@@ -1,4 +1,6 @@
 #include "main.h"
+#include "pros/misc.h"
+#include "pros/motors.hpp"
 
 /**
  * A callback function for LLEMU's center button.
@@ -82,6 +84,7 @@ void opcontrol() {
 	pros::Motor front_right_mtr(11);
 	pros::Motor rear_left_mtr(2);
 	pros::Motor rear_right_mtr(1);
+	pros::Motor flywheel_mtr(3);
 	while (true) {
 		
 	pros::screen::set_pen(RGB2COLOR((char) (rand() % 255 + 0),(char)  (rand() % 255 + 0), (char) (rand() % 255 + 0)));
@@ -95,11 +98,13 @@ void opcontrol() {
 		int front_right = -1 * master.get_analog(ANALOG_RIGHT_Y);
 		int rear_left = master.get_analog(ANALOG_LEFT_Y);
 		int rear_right = -1 * master.get_analog(ANALOG_RIGHT_Y);
+		int flywheel = 127 * master.get_digital(pros::E_CONTROLLER_DIGITAL_A);
 
 		front_left_mtr = front_left;
 		front_right_mtr = front_right;
 		rear_left_mtr = rear_left;
 		rear_right_mtr = rear_right;
+		flywheel_mtr = flywheel;
 
 		//pros::lcd::set_background_color((char) (rand() % 255 + 0),(char)  (rand() % 255 + 0), (char) (rand() % 255 + 0));
 		//pros::lcd::initialize();
