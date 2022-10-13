@@ -29,9 +29,10 @@ void on_center_button() {
 void initialize() {
 
 	// Sets the background to the image contained within waifu_elijah.c
+	
 lv_obj_t* background = lv_img_create(lv_scr_act(), NULL);
-LV_IMG_DECLARE(waifu_elijah);
-lv_img_set_src(background, &waifu_elijah);
+LV_IMG_DECLARE(raptor_shark);
+lv_img_set_src(background, &raptor_shark);
 lv_obj_set_size(background, 480, 240);
 lv_obj_align(background, NULL, LV_ALIGN_IN_TOP_LEFT, 0, 0);
 }
@@ -88,10 +89,11 @@ void opcontrol() {
 
 	// Imports the motors and maps them to variables
 	//pros::Motor motor_name(port);
-	pros::Motor front_left(12);
-	pros::Motor front_right(11);
-	pros::Motor rear_left(2);
-	pros::Motor rear_right(1);
+	float limiter = 1;
+	pros::Motor front_left(2,false); // Motor: Normal
+	pros::Motor front_right(1,true); // Motor: Reversed
+	pros::Motor rear_left(12,false); // Motor: Normal
+	pros::Motor rear_right(11,true); // Motor: Reversed
 	pros::Motor flywheel(3);
 	pros::Motor flywheel_2(4);
 
@@ -112,10 +114,10 @@ void opcontrol() {
 		                 (pros::lcd::read_buttons() & LCD_BTN_RIGHT) >> 0);
 */
 		// Sets the motors to the values of the analog sticks. 
-		front_left = master.get_analog(ANALOG_LEFT_Y);
-		front_right = -1 * master.get_analog(ANALOG_RIGHT_Y);
-		rear_left = master.get_analog(ANALOG_LEFT_Y);
-		rear_right = -1 * master.get_analog(ANALOG_RIGHT_Y);
+		front_left = limiter * master.get_analog(ANALOG_LEFT_Y);
+		front_right = limiter * master.get_analog(ANALOG_RIGHT_Y);
+		rear_left = limiter * master.get_analog(ANALOG_LEFT_Y);
+		rear_right = limiter * master.get_analog(ANALOG_RIGHT_Y);
 
 		// Toggle-able flywheel logic (Hold DIGITAL_A on the controller to activate/deactivate the flywheel)
 		held = master.get_digital(pros::E_CONTROLLER_DIGITAL_A) == 1 && !held;
