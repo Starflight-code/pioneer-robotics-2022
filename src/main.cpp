@@ -1,6 +1,7 @@
 #include "main.h"
 #include "pros/misc.h"
 #include "pros/motors.hpp"
+#include <iostream>
 
 /**
  * A callback function for LLEMU's center button.
@@ -26,10 +27,14 @@ void on_center_button() {
  * to keep execution time for this mode under a few seconds.
  */
 void initialize() {
-	//pros::lcd::initialize();
-	//pros::lcd::set_text(1, "Hello PROS User!");
 
-	//pros::lcd::register_btn1_cb(on_center_button);
+	// Sets the background to the image contained within waifu_elijah.c
+	
+lv_obj_t* background = lv_img_create(lv_scr_act(), NULL);
+LV_IMG_DECLARE(raptor_shark);
+lv_img_set_src(background, &raptor_shark);
+lv_obj_set_size(background, 480, 240);
+lv_obj_align(background, NULL, LV_ALIGN_IN_TOP_LEFT, 0, 0);
 }
 
 /**
@@ -37,7 +42,9 @@ void initialize() {
  * the VEX Competition Switch, following either autonomous or opcontrol. When
  * the robot is enabled, this task will exit.
  */
-void disabled() {}
+void disabled() {
+
+}
 
 /**
  * Runs after initialize(), and before autonomous when connected to the Field
@@ -77,38 +84,60 @@ void autonomous() {}
  * task, not resume it from where it left off.
  */
 void opcontrol() {
+	// Imports the Controller and maps it to the variable master
 	pros::Controller master(pros::E_CONTROLLER_MASTER);
 
-	// 
-	pros::Motor front_left_mtr(12);
-	pros::Motor front_right_mtr(11);
-	pros::Motor rear_left_mtr(2);
-	pros::Motor rear_right_mtr(1);
-	pros::Motor flywheel_mtr(3);
+	// Imports the motors and maps them to variables
+	//pros::Motor motor_name(port);
+	float limiter = 1;
+	pros::Motor front_left(2,false); // Motor: Normal
+	pros::Motor front_right(1,true); // Motor: Reversed
+	pros::Motor rear_left(12,false); // Motor: Normal
+	pros::Motor rear_right(11,true); // Motor: Reversed
+	pros::Motor flywheel(3);
+	pros::Motor flywheel_2(4);
+
+	//Used within control/logic structures
+	bool held;
+	bool flywheelstate = false;
+
+
 	while (true) {
 		
-	pros::screen::set_pen(RGB2COLOR((char) (rand() % 255 + 0),(char)  (rand() % 255 + 0), (char) (rand() % 255 + 0)));
-	pros::screen::fill_rect(0,0,1000,300);
+	// Test code for randomly setting the screen to different colors. May violate vex rules, do not enable when competing.
+	/*
+	//pros::screen::set_pen(RGB2COLOR((char) (rand() % 255 + 0),(char)  (rand() % 255 + 0), (char) (rand() % 255 + 0)));
+	//pros::screen::fill_rect(0,0,1000,300);
 	//pros::screen::erase();
-		/*pros::lcd::print(0, "%d %d %d", (pros::lcd::read_buttons() & LCD_BTN_LEFT) >> 2,
+		pros::lcd::print(0, "%d %d %d", (pros::lcd::read_buttons() & LCD_BTN_LEFT) >> 2,
 		                 (pros::lcd::read_buttons() & LCD_BTN_CENTER) >> 1,
 		                 (pros::lcd::read_buttons() & LCD_BTN_RIGHT) >> 0);
 */
-		int front_left = master.get_analog(ANALOG_LEFT_Y);
-		int front_right = -1 * master.get_analog(ANALOG_RIGHT_Y);
-		int rear_left = master.get_analog(ANALOG_LEFT_Y);
-		int rear_right = -1 * master.get_analog(ANALOG_RIGHT_Y);
-		int flywheel = 127 * master.get_digital(pros::E_CONTROLLER_DIGITAL_A);
+		// Sets the motors to the values of the analog sticks. 
+		front_left = limiter * master.get_analog(ANALOG_LEFT_Y);
+		front_right = limiter * master.get_analog(ANALOG_RIGHT_Y);
+		rear_left = limiter * master.get_analog(ANALOG_LEFT_Y);
+		rear_right = limiter * master.get_analog(ANALOG_RIGHT_Y);
 
-		front_left_mtr = front_left;
-		front_right_mtr = front_right;
-		rear_left_mtr = rear_left;
-		rear_right_mtr = rear_right;
-		flywheel_mtr = flywheel;
-
-		//pros::lcd::set_background_color((char) (rand() % 255 + 0),(char)  (rand() % 255 + 0), (char) (rand() % 255 + 0));
-		//pros::lcd::initialize();
-		//pros::lcd::clear();
+		// Toggle-able flywheel logic (Hold DIGITAL_A on the controller to activate/deactivate the flywheel)
+		held = master.get_digital(pros::E_CONTROLLER_DIGITAL_A) == 1 && !held;
+		// This is a branching version of the above code. Switch to this only if the branchless version doesn't work. (Branchless code is more efficient)
+		/*if (master.get_digital(pros::E_CONTROLLER_DIGITAL_A) == 1 && !held) { 
+			held = true;
+		}*/
+		if (master.get_digital(pros::E_CONTROLLER_DIGITAL_A) == 0 && held) { 
+		if (flywheelstate == true) {
+		// Flywheel is toggled OFF
+		flywheel = 0;
+		flywheel_2 = 0;	
+		//std::cout << "Flywheel Off";
+		} else {
+		// Flywhhel is toggled ON
+		flywheel = 127;
+		flywheel_2 = -127;
+		//std::cout << "Flywheel On";
+		}
+		}
 		pros::delay(50);
 	}
 }
