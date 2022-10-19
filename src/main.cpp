@@ -94,6 +94,12 @@ void opcontrol() {
 	pros::Motor front_right(1,true); // Motor: Reversed
 	pros::Motor rear_left(12,false); // Motor: Normal
 	pros::Motor rear_right(11,true); // Motor: Reversed
+	/*
+	pros::Motor front_left_2(x,true); // Motor: Reversed
+	pros::Motor front_right_2(x,false); // Motor: Normal
+	pros::Motor rear_left_2(x,true); // Motor: Reversed
+	pros::Motor rear_right_2(x,false); // Motor: Normal
+	*/
 	pros::Motor flywheel(3);
 	pros::Motor flywheel_2(4);
 
@@ -118,6 +124,12 @@ void opcontrol() {
 		front_right = limiter * master.get_analog(ANALOG_RIGHT_Y);
 		rear_left = limiter * master.get_analog(ANALOG_LEFT_Y);
 		rear_right = limiter * master.get_analog(ANALOG_RIGHT_Y);
+		/*
+		front_left_2 = limiter * master.get_analog(ANALOG_LEFT_Y);
+		front_right_2 = limiter * master.get_analog(ANALOG_RIGHT_Y);
+		rear_left_2 = limiter * master.get_analog(ANALOG_LEFT_Y);
+		rear_right_2 = limiter * master.get_analog(ANALOG_RIGHT_Y);
+		*/
 
 		// Toggle-able flywheel logic (Hold DIGITAL_A on the controller to activate/deactivate the flywheel)
 		held = master.get_digital(pros::E_CONTROLLER_DIGITAL_A) == 1 && !held;
