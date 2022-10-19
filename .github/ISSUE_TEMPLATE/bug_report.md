@@ -23,7 +23,7 @@ A clear and concise description of what you expected to happen.
 **Screenshots/Photos/Videos**
 If applicable, add screenshots/photos/videos to help explain your problem.
 
-**Robot (please complete the following information):**
+**Robot/Software (please complete the following information):**
  - Components [e.g. 4 motors plugged in with the vex radio unplugged]
  - Software Version [e.g. 0.1.0-alpha]
  - Software Branch [e.g. main testing unstable]
