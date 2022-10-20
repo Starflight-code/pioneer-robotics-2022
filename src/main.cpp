@@ -2,6 +2,7 @@
 #include "pros/misc.h"
 #include "pros/motors.hpp"
 #include <iostream>
+#include "motors.cpp"
 
 /**
  * A callback function for LLEMU's center button.
@@ -90,18 +91,23 @@ void opcontrol() {
 	// Imports the motors and maps them to variables
 	//pros::Motor motor_name(port);
 	float limiter = 1;
+	/*
 	pros::Motor front_left(2,false); // Motor: Normal
 	pros::Motor front_right(1,true); // Motor: Reversed
 	pros::Motor rear_left(12,false); // Motor: Normal
 	pros::Motor rear_right(11,true); // Motor: Reversed
+	*/
 	/*
 	pros::Motor front_left_2(x,true); // Motor: Reversed
 	pros::Motor front_right_2(x,false); // Motor: Normal
 	pros::Motor rear_left_2(x,true); // Motor: Reversed
 	pros::Motor rear_right_2(x,false); // Motor: Normal
 	*/
+	/*
 	pros::Motor flywheel(3);
 	pros::Motor flywheel_2(4);
+	*/
+
 
 	//Used within control/logic structures
 	bool held;
