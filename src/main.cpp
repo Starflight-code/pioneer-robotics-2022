@@ -99,7 +99,9 @@ void opcontrol() {
 
 		// Toggle-able flywheel logic (Hold DIGITAL_A on the controller to activate/deactivate the flywheel)
 		held = master.get_digital(pros::E_CONTROLLER_DIGITAL_A) == 1 && !held;
-		if (master.get_digital(pros::E_CONTROLLER_DIGITAL_A) == 0 && held) { motorSpeed(3, !flywheelstate * 127); }
+
+		if (master.get_digital(pros::E_CONTROLLER_DIGITAL_A) == 0 && held) motorSpeed(3, !flywheelstate * 127); 
+
 		pros::delay(50);
 	}
 }
