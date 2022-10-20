@@ -90,7 +90,6 @@ void opcontrol() {
 
 	// Imports the motors and maps them to variables
 	//pros::Motor motor_name(port);
-	float limiter = 1;
 	/*
 	pros::Motor front_left(2,false); // Motor: Normal
 	pros::Motor front_right(1,true); // Motor: Reversed
