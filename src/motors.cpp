@@ -6,7 +6,7 @@
 float modifier = 1;
 
 // Imports the controller and maps it to variable master
-pros::Controller master(pros::E_CONTROLLER_MASTER);
+//pros::Controller master(pros::E_CONTROLLER_MASTER);
 
 // Imports the motors and maps them to variables
 pros::Motor front_left(2,false); // Motor: Normal

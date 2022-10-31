@@ -2,7 +2,7 @@
 #include "pros/misc.h"
 #include "pros/motors.hpp"
 #include <iostream>
-#include "motors.cpp"
+#include "controls.cpp"
 
 /**
  * A callback function for LLEMU's center button.
@@ -89,18 +89,9 @@ void opcontrol() {
 	bool held;
 	bool flywheelstate = false;
 
-
 	while (true) {
 
-		// Sets the motors to the values of the analog sticks. Calls the motorSpeed function from motors.cpp
-		motorSpeed(1, master.get_analog(ANALOG_LEFT_Y));
-		motorSpeed(2, master.get_analog(ANALOG_RIGHT_Y));
-
-
-		// Toggle-able flywheel logic (Hold DIGITAL_A on the controller to activate/deactivate the flywheel)
-		held = master.get_digital(pros::E_CONTROLLER_DIGITAL_A) == 1 && !held;
-
-		if (master.get_digital(pros::E_CONTROLLER_DIGITAL_A) == 0 && held) motorSpeed(3, !flywheelstate * 127); 
+		control_listener(held, flywheelstate); // Calls control listener from controls.cpp, look there to change the controls
 
 		pros::delay(50);
 	}
