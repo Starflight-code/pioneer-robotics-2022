@@ -1,7 +1,4 @@
-#include "main.h"
-#include "pros/misc.h"
-#include "pros/motors.hpp"
-#include <iostream>
+#include "include.cpp"
 #include "controls.cpp"
 
 /**

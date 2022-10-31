@@ -1,6 +1,10 @@
-#include "main.h"
+#include "include.cpp"
 #include "motors.cpp"
 pros::Controller master(pros::E_CONTROLLER_MASTER);
+// Test above to see if they persist between function calls and stay within scope of control_listener
+//bool held;
+//bool flywheelstate;
+
 
 void control_listener(bool held, bool flywheelstate) {
         // Sets the motors to the values of the analog sticks. Calls the motorSpeed function from motors.cpp

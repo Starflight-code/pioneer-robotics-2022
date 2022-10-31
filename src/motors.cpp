@@ -1,7 +1,4 @@
-#include "main.h"
-#include "pros/misc.h"
-#include "pros/motors.hpp"
-#include <exception>
+#include "include.cpp"
 // Limits the motor speed, must be 0 <= modifier <= 1
 float modifier = 1;
 
@@ -23,19 +20,20 @@ pros::Motor flywheel(3, false);
 pros::Motor flywheel_2(4, true);
 void motorSpeed(int motorSet, int speed) {
 switch (motorSet) {
-    case 1:
+    case 1: // motorSpeed(1, speed) to set left motor group's speed
         front_left = speed * modifier;
         rear_left = speed * modifier;
         break;
-    case 2:
+    case 2: // motorSpeed(2, speed) to set the right motor group's speed
         front_right = speed * modifier;
         rear_right = speed * modifier;
         break;
-    case 3:
+    case 3: // motorSpeed(3, speed) to set flywheel motor group's speed
         flywheel = speed;
         flywheel = speed;
         break;
     default:
-        throw "Error, invalid input sent to function motorSpeed()";
-        break;
+        //throw "Error, invalid input sent to function motorSpeed()";
+        return;
+        //break;
 }}
