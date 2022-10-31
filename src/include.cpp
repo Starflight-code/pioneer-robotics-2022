@@ -5,3 +5,4 @@
 #include <iostream>
 #include <exception>
 #include "pros/apix.h"
+#include <math.h>

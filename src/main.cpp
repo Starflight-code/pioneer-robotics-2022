@@ -82,13 +82,10 @@ void autonomous() {}
  * task, not resume it from where it left off.
  */
 void opcontrol() {
-	//Used within control/logic structures
-	bool held;
-	bool flywheelstate = false;
 
 	while (true) {
 
-		control_listener(held, flywheelstate); // Calls control listener from controls.cpp, look there to change the controls
+		control_listener(); // Calls control listener from controls.cpp, look there to change the controls
 
 		pros::delay(50);
 	}
