@@ -1,9 +1,8 @@
 #include "include.cpp"
 #include "motors.cpp"
+
 pros::Controller master(pros::E_CONTROLLER_MASTER);
-bool held = false;
-bool held_init;
-bool flywheelstate = false;
+bool held = false; // Held tracks the current E-CONTROLLER_DIGITAL_A state
 
 
 void control_listener() {
@@ -15,17 +14,19 @@ void control_listener() {
         // Set held to true if digital controller A is pressed and held is false
         
         switch (master.get_digital(pros::E_CONTROLLER_DIGITAL_A)) {
-            case true:
-            held_init = !held;
-            held = true;
-            if (held_init == held) flywheelstate = !flywheelstate; motorSpeed(3, !flywheelstate * 127);
+            case true: // When Controller Digital A is pushed
 
-            case false:
-            held_init = !held;
-            held = false; /*
-            if (held_init == held) motorSpeed(3, !flywheelstate * 127);*/
+                // Compares these two, they will be the same only when the state changes. Changes it to the opposite
+                // of the flywheel state and toggles the flywheel to the opposite of the current flywheel state.
+                if (!held) {
+                    motorSpeed(3,  !motorCheck(3) * 127);  
+                }
+                held = true;
+            case false: // When Controller Digital A is not pushed
+                held = false; /*
+                if (held_init == held) motorSpeed(3, !flywheelstate * 127);*/
             default:
-            return;
+                return;
         }
         /*
 		held = master.get_digital(pros::E_CONTROLLER_DIGITAL_A) == 1 && !held;
