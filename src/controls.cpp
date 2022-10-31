@@ -11,24 +11,22 @@ void control_listener() {
 		motorSpeed(2, master.get_analog(ANALOG_RIGHT_Y));
         
 		// Toggle-able flywheel logic (Hold DIGITAL_A on the controller to activate/deactivate the flywheel)
-        // Set held to true if digital controller A is pressed and held is false
-        
         switch (master.get_digital(pros::E_CONTROLLER_DIGITAL_A)) {
             case true: // When Controller Digital A is pushed
-
-                // Compares these two, they will be the same only when the state changes. Changes it to the opposite
-                // of the flywheel state and toggles the flywheel to the opposite of the current flywheel state.
+                // Uses held to track changes, compares it based off the Controller_Digital_A value recorded
                 if (!held) {
-                    motorSpeed(3,  !motorCheck(3) * 127);  
+                    // Toggles motor using motorCheck() tracking
+                    motorSpeed(3,  !(motorCheck(3) == 127) * 127);  
                 }
-                held = true;
+                held = true; // Sets comparison tracker "held" to true
             case false: // When Controller Digital A is not pushed
-                held = false; /*
-                if (held_init == held) motorSpeed(3, !flywheelstate * 127);*/
+                held = false; // Sets comparison tracker "held" to false
             default:
-                return;
+                return; // Returns if an erroneous values are detected. Should never happen, since digital outputs should be a 0 or 1.
         }
-        /*
+        /* -- Branchless code: Deprecated, may not function. This was replaced by the above code and will be removed once the
+        above code is tested prior to testing --> main pull.
+
 		held = master.get_digital(pros::E_CONTROLLER_DIGITAL_A) == 1 && !held;
         
         // If digital controller A is pressed and held. Set flywheel state to 

@@ -86,7 +86,8 @@ void opcontrol() {
 	while (true) {
 
 		control_listener(); // Calls control listener from controls.cpp, look there to change the controls
-
-		pros::delay(50);
+		
+		// Waits 50 milliseconds and gives CPU some time to sleep. Increase this value if the CPU overheats.
+		pros::delay(50); 
 	}
 }
