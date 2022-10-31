@@ -27,12 +27,12 @@ void on_center_button() {
 void initialize() {
 
 	// Sets the background to the image contained within waifu_elijah.c
-	
+	/* -- Removed photo, screen will be blank. Replace with a logo once created. --
 lv_obj_t* background = lv_img_create(lv_scr_act(), NULL);
 LV_IMG_DECLARE(raptor_shark);
 lv_img_set_src(background, &raptor_shark);
 lv_obj_set_size(background, 480, 240);
-lv_obj_align(background, NULL, LV_ALIGN_IN_TOP_LEFT, 0, 0);
+lv_obj_align(background, NULL, LV_ALIGN_IN_TOP_LEFT, 0, 0);*/
 }
 
 /**

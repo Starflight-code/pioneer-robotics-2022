@@ -1,7 +1,7 @@
 #include "include.cpp"
 #include "motors.cpp"
 
-pros::Controller master(pros::E_CONTROLLER_MASTER);
+pros::Controller master(pros::E_CONTROLLER_MASTER); // Imports Controller as "master"
 bool held = false; // Held tracks the current E-CONTROLLER_DIGITAL_A state
 
 
@@ -25,7 +25,7 @@ void control_listener() {
                 return; // Returns if an erroneous values are detected. Should never happen, since digital outputs should be a 0 or 1.
         }
         /* -- Branchless code: Deprecated, may not function. This was replaced by the above code and will be removed once the
-        above code is tested prior to testing --> main pull.
+        above code is tested prior to testing --> main pull. --
 
 		held = master.get_digital(pros::E_CONTROLLER_DIGITAL_A) == 1 && !held;
         
