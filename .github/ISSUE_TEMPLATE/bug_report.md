@@ -24,9 +24,9 @@ A clear and concise description of what you expected to happen.
 If applicable, add screenshots/photos/videos to help explain your problem.
 
 **Robot/Software (please complete the following information):**
- - Components [e.g. 4 motors plugged in with the vex radio unplugged]
- - Software Version [e.g. 0.1.0-alpha]
- - Software Branch [e.g. main testing unstable]
+ - Components [e.g. 4 motors plugged in with the vex radio unplugged]: 
+ - Software Version [e.g. 0.1.0-alpha]: 
+ - Software Branch [e.g. main testing unstable]: 
 
 **Additional context**
 Add any other context about the problem here.
