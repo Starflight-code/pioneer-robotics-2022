@@ -1,18 +1,21 @@
+#include "include.cpp"
 #include "motors.cpp"
-static float kP = 2;
+static float kP = .2;
 static float kI = .04;
 static float kD = .01;
+float error;
+float prevError;
+float prevIntegral;
+float derivative;
+float integral;
 
 int setSpeed(int desiredVelocity) {
     // desiredVelocity is in RPM
-    float error = flywheel.get_actual_velocity() - desiredVelocity;
-    float prevError;
-    float prevIntegral;
-    float integral = prevIntegral + error;
+    error = flywheel.get_actual_velocity() - desiredVelocity;
+    integral = prevIntegral + error;
     prevIntegral = integral;
-    float derivative = error - prevError;
+    derivative = error - prevError;
     prevError = error;
-    int v = ((kP * error) + (kD * derivative) + (kI * integral)) * 127;
 
-    return v;
+    return ((kP * error) + (kD * derivative) + (kI * integral)) * 127;
 }
