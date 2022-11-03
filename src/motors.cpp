@@ -43,7 +43,7 @@ switch (motorSet) {
         break;
     case 3: // motorSpeed(3, speed) to set flywheel motor group's speed
         flywheel = speed;
-        flywheel = speed;
+        flywheel_2 = speed;
         flywheels = speed;
         break;
     default:
