@@ -10,12 +10,12 @@ float derivative;
 float integral;
 
 int setSpeed(int desiredVelocity) {
-    // desiredVelocity is in RPM
-    error = flywheel.get_actual_velocity() - desiredVelocity;
-    integral = prevIntegral + error;
-    prevIntegral = integral;
-    derivative = error - prevError;
-    prevError = error;
+  // desiredVelocity is in RPM
+  error = flywheel.get_actual_velocity() - desiredVelocity;
+  integral = prevIntegral + error;
+  prevIntegral = integral;
+  derivative = error - prevError;
+  prevError = error;
 
-    return ((kP * error) + (kD * derivative) + (kI * integral)) * 127;
+  return ((kP * error) + (kD * derivative) + (kI * integral)) * 127;
 }
