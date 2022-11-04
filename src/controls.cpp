@@ -25,7 +25,7 @@ void control_listener() {
     if (!held_R1) {
       switch (flywheelState) {
       case 0:
-        motors.setSpeed(3, Flywheels.setSpeed(3600));
+        motors.setSpeed(3, Flywheels.calcSpeed(3600));
         flywheelState = 1;
         break;
       case 1:
@@ -33,7 +33,7 @@ void control_listener() {
         flywheelState = 0;
         break;
       case 2:
-        motors.setSpeed(3, Flywheels.setSpeed(3600));
+        motors.setSpeed(3, Flywheels.calcSpeed(3600));
         flywheelState = 1;
         break;
       }
@@ -53,11 +53,11 @@ void control_listener() {
       // Toggles motor using motorCheck() tracking
       switch (flywheelState) {
       case 0:
-        motors.setSpeed(3, Flywheels.setSpeed(2000));
+        motors.setSpeed(3, Flywheels.calcSpeed(2000));
         flywheelState = 2;
         break;
       case 1:
-        motors.setSpeed(3, Flywheels.setSpeed(2000));
+        motors.setSpeed(3, Flywheels.calcSpeed(2000));
         flywheelState = 2;
         break;
       case 2:

@@ -1,5 +1,7 @@
-#include "include.cpp"
+#include "absolute positioning.cpp"
 #include "controls.cpp"
+#include "include.cpp"
+
 
 /**
  * A callback function for LLEMU's center button.
@@ -7,15 +9,15 @@
  * When this callback is fired, it will toggle line 2 of the LCD text between
  * "I was pressed!" and nothing.
  */
- /*
+/*
 void on_center_button() {
-	static bool pressed = false;
-	pressed = !pressed;
-	if (pressed) {
-		pros::lcd::set_text(2, "I was pressed!");
-	} else {
-		pros::lcd::clear_line(2);
-	}
+       static bool pressed = false;
+       pressed = !pressed;
+       if (pressed) {
+               pros::lcd::set_text(2, "I was pressed!");
+       } else {
+               pros::lcd::clear_line(2);
+       }
 }*/
 
 /**
@@ -26,9 +28,9 @@ void on_center_button() {
  */
 void initialize() {
 
-	// Sets the background to the image contained within waifu_elijah.c
-	/* -- Removed photo, screen will be blank. Replace with a logo once created. --
-lv_obj_t* background = lv_img_create(lv_scr_act(), NULL);
+  // Sets the background to the image contained within waifu_elijah.c
+  /* -- Removed photo, screen will be blank. Replace with a logo once created.
+-- lv_obj_t* background = lv_img_create(lv_scr_act(), NULL);
 LV_IMG_DECLARE(raptor_shark);
 lv_img_set_src(background, &raptor_shark);
 lv_obj_set_size(background, 480, 240);
@@ -40,9 +42,7 @@ lv_obj_align(background, NULL, LV_ALIGN_IN_TOP_LEFT, 0, 0);*/
  * the VEX Competition Switch, following either autonomous or opcontrol. When
  * the robot is enabled, this task will exit.
  */
-void disabled() {
-
-}
+void disabled() {}
 
 /**
  * Runs after initialize(), and before autonomous when connected to the Field
@@ -82,12 +82,14 @@ void autonomous() {}
  * task, not resume it from where it left off.
  */
 void opcontrol() {
+  odometry odo;
+  while (true) {
 
-	while (true) {
+    control_listener(); // Calls control listener from controls.cpp, look there
+                        // to change the controls
 
-		control_listener(); // Calls control listener from controls.cpp, look there to change the controls
-		
-		// Waits 50 milliseconds and gives CPU some time to sleep. Increase this value if the CPU overheats.
-		pros::delay(50); 
-	}
+    // Waits 50 milliseconds and gives CPU some time to sleep. Increase this
+    // value if the CPU overheats.
+    pros::delay(50);
+  }
 }
