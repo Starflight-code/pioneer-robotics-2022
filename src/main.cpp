@@ -1,7 +1,7 @@
 #include "absolute positioning.cpp"
-#include "controls.cpp"
 #include "include.cpp"
-
+#include "pros/rtos.hpp"
+#include "tasks.cpp"
 
 /**
  * A callback function for LLEMU's center button.
@@ -83,9 +83,9 @@ void autonomous() {}
  */
 void opcontrol() {
   odometry odo;
+  pros::Task controls_fn(controls_fn);
   while (true) {
-
-    control_listener(); // Calls control listener from controls.cpp, look there
+    //control_listener(); // Calls control listener from controls.cpp, look there
                         // to change the controls
 
     // Waits 50 milliseconds and gives CPU some time to sleep. Increase this
