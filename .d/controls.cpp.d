@@ -77,7 +77,7 @@ bin/controls.cpp.o: src/controls.cpp src/flywheel.cpp src/include.cpp \
  include/pros/screen.hpp include/pros/screen.h include/pros/vision.hpp \
  include/pros/vision.h include/pros/link.hpp include/pros/link.h \
  include/pros/apix.h include/api.h include/pros/serial.h \
- include/pros/serial.hpp include/pros/motors.hpp include/pros/apix.h \
+ include/pros/serial.hpp include/pros/apix.h include/pros/motors.hpp \
  src/motors.cpp
 src/flywheel.cpp:
 src/include.cpp:
@@ -238,6 +238,6 @@ include/pros/apix.h:
 include/api.h:
 include/pros/serial.h:
 include/pros/serial.hpp:
-include/pros/motors.hpp:
 include/pros/apix.h:
+include/pros/motors.hpp:
 src/motors.cpp:
