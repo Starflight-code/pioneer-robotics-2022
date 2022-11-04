@@ -1,5 +1,5 @@
 #include "flywheel.cpp"
-
+Flywheels Flywheels;
 pros::Controller
     master(pros::E_CONTROLLER_MASTER); // Imports Controller as "master"
 bool held_R1 =
@@ -25,15 +25,15 @@ void control_listener() {
     if (!held_R1) {
       switch (flywheelState) {
       case 0:
-        motors.setSpeed(3, setSpeed(3600));
+        motors.setSpeed(3, Flywheels.setSpeed(3600));
         flywheelState = 1;
         break;
       case 1:
-        motorSpeed(3, 0);
+        motors.setSpeed(3, 0);
         flywheelState = 0;
         break;
       case 2:
-        motorSpeed(3, setSpeed(3600));
+        motors.setSpeed(3, Flywheels.setSpeed(3600));
         flywheelState = 1;
         break;
       }
@@ -53,15 +53,15 @@ void control_listener() {
       // Toggles motor using motorCheck() tracking
       switch (flywheelState) {
       case 0:
-        motorSpeed(3, setSpeed(2000));
+        motors.setSpeed(3, Flywheels.setSpeed(2000));
         flywheelState = 2;
         break;
       case 1:
-        motorSpeed(3, setSpeed(2000));
+        motors.setSpeed(3, Flywheels.setSpeed(2000));
         flywheelState = 2;
         break;
       case 2:
-        motorSpeed(3, 0);
+        motors.setSpeed(3, 0);
         flywheelState = 0;
         break;
       }
