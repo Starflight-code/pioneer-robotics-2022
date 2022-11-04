@@ -1,5 +1,6 @@
 #include "include.cpp"
 #include "motors.cpp"
+Motors motors;
 static float kP = .2;
 static float kI = .04;
 static float kD = .01;

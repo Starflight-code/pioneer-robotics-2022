@@ -13,8 +13,8 @@ void control_listener() {
   // Sets the motors to the values of the analog sticks. Calls the motorSpeed
   // function from motors.cpp
   master.get_digital(pros::E_CONTROLLER_DIGITAL_R2);
-  motorSpeed(1, master.get_analog(ANALOG_LEFT_Y));
-  motorSpeed(2, master.get_analog(ANALOG_RIGHT_Y));
+  motors.setSpeed(1, master.get_analog(ANALOG_LEFT_Y));
+  motors.setSpeed(2, master.get_analog(ANALOG_RIGHT_Y));
 
   // Toggle-able flywheel logic (Hold DIGITAL_A on the controller to
   // activate/deactivate the flywheel)
@@ -25,7 +25,7 @@ void control_listener() {
     if (!held_R1) {
       switch (flywheelState) {
       case 0:
-        motorSpeed(3, setSpeed(3600));
+        motors.setSpeed(3, setSpeed(3600));
         flywheelState = 1;
         break;
       case 1:
