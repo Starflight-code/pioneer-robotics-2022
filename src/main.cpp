@@ -1,4 +1,4 @@
-#include "absolute positioning.cpp"
+#include "absolute_positioning.cpp"
 #include "include.cpp"
 #include "pros/rtos.hpp"
 #include "tasks.cpp"
@@ -29,19 +29,19 @@ void on_center_button() {
 void initialize() {
 
   // Sets the background to the image contained within waifu_elijah.c
-  /* -- Removed photo, screen will be blank. Replace with a logo once created.
--- lv_obj_t* background = lv_img_create(lv_scr_act(), NULL);
-LV_IMG_DECLARE(raptor_shark);
-lv_img_set_src(background, &raptor_shark);
-lv_obj_set_size(background, 480, 240);
-lv_obj_align(background, NULL, LV_ALIGN_IN_TOP_LEFT, 0, 0);*/
-}
-
+  /* -- Removed photo, screen will be blank. Replace with a logo once created.*/ /*
+ lv_obj_t* background = lv_img_create(lv_scr_act(), NULL);
+ LV_IMG_DECLARE(raptor_shark);
+ lv_img_set_src(background, &raptor_shark);
+ lv_obj_set_size(background, 480, 240);
+ lv_obj_align(background, NULL, LV_ALIGN_IN_TOP_LEFT, 0, 0);
+ }
+ */
 /**
  * Runs while the robot is in the disabled state of Field Management System or
  * the VEX Competition Switch, following either autonomous or opcontrol. When
  * the robot is enabled, this task will exit.
- */
+ */}
 void disabled() {}
 
 /**
@@ -83,10 +83,11 @@ void autonomous() {}
  */
 void opcontrol() {
   odometry odo;
-  pros::Task controls_fn(controls_fn);
+  cl CL;
+  // pros::Task controls_fn(nullptr);
   while (true) {
-    //control_listener(); // Calls control listener from controls.cpp, look there
-                        // to change the controls
+    CL.control_listener(); // Calls control listener from controls.cpp, look
+                           // there to change the controls
 
     // Waits 50 milliseconds and gives CPU some time to sleep. Increase this
     // value if the CPU overheats.

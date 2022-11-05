@@ -1,37 +1,47 @@
-#include "include.cpp"
 #include "pros/motors.hpp"
-// Limits the motor speed, must be 0 <= modifier <= 1
-float modifier = 1;
-int left_motors = 0;
-int right_motors = 0;
-int flywheels = 0;
+#include "include.cpp"
 
-// Imports the controller and maps it to variable master
-// pros::Controller master(pros::E_CONTROLLER_MASTER);
-// Imports the motors and maps them to variables
-pros::Motor front_left(2, false); // Motor: Normal
-pros::Motor front_right(1, true); // Motor: Reversed
-pros::Motor rear_left(12, false); // Motor: Normal
-pros::Motor rear_right(11, true); // Motor: Reversed
-/* Uncomment and set ports to enable the 8 motor drive
-pros::Motor front_left_2(x,true); // Motor: Reversed
-pros::Motor front_right_2(x,false); // Motor: Normal
-pros::Motor rear_left_2(x,true); // Motor: Reversed
-pros::Motor rear_right_2(x,false); // Motor: Normal
-*/
-pros::Motor flywheel(3, false);
-pros::Motor flywheel_2(4, true);
-
-class Motors {
+class Motor_Class {
 private:
   float modifier = 1;
   int left_motors = 0;
   int right_motors = 0;
   int flywheels = 0;
+  // bool init = false;
+  /*pros::Motor rl = rear_left;
+  pros::Motor rr = rear_right;
+  pros::Motor fl = front_left;
+  pros::Motor fr = front_left;*/
+
 public:
   void setModifier(float x) { modifier = x; }
+  void init_f() {
+    // #include "variables.cpp"
+    //  Limits the motor speed, must be 0 <= modifier <= 1
+    /*float modifier = 1;
+    int left_motors = 0;
+    int right_motors = 0;
+    int flywheels = 0;
+    */
+  }
   void setSpeed(int motorSet, int speed) {
+    // if (not init) {
+    // init = true;
+    pros::Motor front_left(2, false); // Motor: Normal
+    pros::Motor front_right(1, true); // Motor: Reversed
+    pros::Motor rear_left(12, false); // Motor: Normal
+    pros::Motor rear_right(11, true); // Motor: Reversed
+    /* Uncomment and set ports to enable the 8 motor drive
+    pros::Motor front_left_2(x,true); // Motor: Reversed
+    pros::Motor front_right_2(x,false); // Motor: Normal
+    pros::Motor rear_left_2(x,true); // Motor: Reversed
+    pros::Motor rear_right_2(x,false); // Motor: Normal
+    */
+    pros::Motor flywheel(3, false);
+    pros::Motor flywheel_2(4, true);
+    //};
     switch (motorSet) {
+
     case 1: // motorSpeed(1, speed) to set left motor group's speed
       front_left = speed * modifier;
       rear_left = speed * modifier;

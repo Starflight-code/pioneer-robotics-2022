@@ -1,8 +1,7 @@
 #include "include.cpp"
 #include "motors.cpp"
-Motors motors;
 
-class Flywheels {
+class FlywheelClass {
 private:
   const float kP = .2;
   const float kI = .04;
@@ -15,8 +14,9 @@ private:
 
 public:
   int calcSpeed(int desiredVelocity) {
+    Motor_Class Motors;
     // desiredVelocity is in RPM
-    error = flywheel.get_actual_velocity() - desiredVelocity;
+    // error = flywheel.get_actual_velocity() - desiredVelocity;
     integral = prevIntegral + error;
     prevIntegral = integral;
     derivative = error - prevError;
