@@ -1,8 +1,7 @@
 #include "include.cpp"
-pros::Rotation left = pros::Rotation(12); //left rotation sensor on port 12, not reversed
-pros::Rotation right = pros::Rotation(13); //right rotation sensor on port 13, not reversed
-pros::Rotation back = pros::Rotation(14); //back rotation sensor on port 14, not reversed
 
+class abs_pos {
+private:
 const float sL = 0; //x distance between tracking center and left tracking wheel
 const float sR = 0; //x distance between tracking center and right tracking wheel
 const float sC = 0; //y distance between tracking center and back tracking wheel
@@ -25,8 +24,10 @@ float arcRadius;
 float localPosition [2];//(x,y)
 float polarChangeInPosition [2];//(r,theta)
 float globalChangeInPosition [2];//(x,y)
-
-
+public:
+pros::Rotation left = pros::Rotation(12); //left rotation sensor on port 12, not reversed
+pros::Rotation right = pros::Rotation(13); //right rotation sensor on port 13, not reversed
+pros::Rotation back = pros::Rotation(14); //back rotation sensor on port 14, not reversed
 
 float  rotationToTranslation (float angle) {
   /*converts angle in centidegrees to angle in radians and uses arc length formula
@@ -40,6 +41,9 @@ float  rotationToTranslation (float angle) {
 void findPosition() {
 
   while(true) {
+//pros::Rotation left = pros::Rotation(12); //left rotation sensor on port 12, not reversed
+//pros::Rotation right = pros::Rotation(13); //right rotation sensor on port 13, not reversed
+//pros::Rotation back = pros::Rotation(14); //back rotation sensor on port 14, not reversed
     leftTranslation = rotationToTranslation(left.get_position());
     rightTranslation = rotationToTranslation(right.get_position());
     backTranslation = rotationToTranslation(back.get_position());
@@ -85,3 +89,4 @@ void findPosition() {
     previousAngle = globalAngle;
   }
 }
+};
