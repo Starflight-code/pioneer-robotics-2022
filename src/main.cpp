@@ -82,7 +82,7 @@ void autonomous() {}
  * task, not resume it from where it left off.
  */
 void opcontrol() {
-  odometry odo;
+  //odometry odo;
   cl CL;
   // pros::Task controls_fn(nullptr);
   while (true) {
