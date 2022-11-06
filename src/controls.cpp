@@ -1,10 +1,10 @@
-#include "flywheel.cpp"
+#include "PID.cpp"
 
 class cl {
 public:
   void run() {
     Motor_Class Motors;
-    FlywheelClass Flywheels;
+    PID Flywheels;
     pros::Controller master(
         pros::E_CONTROLLER_MASTER); // Imports Controller as "master"
     bool held_R1 = false; // Held tracks the current E-CONTROLLER_DIGITAL_R1
@@ -27,7 +27,7 @@ public:
       if (!held_R1) {
         switch (flywheelState) {
         case 0:
-          Motors.setSpeed(3, Flywheels.calcSpeed(3600));
+          Motors.setSpeed(3, Flywheels.full(3600));
           flywheelState = 1;
           break;
         case 1:
@@ -35,7 +35,7 @@ public:
           flywheelState = 0;
           break;
         case 2:
-          Motors.setSpeed(3, Flywheels.calcSpeed(3600));
+          Motors.setSpeed(3, Flywheels.full(3600));
           flywheelState = 1;
           break;
         }
@@ -55,11 +55,11 @@ public:
         // Toggles motor using motorCheck() tracking
         switch (flywheelState) {
         case 0:
-          Motors.setSpeed(3, Flywheels.calcSpeed(2000));
+          Motors.setSpeed(3, Flywheels.full(2000));
           flywheelState = 2;
           break;
         case 1:
-          Motors.setSpeed(3, Flywheels.calcSpeed(2000));
+          Motors.setSpeed(3, Flywheels.full(2000));
           flywheelState = 2;
           break;
         case 2:

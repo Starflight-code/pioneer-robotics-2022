@@ -1,7 +1,16 @@
 #include "absolute_positioning.cpp"
 #include "include.cpp"
 #include "pros/rtos.hpp"
-#include "tasks.cpp"
+#include "controls.cpp"
+
+// Controls listener task
+void controls_fn(void* param) {
+    cl Control_Listener;
+    while(true) {
+    Control_Listener.run();
+    pros::c::delay(50);
+    }
+ }
 
 /**
  * A callback function for LLEMU's center button.
@@ -82,10 +91,10 @@ void autonomous() {}
  * task, not resume it from where it left off.
  */
 void opcontrol() {
-  cl Control_Listener;
-  // pros::Task controls_fn(nullptr); removed code that interacts with the PROS scheduler
+  //cl Control_Listener;
+  pros::Task controls(controls_fn); //removed code that interacts with the PROS scheduler
   while (true) {
-    Control_Listener.run(); // Calls control listener from controls.cpp, look
+    //Control_Listener.run(); // Calls control listener from controls.cpp, look
                            // there to change the controls
 
     // Waits 50 milliseconds and gives CPU some time to sleep. Increase this
