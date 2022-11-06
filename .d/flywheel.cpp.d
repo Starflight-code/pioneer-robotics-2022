@@ -1,5 +1,5 @@
-bin/main.cpp.o: src/main.cpp src/absolute_positioning.cpp src/include.cpp \
- include/main.h include/api.h include/pros/adi.h include/pros/colors.h \
+bin/flywheel.cpp.o: src/flywheel.cpp src/include.cpp include/main.h \
+ include/api.h include/pros/adi.h include/pros/colors.h \
  include/pros/distance.h include/pros/error.h include/pros/ext_adi.h \
  include/pros/adi.h include/pros/adi.h include/pros/gps.h \
  include/pros/imu.h include/pros/link.h include/pros/llemu.h \
@@ -78,8 +78,7 @@ bin/main.cpp.o: src/main.cpp src/absolute_positioning.cpp src/include.cpp \
  include/pros/vision.h include/pros/link.hpp include/pros/link.h \
  include/pros/apix.h include/api.h include/pros/serial.h \
  include/pros/serial.hpp include/pros/apix.h include/pros/motors.hpp \
- src/tasks.cpp src/controls.cpp src/flywheel.cpp src/motors.cpp
-src/absolute_positioning.cpp:
+ src/motors.cpp
 src/include.cpp:
 include/main.h:
 include/api.h:
@@ -240,7 +239,4 @@ include/pros/serial.h:
 include/pros/serial.hpp:
 include/pros/apix.h:
 include/pros/motors.hpp:
-src/tasks.cpp:
-src/controls.cpp:
-src/flywheel.cpp:
 src/motors.cpp:

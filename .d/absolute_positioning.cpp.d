@@ -1,9 +1,9 @@
-bin/main.cpp.o: src/main.cpp src/absolute_positioning.cpp src/include.cpp \
- include/main.h include/api.h include/pros/adi.h include/pros/colors.h \
- include/pros/distance.h include/pros/error.h include/pros/ext_adi.h \
- include/pros/adi.h include/pros/adi.h include/pros/gps.h \
- include/pros/imu.h include/pros/link.h include/pros/llemu.h \
- include/display/lvgl.h include/display/lv_version.h \
+bin/absolute_positioning.cpp.o: src/absolute_positioning.cpp \
+ src/include.cpp include/main.h include/api.h include/pros/adi.h \
+ include/pros/colors.h include/pros/distance.h include/pros/error.h \
+ include/pros/ext_adi.h include/pros/adi.h include/pros/adi.h \
+ include/pros/gps.h include/pros/imu.h include/pros/link.h \
+ include/pros/llemu.h include/display/lvgl.h include/display/lv_version.h \
  include/display/lv_misc/lv_log.h include/display/lv_conf.h \
  include/display/lv_conf_checker.h include/display/lv_misc/lv_task.h \
  include/display/lv_misc/lv_mem.h include/display/lv_misc/lv_log.h \
@@ -77,9 +77,7 @@ bin/main.cpp.o: src/main.cpp src/absolute_positioning.cpp src/include.cpp \
  include/pros/screen.hpp include/pros/screen.h include/pros/vision.hpp \
  include/pros/vision.h include/pros/link.hpp include/pros/link.h \
  include/pros/apix.h include/api.h include/pros/serial.h \
- include/pros/serial.hpp include/pros/apix.h include/pros/motors.hpp \
- src/tasks.cpp src/controls.cpp src/flywheel.cpp src/motors.cpp
-src/absolute_positioning.cpp:
+ include/pros/serial.hpp include/pros/apix.h include/pros/motors.hpp
 src/include.cpp:
 include/main.h:
 include/api.h:
@@ -240,7 +238,3 @@ include/pros/serial.h:
 include/pros/serial.hpp:
 include/pros/apix.h:
 include/pros/motors.hpp:
-src/tasks.cpp:
-src/controls.cpp:
-src/flywheel.cpp:
-src/motors.cpp:
