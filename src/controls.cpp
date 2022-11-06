@@ -2,7 +2,7 @@
 
 class cl {
 public:
-  void control_listener() {
+  void run() {
     Motor_Class Motors;
     FlywheelClass Flywheels;
     pros::Controller master(
@@ -11,13 +11,10 @@ public:
                           // state; Halfcourt
     bool held_R2 = false; // Held tracks the current E-CONTROLLER_DIGITAL_R2
                           // state; Point-Blank
-    int flywheelState =
-        0; // Tracks flywheel state 0: off 1: Halfcourt 2: Point-Blank
+    int flywheelState = 0; // Tracks flywheel state 0: off 1: Halfcourt 2: Point-Blank
     // Sets the motors to the values of the analog sticks. Calls the motorSpeed
     // function from motors.cpp
     master.get_digital(pros::E_CONTROLLER_DIGITAL_R2);
-    // Motors.setSpeed(1, master.get_analog(ANALOG_LEFT_Y));
-    // Motors.setSpeed(2, master.get_analog(ANALOG_RIGHT_Y));
     Motors.setSpeed(1, master.get_analog(ANALOG_LEFT_Y));
     Motors.setSpeed(2, master.get_analog(ANALOG_RIGHT_Y));
 
@@ -30,17 +27,14 @@ public:
       if (!held_R1) {
         switch (flywheelState) {
         case 0:
-          // Motors.setSpeed(3, Flywheels.calcSpeed(3600));
           Motors.setSpeed(3, Flywheels.calcSpeed(3600));
           flywheelState = 1;
           break;
         case 1:
-          // Motors.setSpeed(3, 0);
           Motors.setSpeed(3, 0);
           flywheelState = 0;
           break;
         case 2:
-          // Motors.setSpeed(3, Flywheels.calcSpeed(3600));
           Motors.setSpeed(3, Flywheels.calcSpeed(3600));
           flywheelState = 1;
           break;
@@ -61,17 +55,14 @@ public:
         // Toggles motor using motorCheck() tracking
         switch (flywheelState) {
         case 0:
-          // Motors.setSpeed(3, Flywheels.calcSpeed(2000));
           Motors.setSpeed(3, Flywheels.calcSpeed(2000));
           flywheelState = 2;
           break;
         case 1:
-          // Motors.setSpeed(3, Flywheels.calcSpeed(2000));
           Motors.setSpeed(3, Flywheels.calcSpeed(2000));
           flywheelState = 2;
           break;
         case 2:
-          // Motors.setSpeed(3, 0);
           Motors.setSpeed(3, 0);
           flywheelState = 0;
           break;
@@ -86,12 +77,3 @@ public:
     }
   }
 };
-/* -- Branchless code: Deprecated, may not function. This was replaced by the
-above code and will be removed once the above code is tested prior to testing
---> main pull. --
-
-        held = master.get_digital(pros::E_CONTROLLER_DIGITAL_A) == 1 && !held;
-
-// If digital controller A is pressed and held. Set flywheel state to
-        if (master.get_digital(pros::E_CONTROLLER_DIGITAL_A) == 0 && held)
-motorSpeed(3, !flywheelstate * 127);*/

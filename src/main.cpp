@@ -82,11 +82,10 @@ void autonomous() {}
  * task, not resume it from where it left off.
  */
 void opcontrol() {
-  //odometry odo;
-  cl CL;
-  // pros::Task controls_fn(nullptr);
+  cl Control_Listener;
+  // pros::Task controls_fn(nullptr); removed code that interacts with the PROS scheduler
   while (true) {
-    CL.control_listener(); // Calls control listener from controls.cpp, look
+    Control_Listener.run(); // Calls control listener from controls.cpp, look
                            // there to change the controls
 
     // Waits 50 milliseconds and gives CPU some time to sleep. Increase this
