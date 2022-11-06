@@ -1,6 +1,8 @@
 #include "PID.cpp"
 
 class cl {
+  private:
+  double local_limiter = 100;
 public:
   void run() {
     Motor_Class Motors;
@@ -15,8 +17,10 @@ public:
     // Sets the motors to the values of the analog sticks. Calls the motorSpeed
     // function from motors.cpp
     master.get_digital(pros::E_CONTROLLER_DIGITAL_R2);
-    Motors.setSpeed(1, master.get_analog(ANALOG_LEFT_Y));
-    Motors.setSpeed(2, master.get_analog(ANALOG_RIGHT_Y));
+    if (master.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT)){
+    local_limiter = (master.get_analog(ANALOG_LEFT_X) + 170) / 3.4;} 
+    Motors.setSpeed(1, int(master.get_analog(ANALOG_LEFT_Y) * (local_limiter/100)));
+    Motors.setSpeed(2, int(master.get_analog(ANALOG_RIGHT_Y) * (local_limiter/100)));
 
     // Toggle-able flywheel logic (Hold DIGITAL_A on the controller to
     // activate/deactivate the flywheel)
