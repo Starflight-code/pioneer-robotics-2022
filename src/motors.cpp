@@ -12,34 +12,33 @@ public:
   void setModifier(float x) { modifier = x; }
   void setSpeed(int motorSet, int speed) {
 // -- Motor Import/Config --
-    pros::Motor front_left(2, false); // Motor: Normal
-    pros::Motor front_right(1, true); // Motor: Reversed
-    pros::Motor rear_left(12, false); // Motor: Normal
-    pros::Motor rear_right(11, true); // Motor: Reversed
-    /* Uncomment and set ports to enable the 8 motor drive
-    pros::Motor front_left_2(x,true); // Motor: Reversed
-    pros::Motor front_right_2(x,false); // Motor: Normal
-    pros::Motor rear_left_2(x,true); // Motor: Reversed
-    pros::Motor rear_right_2(x,false); // Motor: Normal */
+    pros::Motor L1(8, true); // Motor L1: Normal
+    pros::Motor L2(6,false);  // Motor L2: Reversed
+    pros::Motor L3(5, true);   // Motor L3: Normal
+    pros::Motor L4(9,false);   // Motor L4: Reversed
+
+    pros::Motor R1(20, false);   // Motor R1: Reversed
+    pros::Motor R2(19,true); // Motor R2: Normal
+    pros::Motor R3(18, false);    // Motor R3: Reversed
+    pros::Motor R4(17,true);  // Motor R4: Normal
+
     pros::Motor flywheel(3, false);
     pros::Motor flywheel_2(4, true);
 // -- END OF MOTOR IMPORT/CONFIG
     switch (motorSet) {
 
     case 1: // motorSpeed(1, speed) to set left motor group's speed
-      front_left = speed * modifier;
-      rear_left = speed * modifier;
-      /* Uncomment for 8 motor drive
-      front_left_2 = speed * modifier;
-      rear_left_2 = speed * modifier; */
+      L1 = speed * modifier;
+      L2 = speed * modifier;
+      L3 = speed * modifier;
+      L4 = speed * modifier;
       left_motors = speed;
       break;
     case 2: // motorSpeed(2, speed) to set the right motor group's speed
-      front_right = speed * modifier;
-      rear_right = speed * modifier;
-      /* Uncomment for 8 motor drive
-      front_right_2 = speed * modifier;
-      rear_right_2 = speed * modifier; */
+      R1 = speed * modifier;
+      R2 = speed * modifier;
+      R3 = speed * modifier;
+      R4 = speed * modifier;
       right_motors = speed;
       break;
     case 3: // motorSpeed(3, speed) to set flywheel motor group's speed
