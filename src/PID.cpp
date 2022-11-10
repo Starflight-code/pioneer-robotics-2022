@@ -1,7 +1,7 @@
 #include "include.cpp"
 #include "motors.cpp"
 
-class PID {
+class Control {
 private:
   const float kP = .2; // Potential Constant
   const float kI = .04; // Integral Constant
@@ -13,7 +13,7 @@ private:
   float integral;
 
 public:
-  int full(int desiredVelocity) {
+  int PID(int desiredVelocity) {
     Motor_Class Motors;
     // desiredVelocity is in RPM
     error = Motors.getVelocity(3) - desiredVelocity;

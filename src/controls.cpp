@@ -1,26 +1,30 @@
 #include "PID.cpp"
 
 class cl {
-  private:
+private:
   double local_limiter = 100;
+
 public:
   void run() {
     Motor_Class Motors;
-    PID Flywheels;
-    pros::Controller master(
-        pros::E_CONTROLLER_MASTER); // Imports Controller as "master"
+    Control Flywheels;
+    pros::Controller master(pros::E_CONTROLLER_MASTER); // Imports Controller as "master"
     bool held_R1 = false; // Held tracks the current E-CONTROLLER_DIGITAL_R1
                           // state; Halfcourt
     bool held_R2 = false; // Held tracks the current E-CONTROLLER_DIGITAL_R2
                           // state; Point-Blank
-    int flywheelState = 0; // Tracks flywheel state 0: off 1: Halfcourt 2: Point-Blank
+    int flywheelState =
+        0; // Tracks flywheel state 0: off 1: Halfcourt 2: Point-Blank
     // Sets the motors to the values of the analog sticks. Calls the motorSpeed
     // function from motors.cpp
     master.get_digital(pros::E_CONTROLLER_DIGITAL_R2);
-    if (master.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT)){
-    local_limiter = (master.get_analog(ANALOG_LEFT_X) + 170) / 3.4;} 
-    Motors.setSpeed(1, int(master.get_analog(ANALOG_LEFT_Y) * (local_limiter/100)));
-    Motors.setSpeed(2, int(master.get_analog(ANALOG_RIGHT_Y) * (local_limiter/100)));
+    if (master.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT)) {
+      local_limiter = (master.get_analog(ANALOG_LEFT_X) + 170) / 3.4;
+    }
+    Motors.setSpeed(
+        1, int(master.get_analog(ANALOG_LEFT_Y) * (local_limiter / 100)));
+    Motors.setSpeed(
+        2, int(master.get_analog(ANALOG_RIGHT_Y) * (local_limiter / 100)));
 
     // Toggle-able flywheel logic (Hold DIGITAL_A on the controller to
     // activate/deactivate the flywheel)
@@ -31,7 +35,7 @@ public:
       if (!held_R1) {
         switch (flywheelState) {
         case 0:
-          Motors.setSpeed(3, Flywheels.full(3600));
+          Motors.setSpeed(3, Flywheels.PID(3600));
           flywheelState = 1;
           break;
         case 1:
@@ -39,7 +43,7 @@ public:
           flywheelState = 0;
           break;
         case 2:
-          Motors.setSpeed(3, Flywheels.full(3600));
+          Motors.setSpeed(3, Flywheels.PID(3600));
           flywheelState = 1;
           break;
         }
@@ -59,11 +63,11 @@ public:
         // Toggles motor using motorCheck() tracking
         switch (flywheelState) {
         case 0:
-          Motors.setSpeed(3, Flywheels.full(2000));
+          Motors.setSpeed(3, Flywheels.PID(2000));
           flywheelState = 2;
           break;
         case 1:
-          Motors.setSpeed(3, Flywheels.full(2000));
+          Motors.setSpeed(3, Flywheels.PID(2000));
           flywheelState = 2;
           break;
         case 2:

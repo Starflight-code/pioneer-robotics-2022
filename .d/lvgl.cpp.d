@@ -1,21 +1,21 @@
-bin/main.cpp.o: src/main.cpp src/absolute_positioning.cpp src/include.cpp \
+bin/lvgl.cpp.o: src/lvgl.cpp include/display/lv_core/lv_obj.h \
+ include/display/lv_conf.h include/display/lv_conf_checker.h \
+ include/display/lv_core/lv_style.h include/display/lv_misc/lv_color.h \
+ include/display/lv_misc/lv_area.h include/display/lv_misc/lv_font.h \
+ include/display/lv_misc/lv_symbol_def.h \
+ include/display/lv_fonts/lv_font_builtin.h \
+ include/display/lv_misc/lv_anim.h include/display/lv_misc/lv_mem.h \
+ include/display/lv_misc/lv_log.h include/display/lv_misc/lv_ll.h \
+ include/display/lv_misc/lv_mem.h include/display/lv_misc/lv_log.h \
  include/main.h include/api.h include/pros/adi.h include/pros/colors.h \
  include/pros/distance.h include/pros/error.h include/pros/ext_adi.h \
  include/pros/adi.h include/pros/adi.h include/pros/gps.h \
  include/pros/imu.h include/pros/link.h include/pros/llemu.h \
  include/display/lvgl.h include/display/lv_version.h \
- include/display/lv_misc/lv_log.h include/display/lv_conf.h \
- include/display/lv_conf_checker.h include/display/lv_misc/lv_task.h \
- include/display/lv_misc/lv_mem.h include/display/lv_misc/lv_log.h \
+ include/display/lv_misc/lv_log.h include/display/lv_misc/lv_task.h \
  include/display/lv_misc/lv_ll.h include/display/lv_hal/lv_hal.h \
  include/display/lv_hal/lv_hal_disp.h include/display/lv_hal/lv_hal.h \
- include/display/lv_misc/lv_color.h include/display/lv_misc/lv_area.h \
- include/display/lv_hal/lv_hal_indev.h include/display/lv_core/lv_obj.h \
- include/display/lv_core/lv_style.h include/display/lv_misc/lv_font.h \
- include/display/lv_misc/lv_symbol_def.h \
- include/display/lv_fonts/lv_font_builtin.h \
- include/display/lv_misc/lv_anim.h include/display/lv_misc/lv_mem.h \
- include/display/lv_misc/lv_ll.h include/display/lv_misc/lv_log.h \
+ include/display/lv_hal/lv_hal_indev.h \
  include/display/lv_hal/lv_hal_tick.h include/display/lv_core/lv_obj.h \
  include/display/lv_core/lv_group.h include/display/lv_core/lv_obj.h \
  include/display/lv_core/lv_lang.h include/display/lv_core/lv_vdb.h \
@@ -77,10 +77,22 @@ bin/main.cpp.o: src/main.cpp src/absolute_positioning.cpp src/include.cpp \
  include/pros/screen.hpp include/pros/screen.h include/pros/vision.hpp \
  include/pros/vision.h include/pros/link.hpp include/pros/link.h \
  include/pros/apix.h include/api.h include/pros/serial.h \
- include/pros/serial.hpp include/pros/apix.h include/pros/motors.hpp \
- src/controls.cpp src/PID.cpp src/motors.cpp src/lvgl.cpp
-src/absolute_positioning.cpp:
-src/include.cpp:
+ include/pros/serial.hpp
+include/display/lv_core/lv_obj.h:
+include/display/lv_conf.h:
+include/display/lv_conf_checker.h:
+include/display/lv_core/lv_style.h:
+include/display/lv_misc/lv_color.h:
+include/display/lv_misc/lv_area.h:
+include/display/lv_misc/lv_font.h:
+include/display/lv_misc/lv_symbol_def.h:
+include/display/lv_fonts/lv_font_builtin.h:
+include/display/lv_misc/lv_anim.h:
+include/display/lv_misc/lv_mem.h:
+include/display/lv_misc/lv_log.h:
+include/display/lv_misc/lv_ll.h:
+include/display/lv_misc/lv_mem.h:
+include/display/lv_misc/lv_log.h:
 include/main.h:
 include/api.h:
 include/pros/adi.h:
@@ -97,27 +109,12 @@ include/pros/llemu.h:
 include/display/lvgl.h:
 include/display/lv_version.h:
 include/display/lv_misc/lv_log.h:
-include/display/lv_conf.h:
-include/display/lv_conf_checker.h:
 include/display/lv_misc/lv_task.h:
-include/display/lv_misc/lv_mem.h:
-include/display/lv_misc/lv_log.h:
 include/display/lv_misc/lv_ll.h:
 include/display/lv_hal/lv_hal.h:
 include/display/lv_hal/lv_hal_disp.h:
 include/display/lv_hal/lv_hal.h:
-include/display/lv_misc/lv_color.h:
-include/display/lv_misc/lv_area.h:
 include/display/lv_hal/lv_hal_indev.h:
-include/display/lv_core/lv_obj.h:
-include/display/lv_core/lv_style.h:
-include/display/lv_misc/lv_font.h:
-include/display/lv_misc/lv_symbol_def.h:
-include/display/lv_fonts/lv_font_builtin.h:
-include/display/lv_misc/lv_anim.h:
-include/display/lv_misc/lv_mem.h:
-include/display/lv_misc/lv_ll.h:
-include/display/lv_misc/lv_log.h:
 include/display/lv_hal/lv_hal_tick.h:
 include/display/lv_core/lv_obj.h:
 include/display/lv_core/lv_group.h:
@@ -238,9 +235,3 @@ include/pros/apix.h:
 include/api.h:
 include/pros/serial.h:
 include/pros/serial.hpp:
-include/pros/apix.h:
-include/pros/motors.hpp:
-src/controls.cpp:
-src/PID.cpp:
-src/motors.cpp:
-src/lvgl.cpp:
