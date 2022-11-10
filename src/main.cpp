@@ -1,7 +1,6 @@
 #include "absolute_positioning.cpp"
 #include "controls.cpp"
 #include "include.cpp"
-#include "lvgl.cpp"
 #include "pros/rtos.hpp"
 
 

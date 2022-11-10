@@ -1,5 +1,6 @@
 #include "pros/motors.hpp"
 #include "include.cpp"
+#include <vector>
 // #include <tuple>
 
 class Motor_Class {
@@ -11,10 +12,8 @@ private:
   int flywheels = 0;
 
 public:
-  // void setModifier(float x) { modifier = x; } Removed, as modifier is now
-  // static and a local limiter is being used instead.
   void setSpeed(int motorSet, int speed) {
-    // -- Motor Import/Config --
+    
     pros::Motor L1(8, true);  // Motor L1: Normal
     pros::Motor L2(6, false); // Motor L2: Reversed
     pros::Motor L3(5, true);  // Motor L3: Normal
@@ -27,7 +26,7 @@ public:
 
     pros::Motor F1(3, false);
     pros::Motor F2(4, true);
-    // -- END OF MOTOR IMPORT/CONFIG
+
     switch (motorSet) {
 
     case 1: // motorSpeed(1, speed) to set left motor group's speed
@@ -41,7 +40,7 @@ public:
       R1 = speed * modifier;
       R2 = speed * modifier;
       R3 = speed * modifier;
-      R4 = speed * modifier;
+      R4 = speed * modifier; 
       right_motors = speed;
       break;
     case 3: // motorSpeed(3, speed) to set flywheel motor group's speed
@@ -54,7 +53,7 @@ public:
     }
     return;
   };
-  
+
   int getSpeed(int motorSet) {
     switch (motorSet) {
     case 1:
@@ -70,6 +69,7 @@ public:
       return 0; // Returns ZERO if an erroneous input was given.
     }
   }
+  
   float getVelocity(int motorSet) {
     pros::Motor L1(8, true);  // Motor L1: Normal
     pros::Motor L2(6, false); // Motor L2: Reversed

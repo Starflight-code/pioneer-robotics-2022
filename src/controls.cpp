@@ -6,17 +6,21 @@ private:
 
 public:
   void run() {
+
     Motor_Class Motors;
     Control Flywheels;
     pros::Controller master(pros::E_CONTROLLER_MASTER); // Imports Controller as "master"
+
     bool held_R1 = false; // Held tracks the current E-CONTROLLER_DIGITAL_R1
                           // state; Halfcourt
     bool held_R2 = false; // Held tracks the current E-CONTROLLER_DIGITAL_R2
                           // state; Point-Blank
-    int flywheelState =
-        0; // Tracks flywheel state 0: off 1: Halfcourt 2: Point-Blank
-    // Sets the motors to the values of the analog sticks. Calls the motorSpeed
-    // function from motors.cpp
+
+    /* Tracks flywheel state 0: off 1: Halfcourt 2: Point-Blank
+       Sets the motors to the values of the analog sticks. Calls the motorSpeed
+       function from motors.cpp  */
+       int flywheelState = 0; 
+    
     master.get_digital(pros::E_CONTROLLER_DIGITAL_R2);
     if (master.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT)) {
       local_limiter = (master.get_analog(ANALOG_LEFT_X) + 170) / 3.4;
