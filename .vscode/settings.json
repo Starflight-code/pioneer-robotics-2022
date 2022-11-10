@@ -1,3 +1,4 @@
 {
-    "pros.showInstallOnStartup": false
+    "pros.showInstallOnStartup": false,
+    "oneDarkPro.editorTheme": "Nord"
 }

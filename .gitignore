@@ -7,11 +7,11 @@
 *.elf
 
 # PROS
-bin/
-.vscode/
-.cache/
+bin\*
+.vscode\*
+.cache\*
 compile_commands.json
 temp.log
 temp.errors
 *.ini
-.d/
+.d\*
