@@ -1,5 +1,5 @@
-#include "./LinkedMtr.hpp";
-#include "include.cpp";
+#include "./LinkedMtr.hpp"
+#include "include.cpp"
 
 LinkedMtr::LinkedMtr(const int count, const int mtr_ports[], bool altReverse)
 {
