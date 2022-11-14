@@ -1,0 +1,17 @@
+{
+    "pros.showInstallOnStartup": false,
+    "oneDarkPro.editorTheme": "Nord",
+    "files.associations": {
+        "*.ts": "typescript",
+        "*.py": "python",
+        "*.eta": "eta",
+        "*.sass": "sass",
+        "cstdint": "cpp",
+        "initializer_list": "cpp",
+        "exception": "cpp",
+        "chrono": "cpp",
+        "algorithm": "cpp",
+        "atomic": "cpp",
+        "functional": "cpp"
+    }
+}
