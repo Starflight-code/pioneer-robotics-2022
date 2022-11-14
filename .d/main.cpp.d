@@ -1,8 +1,11 @@
-bin/main.cpp.o: src/main.cpp src/absolute_positioning.cpp src/include.cpp \
- include/main.h include/api.h include/pros/adi.h include/pros/colors.h \
- include/pros/distance.h include/pros/error.h include/pros/ext_adi.h \
- include/pros/adi.h include/pros/adi.h include/pros/gps.h \
- include/pros/imu.h include/pros/link.h include/pros/llemu.h \
+bin/main.cpp.o: src/main.cpp include/ajr/GameControls.hpp \
+ include/pros/misc.hpp include/pros/misc.h include/ajr/MtrGroups.hpp \
+ include/ajr/MtrGroup.hpp include/ajr/../main.h include/ajr/../api.h \
+ include/ajr/../pros/adi.h include/ajr/../pros/colors.h \
+ include/ajr/../pros/distance.h include/ajr/../pros/error.h \
+ include/ajr/../pros/ext_adi.h include/ajr/../pros/adi.h \
+ include/pros/adi.h include/ajr/../pros/gps.h include/ajr/../pros/imu.h \
+ include/ajr/../pros/link.h include/ajr/../pros/llemu.h \
  include/display/lvgl.h include/display/lv_version.h \
  include/display/lv_misc/lv_log.h include/display/lv_conf.h \
  include/display/lv_conf_checker.h include/display/lv_misc/lv_task.h \
@@ -64,38 +67,42 @@ bin/main.cpp.o: src/main.cpp src/absolute_positioning.cpp src/include.cpp \
  include/display/lv_objx/lv_arc.h include/display/lv_objx/lv_preload.h \
  include/display/lv_objx/lv_arc.h include/display/lv_objx/lv_calendar.h \
  include/display/lv_objx/lv_spinbox.h include/display/lv_objx/lv_ta.h \
- include/pros/misc.h include/pros/motors.h include/pros/optical.h \
- include/pros/error.h include/pros/rtos.h include/pros/rotation.h \
- include/pros/screen.h include/pros/colors.h include/pros/vision.h \
- include/pros/adi.hpp include/pros/distance.hpp include/pros/distance.h \
- include/pros/gps.hpp include/pros/gps.h include/pros/imu.hpp \
- include/pros/imu.h include/pros/llemu.hpp include/pros/llemu.h \
- include/pros/misc.hpp include/pros/misc.h include/pros/motors.hpp \
+ include/ajr/../pros/misc.h include/ajr/../pros/motors.h \
+ include/ajr/../pros/optical.h include/ajr/../pros/error.h \
+ include/ajr/../pros/rtos.h include/ajr/../pros/rotation.h \
+ include/ajr/../pros/screen.h include/pros/colors.h \
+ include/ajr/../pros/vision.h include/ajr/../pros/adi.hpp \
+ include/ajr/../pros/distance.hpp include/pros/distance.h \
+ include/ajr/../pros/gps.hpp include/pros/gps.h \
+ include/ajr/../pros/imu.hpp include/pros/imu.h \
+ include/ajr/../pros/llemu.hpp include/pros/llemu.h \
+ include/ajr/../pros/misc.hpp include/ajr/../pros/motors.hpp \
  include/pros/motors.h include/pros/rtos.hpp include/pros/rtos.h \
- include/pros/optical.hpp include/pros/optical.h \
- include/pros/rotation.hpp include/pros/rotation.h include/pros/rtos.hpp \
- include/pros/screen.hpp include/pros/screen.h include/pros/vision.hpp \
- include/pros/vision.h include/pros/link.hpp include/pros/link.h \
- include/pros/apix.h include/api.h include/pros/serial.h \
- include/pros/serial.hpp include/pros/apix.h include/pros/motors.hpp \
- src/controls.cpp include/ajr/GameControls.hpp include/pros/misc.hpp \
- include/ajr/MtrGroups.hpp include/ajr/MtrGroup.hpp include/ajr/../main.h \
- include/ajr/apply_limiter.hpp
-src/absolute_positioning.cpp:
-src/include.cpp:
-include/main.h:
-include/api.h:
+ include/ajr/../pros/optical.hpp include/pros/optical.h \
+ include/ajr/../pros/rotation.hpp include/pros/rotation.h \
+ include/ajr/../pros/rtos.hpp include/ajr/../pros/screen.hpp \
+ include/pros/screen.h include/ajr/../pros/vision.hpp \
+ include/pros/vision.h include/ajr/../pros/link.hpp include/pros/link.h \
+ include/ajr/../pros/apix.h include/api.h include/pros/serial.h \
+ include/pros/serial.hpp include/ajr/apply_limiter.hpp
+include/ajr/GameControls.hpp:
+include/pros/misc.hpp:
+include/pros/misc.h:
+include/ajr/MtrGroups.hpp:
+include/ajr/MtrGroup.hpp:
+include/ajr/../main.h:
+include/ajr/../api.h:
+include/ajr/../pros/adi.h:
+include/ajr/../pros/colors.h:
+include/ajr/../pros/distance.h:
+include/ajr/../pros/error.h:
+include/ajr/../pros/ext_adi.h:
+include/ajr/../pros/adi.h:
 include/pros/adi.h:
-include/pros/colors.h:
-include/pros/distance.h:
-include/pros/error.h:
-include/pros/ext_adi.h:
-include/pros/adi.h:
-include/pros/adi.h:
-include/pros/gps.h:
-include/pros/imu.h:
-include/pros/link.h:
-include/pros/llemu.h:
+include/ajr/../pros/gps.h:
+include/ajr/../pros/imu.h:
+include/ajr/../pros/link.h:
+include/ajr/../pros/llemu.h:
 include/display/lvgl.h:
 include/display/lv_version.h:
 include/display/lv_misc/lv_log.h:
@@ -201,51 +208,42 @@ include/display/lv_objx/lv_arc.h:
 include/display/lv_objx/lv_calendar.h:
 include/display/lv_objx/lv_spinbox.h:
 include/display/lv_objx/lv_ta.h:
-include/pros/misc.h:
-include/pros/motors.h:
-include/pros/optical.h:
-include/pros/error.h:
-include/pros/rtos.h:
-include/pros/rotation.h:
-include/pros/screen.h:
+include/ajr/../pros/misc.h:
+include/ajr/../pros/motors.h:
+include/ajr/../pros/optical.h:
+include/ajr/../pros/error.h:
+include/ajr/../pros/rtos.h:
+include/ajr/../pros/rotation.h:
+include/ajr/../pros/screen.h:
 include/pros/colors.h:
-include/pros/vision.h:
-include/pros/adi.hpp:
-include/pros/distance.hpp:
+include/ajr/../pros/vision.h:
+include/ajr/../pros/adi.hpp:
+include/ajr/../pros/distance.hpp:
 include/pros/distance.h:
-include/pros/gps.hpp:
+include/ajr/../pros/gps.hpp:
 include/pros/gps.h:
-include/pros/imu.hpp:
+include/ajr/../pros/imu.hpp:
 include/pros/imu.h:
-include/pros/llemu.hpp:
+include/ajr/../pros/llemu.hpp:
 include/pros/llemu.h:
-include/pros/misc.hpp:
-include/pros/misc.h:
-include/pros/motors.hpp:
+include/ajr/../pros/misc.hpp:
+include/ajr/../pros/motors.hpp:
 include/pros/motors.h:
 include/pros/rtos.hpp:
 include/pros/rtos.h:
-include/pros/optical.hpp:
+include/ajr/../pros/optical.hpp:
 include/pros/optical.h:
-include/pros/rotation.hpp:
+include/ajr/../pros/rotation.hpp:
 include/pros/rotation.h:
-include/pros/rtos.hpp:
-include/pros/screen.hpp:
+include/ajr/../pros/rtos.hpp:
+include/ajr/../pros/screen.hpp:
 include/pros/screen.h:
-include/pros/vision.hpp:
+include/ajr/../pros/vision.hpp:
 include/pros/vision.h:
-include/pros/link.hpp:
+include/ajr/../pros/link.hpp:
 include/pros/link.h:
-include/pros/apix.h:
+include/ajr/../pros/apix.h:
 include/api.h:
 include/pros/serial.h:
 include/pros/serial.hpp:
-include/pros/apix.h:
-include/pros/motors.hpp:
-src/controls.cpp:
-include/ajr/GameControls.hpp:
-include/pros/misc.hpp:
-include/ajr/MtrGroups.hpp:
-include/ajr/MtrGroup.hpp:
-include/ajr/../main.h:
 include/ajr/apply_limiter.hpp:
