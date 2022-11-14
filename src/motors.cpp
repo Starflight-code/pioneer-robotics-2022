@@ -1,20 +1,19 @@
 #include "pros/motors.hpp"
 #include "include.cpp"
+#include "pros/rtos.hpp"
 #include <vector>
 // #include <tuple>
 
-
-class Motor_Class {
-private:
-  float modifier = 1; // This reduced the motor power by POWER * modifier,
-                      // should be between 0 and 1 or it will return an error.
-  int left_motors = 0;
-  int right_motors = 0;
-  int flywheels = 0;
-  std::vector<pros::Motor_Group> mtrgroup;
-
-public:
+class MotorGrp{
+  public:
+std::vector<pros::Motor> leftMotors;
+std::vector<pros::Motor> rightMotors;
+std::vector<pros::Motor> flywheelMotors;
+//pros::MutexVar<pros::Motor_Group> Left;
+//pros::MutexVar<pros::Motor_Group> Right;
+//pros::MutexVar<pros::Motor_Group> Flywheel;
 void motorGroup() {
+
     pros::Motor L1(8, true);  // Motor L1: Normal
     pros::Motor L2(6, false); // Motor L2: Reversed
     pros::Motor L3(5, true);  // Motor L3: Normal
@@ -25,19 +24,41 @@ void motorGroup() {
     pros::Motor R3(18, false); // Motor R3: Reversed
     pros::Motor R4(17, true);  // Motor R4: Normal
 
-    pros::Motor F1(3, false);
-    pros::Motor F2(4, true);
+    const pros::Motor F1(3, false);  // Motor F1: Normal   | Flywheel
+    const pros::Motor F2(4, true);   // Motor F2: Reversed | Flywheel
     pros::Motor_Group Left{L1, L2, L3, L4};
     pros::Motor_Group Right{R1, R2, R3, R4};
     pros::Motor_Group Flywheel{F1, F2};
-    mtrgroup.clear();
-    mtrgroup.push_back(Left);
-    mtrgroup.push_back(Right);
-    mtrgroup.push_back(Flywheel);
+    //mtrgroup.clear();
+    leftMotors.push_back(L1);
+    leftMotors.push_back(L2);
+    leftMotors.push_back(L3);
+    leftMotors.push_back(L4);
+    
+    rightMotors.push_back(R1);
+    rightMotors.push_back(R2);
+    rightMotors.push_back(R3);
+    rightMotors.push_back(R4);
 
-  }
+    flywheelMotors.push_back(F1);
+    flywheelMotors.push_back(F2);
+    }
+};
+class Motor_Class {
+private:
+  float modifier = 1; // This reduced the motor power by POWER * modifier,
+                      // should be between 0 and 1 or it will return an error.
+  int left_motors = 0;
+  int right_motors = 0;
+  int flywheels = 0;
+  
+
+public:
+MotorGrp motor;
   void setSpeed(int motorSet, int speed) {
+    motor.motorGroup();
     /*
+    
     pros::Motor L1(8, true);  // Motor L1: Normal
     pros::Motor L2(6, false); // Motor L2: Reversed
     pros::Motor L3(5, true);  // Motor L3: Normal
@@ -51,14 +72,18 @@ void motorGroup() {
     pros::Motor F1(3, false);
     pros::Motor F2(4, true);
     */
+    pros::Motor_Group left{motor.leftMotors[0], motor.leftMotors[1], motor.leftMotors[2], motor.leftMotors[3]};
+    pros::Motor_Group right{motor.rightMotors[0], motor.rightMotors[1], motor.rightMotors[2], motor.rightMotors[3]};
+    pros::Motor_Group flywheel{motor.flywheelMotors[0], motor.flywheelMotors[1]};
     switch (motorSet) {
-
+    
+    
     case 1: // motorSpeed(1, speed) to set left motor group's speed
       //L1 = speed * modifier;
       //L2 = speed * modifier;
       //L3 = speed * modifier;
       //L4 = speed * modifier;
-      mtrgroup[0] = speed * modifier;
+      left = speed * modifier;
       left_motors = speed;
       break;
     case 2: // motorSpeed(2, speed) to set the right motor group's speed
@@ -67,13 +92,13 @@ void motorGroup() {
       //R3 = speed * modifier;
       //R4 = speed * modifier; 
       
-      mtrgroup[1] = speed * modifier;
+      right = speed * modifier;
       right_motors = speed;
       break;
     case 3: // motorSpeed(3, speed) to set flywheel motor group's speed
       //F1 = speed;
       //F2 = speed;
-      mtrgroup[2];
+      flywheel = speed * modifier;
       flywheels = speed;
       break;
     default:
@@ -99,7 +124,7 @@ void motorGroup() {
   }
   
   float getVelocity(int motorSet) {
-    pros::Motor L1(8, true);  // Motor L1: Normal
+    /*pros::Motor L1(8, true);  // Motor L1: Normal
     pros::Motor L2(6, false); // Motor L2: Reversed
     pros::Motor L3(5, true);  // Motor L3: Normal
     pros::Motor L4(9, false); // Motor L4: Reversed
@@ -111,23 +136,32 @@ void motorGroup() {
 
     pros::Motor F1(3, false);
     pros::Motor F2(4, true);
+*/
+double tot;
     switch (motorSet) {
     case 1:
     //std::vector<double> x = mtrgroup[0].get_actual_velocities();
     /*for (i = 0; i < 4;) {
 
     }*/
-      return (L1.get_actual_velocity() + -L2.get_actual_velocity() +
-              L3.get_actual_velocity() + -L4.get_actual_velocity()) /
-             4; // Returns the left motor group tracker value (speed
+    for (int i = 0; i < motor.leftMotors.size(); i++) {
+    tot += motor.leftMotors[i].get_actual_velocity();
+    }
+    return tot / motor.leftMotors.size();
+     // Returns the left motor group tracker value (speed
                 // of the motor set)
     case 2:
-      return (R1.get_actual_velocity() + -R2.get_actual_velocity() +
-              R3.get_actual_velocity() + -R4.get_actual_velocity()) /
-             4; // Returns the right motor group tracker value (speed
+    for (int i = 0; i < motor.rightMotors.size(); i++) {
+    tot += motor.rightMotors[i].get_actual_velocity();
+    }
+    return tot / motor.rightMotors.size();
+      // Returns the right motor group tracker value (speed
                 // of the motor set)
     case 3:
-      return (F1.get_actual_velocity() + -F2.get_actual_velocity()) /
+    for (int i = 0; i < motor.flywheelMotors.size(); i++) {
+    tot += motor.flywheelMotors[i].get_actual_velocity();
+    }
+    return tot / motor.flywheelMotors.size();
              2; // Returns the flywheel motor group tracker value (speed
                 // of the motor set)
     default:
@@ -135,20 +169,20 @@ void motorGroup() {
     }
   }
   float getFastVelocity(int motorSet) {
-    pros::Motor L1(8, true); // Motor L1: Normal
+    /*pros::Motor L1(8, true); // Motor L1: Normal
 
     pros::Motor R1(20, false); // Motor R1: Reversed
 
     pros::Motor F1(3, false);
-    switch (motorSet) {
+    */switch (motorSet) {
     case 1:
-      return L1.get_actual_velocity(); // Returns the left motor group tracker
+      return motor.leftMotors[0].get_actual_velocity(); // Returns the left motor group tracker
                                        // value (speed of the motor set)
     case 2:
-      return R1.get_actual_velocity(); // Returns the right motor group tracker
+      return motor.rightMotors[0].get_actual_velocity(); // Returns the right motor group tracker
                                        // value (speed of the motor set)
     case 3:
-      return F1.get_actual_velocity(); // Returns the flywheel motor group
+      return motor.flywheelMotors[0].get_actual_velocity(); // Returns the flywheel motor group
                                        // tracker value (speed of the motor set)
     default:
       return 0;
