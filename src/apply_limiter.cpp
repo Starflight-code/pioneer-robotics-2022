@@ -2,5 +2,5 @@
 
 int apply_limiter(int amount, float limiter)
 {
-    return int(amount * limiter);
+    return amount * limiter;
 }
