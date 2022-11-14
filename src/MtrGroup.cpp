@@ -1,15 +1,14 @@
-#include "./LinkedMtr.hpp"
-#include "include.cpp"
+#include "./MtrGroup.hpp"
 
-LinkedMtr::LinkedMtr(const int count, const int mtr_ports[], bool altReverse)
+MtrGroup::MtrGroup(const int count, const int mtr_ports[])
 {
     mtr_count = count;
 
     for (int i = 0; i < count; i++)
-        motors.push_back(pros::Motor(mtr_ports[i], altReverse ? i % 2 == 0 : false));
+        motors.push_back(pros::Motor(mtr_ports[i]));
 };
 
-void LinkedMtr::altReverse() {
+void MtrGroup::alt_reverse() {
     bool reverse = false;
 
     for (pros::Motor m : motors) {
@@ -19,13 +18,13 @@ void LinkedMtr::altReverse() {
     }
 }
 
-void LinkedMtr::set_speed(int speed)
+void MtrGroup::set_speed(int speed)
 {
     for (pros::Motor m : motors)
         m = speed;
 };
 
-float LinkedMtr::get_actual_velocity() {
+float MtrGroup::get_actual_velocity() {
     float result = 0;
 
     for (pros::Motor m : motors)
