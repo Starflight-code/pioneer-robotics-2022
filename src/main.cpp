@@ -98,7 +98,7 @@ void on_center_button() {
  * to keep execution time for this mode under a few seconds.
  */
 void initialize() {
-  initialize_btn();
+  //initialize_btn();
   // Sets the background to the image contained within waifu_elijah.c
   /* -- Removed photo, screen will be blank. Replace with a logo once created.*/ /*
  lv_obj_t* background = lv_img_create(lv_scr_act(), NULL);
@@ -138,7 +138,14 @@ void competition_initialize() {}
  * from where it left off.
  */
 void autonomous() {}
+/*
+Psudocode
 
+Dump all disks in corner || try to shoot && fetch a few disks on each bot before manual starts
+Dimensions 12 ft by 12 ft field
+Disk locations: UNKNOWN
+Initial Position: UNKNOWN
+*/
 /**
  * Runs the operator control code. This function will be started in its own task
  * with the default priority and stack size whenever the robot is enabled via

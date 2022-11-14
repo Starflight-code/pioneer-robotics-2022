@@ -10,7 +10,7 @@ public:
     Motor_Class Motors;
     Control Flywheels;
     pros::Controller master(pros::E_CONTROLLER_MASTER); // Imports Controller as "master"
-
+    Motors.motorGroup();
     bool held_R1 = false; // Held tracks the current E-CONTROLLER_DIGITAL_R1
                           // state; Halfcourt
     bool held_R2 = false; // Held tracks the current E-CONTROLLER_DIGITAL_R2

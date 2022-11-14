@@ -1,5 +1,6 @@
 #include "include.cpp"
-
+#include "pros/motors.hpp"
+#include "pros/apix.h"
 class LinkedMtr
 {
 private:
@@ -10,6 +11,7 @@ public:
     LinkedMtr(const int mtr_count, const int mtr_ports[], bool altReverse);
 
     void set_speed(int speed);
-    void altReverse();
+    //void altReverse();
     float get_actual_velocity();
+
 };

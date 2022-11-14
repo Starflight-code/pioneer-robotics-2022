@@ -1,6 +1,5 @@
-#include "./LinkedMtr.hpp"
+#include "LinkedMtr.hpp"
 #include "include.cpp"
-
 LinkedMtr::LinkedMtr(const int count, const int mtr_ports[], bool altReverse)
 {
     mtr_count = count;
@@ -8,7 +7,7 @@ LinkedMtr::LinkedMtr(const int count, const int mtr_ports[], bool altReverse)
     for (int i = 0; i < count; i++)
         motors.push_back(pros::Motor(mtr_ports[i], altReverse ? i % 2 == 0 : false));
 };
-
+/*
 void LinkedMtr::altReverse() {
     bool reverse = false;
 
@@ -18,7 +17,7 @@ void LinkedMtr::altReverse() {
         reverse = !reverse;
     }
 }
-
+*/
 void LinkedMtr::set_speed(int speed)
 {
     for (pros::Motor m : motors)
