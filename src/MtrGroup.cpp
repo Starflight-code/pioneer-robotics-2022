@@ -28,6 +28,12 @@ void MtrGroup::set_speed(int speed)
         m = speed;
 }
 
+void MtrGroup::set_reversed(const bool reversed)
+{
+    for (pros::Motor m : motors)
+        m.set_reversed(reversed);
+}
+
 float MtrGroup::get_actual_velocity()
 {
     float result = 0;
