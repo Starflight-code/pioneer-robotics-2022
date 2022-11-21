@@ -10,7 +10,7 @@ GameControls::GameControls(MtrGroups groups) : mtr_groups(groups)
 void GameControls::update_drive()
 {
     int left_y = master.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y),
-        right_y = master.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
+        right_y = master.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y);
 
     left_y = apply_limiter(left_y, drive_limiter);
     right_y = apply_limiter(right_y, drive_limiter);
