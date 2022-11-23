@@ -16,7 +16,7 @@ public:
   int PID(int distance) {
     Motor_Class Motors;
     // desiredVelocity is in RPM
-    //error = Motors.getVelocity(3) - desiredVelocity;
+    //error = Motors.getVelocity(3) - desiredVelocity; !! DEPRECATED Velocity PID
     error = distance - Motors.getPosition(1);
     integral = prevIntegral + error;
     prevIntegral = integral;

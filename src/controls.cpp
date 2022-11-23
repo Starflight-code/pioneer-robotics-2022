@@ -32,7 +32,7 @@ public:
     //Left_Y stick controls forward/backwards Right_X stick controls left/right and local limiter still works
     Motors.setSpeed(1, int((-(master.get_analog(ANALOG_LEFT_Y) / (sc / 170) + master.get_analog(ANALOG_RIGHT_X) / (sc / 170)) * (local_limiter / 100))));
     Motors.setSpeed(2, int(((master.get_analog(ANALOG_LEFT_Y) / (sc / 170) - master.get_analog(ANALOG_RIGHT_X) / (sc / 170)) * (local_limiter / 100))));
-    //Motors.setSpeed(
+    //Motors.setSpeed( !! DEPRECATED <TANK CONTROL>
     //    1, int(master.get_analog(ANALOG_LEFT_Y) * (local_limiter / 100)));
     //Motors.setSpeed(
     //    2, int(master.get_analog(ANALOG_RIGHT_Y) * (local_limiter / 100)));
