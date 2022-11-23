@@ -26,20 +26,22 @@ void motorGroup() {
 
     const pros::Motor F1(3, false);  // Motor F1: Normal   | Flywheel
     const pros::Motor F2(4, true);   // Motor F2: Reversed | Flywheel
-    pros::Motor_Group Left{L1, L2, L3, L4};
-    pros::Motor_Group Right{R1, R2, R3, R4};
-    pros::Motor_Group Flywheel{F1, F2};
-    //mtrgroup.clear();
+    //pros::Motor_Group Left{L1, L2, L3, L4};
+    //pros::Motor_Group Right{R1, R2, R3, R4};
+    //pros::Motor_Group Flywheel{F1, F2};
+    leftMotors.clear();
     leftMotors.push_back(L1);
     leftMotors.push_back(L2);
     leftMotors.push_back(L3);
     leftMotors.push_back(L4);
     
+    rightMotors.clear();
     rightMotors.push_back(R1);
     rightMotors.push_back(R2);
     rightMotors.push_back(R3);
     rightMotors.push_back(R4);
 
+    flywheelMotors.clear();
     flywheelMotors.push_back(F1);
     flywheelMotors.push_back(F2);
     }
@@ -51,12 +53,14 @@ private:
   int left_motors = 0;
   int right_motors = 0;
   int flywheels = 0;
+  bool init = true;
   
 
 public:
 MotorGrp motor;
   void setSpeed(int motorSet, int speed) {
-    motor.motorGroup();
+    if (init == true) { motor.motorGroup(); }
+    init = false;
     /*
     
     pros::Motor L1(8, true);  // Motor L1: Normal
@@ -91,7 +95,6 @@ MotorGrp motor;
       //R2 = speed * modifier;
       //R3 = speed * modifier;
       //R4 = speed * modifier; 
-      
       right = speed * modifier;
       right_motors = speed;
       break;
@@ -137,32 +140,64 @@ MotorGrp motor;
     pros::Motor F1(3, false);
     pros::Motor F2(4, true);
 */
-double tot;
+double total;
     switch (motorSet) {
     case 1:
     //std::vector<double> x = mtrgroup[0].get_actual_velocities();
     /*for (i = 0; i < 4;) {
 
     }*/
-    for (int i = 0; i < motor.leftMotors.size(); i++) {
-    tot += motor.leftMotors[i].get_actual_velocity();
+    for (int i = 0; i < motor.leftMotors.size(); i++) { // Loops for each motor, pulls velocities from each
+    total += motor.leftMotors[i].get_actual_velocity();
     }
-    return tot / motor.leftMotors.size();
-     // Returns the left motor group tracker value (speed
+    return total / motor.leftMotors.size();
+     // Returns the left motor group encoder value (average speed
                 // of the motor set)
     case 2:
     for (int i = 0; i < motor.rightMotors.size(); i++) {
-    tot += motor.rightMotors[i].get_actual_velocity();
+    total += motor.rightMotors[i].get_actual_velocity();
     }
-    return tot / motor.rightMotors.size();
-      // Returns the right motor group tracker value (speed
+    return total / motor.rightMotors.size();
+      // Returns the right motor group encoder value (average speed
                 // of the motor set)
     case 3:
     for (int i = 0; i < motor.flywheelMotors.size(); i++) {
-    tot += motor.flywheelMotors[i].get_actual_velocity();
+    total += motor.flywheelMotors[i].get_actual_velocity();
     }
-    return tot / motor.flywheelMotors.size();
-             2; // Returns the flywheel motor group tracker value (speed
+    return total / motor.flywheelMotors.size();
+             2; // Returns the flywheel motor group encoder value (average speed
+                // of the motor set)
+    default:
+      return 0;
+    }
+  }
+  float getPosition(int motorSet) {
+        double total;
+        switch (motorSet) {
+    case 1:
+    //std::vector<double> x = mtrgroup[0].get_actual_velocities();
+    /*for (i = 0; i < 4;) {
+
+    }*/
+    for (int i = 0; i < motor.leftMotors.size(); i++) { // Loops for each motor, pulls velocities from each
+    total += motor.leftMotors[i].get_position();
+    }
+    return total / motor.leftMotors.size();
+     // Returns the left motor group encoder value (average speed
+                // of the motor set)
+    case 2:
+    for (int i = 0; i < motor.rightMotors.size(); i++) {
+    total += motor.rightMotors[i].get_position();
+    }
+    return total / motor.rightMotors.size();
+      // Returns the right motor group encoder value (average speed
+                // of the motor set)
+    case 3:
+    for (int i = 0; i < motor.flywheelMotors.size(); i++) {
+    total += motor.flywheelMotors[i].get_position();
+    }
+    return total / motor.flywheelMotors.size();
+             2; // Returns the flywheel motor group encoder value (average speed
                 // of the motor set)
     default:
       return 0;
@@ -176,14 +211,14 @@ double tot;
     pros::Motor F1(3, false);
     */switch (motorSet) {
     case 1:
-      return motor.leftMotors[0].get_actual_velocity(); // Returns the left motor group tracker
-                                       // value (speed of the motor set)
+      return motor.leftMotors[0].get_actual_velocity(); // Returns the left motor group encoder value
+      // (speed of first motor in the motor set)
     case 2:
-      return motor.rightMotors[0].get_actual_velocity(); // Returns the right motor group tracker
-                                       // value (speed of the motor set)
+      return motor.rightMotors[0].get_actual_velocity(); // Returns the right motor group encoder value
+      // (speed of first motor in the motor set)
     case 3:
-      return motor.flywheelMotors[0].get_actual_velocity(); // Returns the flywheel motor group
-                                       // tracker value (speed of the motor set)
+      return motor.flywheelMotors[0].get_actual_velocity(); // Returns the flywhhel motor group encoder value
+      // (speed of first motor in the motor set)
     default:
       return 0;
     }

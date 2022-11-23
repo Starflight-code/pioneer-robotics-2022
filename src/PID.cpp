@@ -13,10 +13,11 @@ private:
   float integral;
 
 public:
-  int PID(int desiredVelocity) {
+  int PID(int distance) {
     Motor_Class Motors;
     // desiredVelocity is in RPM
-    error = Motors.getVelocity(3) - desiredVelocity;
+    //error = Motors.getVelocity(3) - desiredVelocity;
+    error = distance - Motors.getPosition(1);
     integral = prevIntegral + error;
     prevIntegral = integral;
     derivative = error - prevError;

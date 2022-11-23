@@ -1,6 +1,7 @@
 #include "absolute_positioning.cpp"
 #include "controls.cpp"
 #include "include.cpp"
+#include "pros/motors.hpp"
 #include "pros/rtos.hpp"
 
 
@@ -12,7 +13,7 @@ void controls_fn(void *param) {
     pros::c::delay(50);
   }
 }
-
+/* Testing code for dynamic UI with touchscreen inputs, ignore for now.
 lv_obj_t *myButton;
 lv_obj_t *myButtonLabel;
 lv_obj_t *myLabel;
@@ -73,7 +74,7 @@ void initialize_btn() {
   lv_obj_align(myLabel, NULL, LV_ALIGN_IN_LEFT_MID, 10,
                0); // set the position to center
 }
-
+*/
 /**
  * A callback function for LLEMU's center button.
  *
@@ -100,19 +101,18 @@ void on_center_button() {
 void initialize() {
   //initialize_btn();
   // Sets the background to the image contained within waifu_elijah.c
-  /* -- Removed photo, screen will be blank. Replace with a logo once created.*/ /*
- lv_obj_t* background = lv_img_create(lv_scr_act(), NULL);
- LV_IMG_DECLARE(raptor_shark);
- lv_img_set_src(background, &raptor_shark);
+  /* -- Removed photo, screen will be blank. Replace with a logo once created.*/ 
+ /*lv_obj_t* background = lv_img_create(lv_scr_act(), NULL);
+ LV_IMG_DECLARE(waifu_elijah);
+ lv_img_set_src(background, &waifu_elijah);
  lv_obj_set_size(background, 480, 240);
- lv_obj_align(background, NULL, LV_ALIGN_IN_TOP_LEFT, 0, 0);
+ lv_obj_align(background, NULL, LV_ALIGN_IN_TOP_LEFT, 0, 0);*/
  }
- */
 /**
  * Runs while the robot is in the disabled state of Field Management System or
  * the VEX Competition Switch, following either autonomous or opcontrol. When
  * the robot is enabled, this task will exit.
- */}
+ */
 void disabled() {}
 
 /**
