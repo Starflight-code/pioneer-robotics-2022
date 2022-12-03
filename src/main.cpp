@@ -10,7 +10,16 @@
 void controls_fn(void *param) {
   cl Control_Listener;
   while (true) {
+    switch(Control_Listener.Motors.Robot.RID) {
+    case 1: // Artie Control Scheme
     Control_Listener.run();
+    break;
+    case 2: // Chance Control Scheme
+    Control_Listener.run();
+    break;
+    default:
+    break;
+    }
     pros::c::delay(50);
   }
 }

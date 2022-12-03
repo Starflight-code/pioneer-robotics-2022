@@ -9,9 +9,9 @@ private:
   const int _SPINNER_SPEED = 60; // Speed that spinner will spin at
   const int _SPINNER_DRIVE_SPEED = 10; // Speed for drive motors to push robot forward, keeping contact with spinner
   bool spinnerActive = false; // Allows for control while pushing robot forward for spinner (Quality of Life)
-  Motor_Class Motors;
   Control Flywheels;
-public:
+  public:
+  Motor_Class Motors;
   void run() {
 
     pros::Controller master(pros::E_CONTROLLER_MASTER); // Imports Controller as "master"
