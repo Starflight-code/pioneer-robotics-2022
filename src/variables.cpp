@@ -32,10 +32,10 @@ class robot {
     int launcher_port;
 
 /// Should be 'a' for Artie or 'c' for Chance
-    void init(char robot_initial)
+    void init(char robot_initials)
     {
-        char ri = robot_initial;
-    RID = ((ri == 'a') * 1) + (ri == 'c') * 2; // Branchless method to generate robot identification numbers w/ characters
+    RID = ((robot_initials == 'a') * 1) + (robot_initials == 'c') * 2; // Branchless method to generate robot identification numbers w/ characters
+    //RID = 1 or 2 Override whatever was given
     switch(RID) {
         case 1: // Loads configs for Artie
         name = "Artie";
