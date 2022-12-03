@@ -12,10 +12,10 @@ public:
   void setModifier(float x) { modifier = x; }
   void setSpeed(int motorSet, int speed) {
 // -- Motor Import/Config --
-    pros::Motor L1(8, true); // Motor L1: Normal
-    pros::Motor L2(6,false);  // Motor L2: Reversed
-    pros::Motor L3(5, true);   // Motor L3: Normal
-    pros::Motor L4(9,false);   // Motor L4: Reversed
+    pros::Motor L1(9, true); // Motor L1: Normal
+    pros::Motor L2(5,false);  // Motor L2: Reversed
+    pros::Motor L3(4, true);   // Motor L3: Normal
+    pros::Motor L4(8,false);   // Motor L4: Reversed
 
     pros::Motor R1(20, false);   // Motor R1: Reversed
     pros::Motor R2(19,true); // Motor R2: Normal
