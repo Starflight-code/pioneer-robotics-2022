@@ -1,6 +1,8 @@
 #include "absolute_positioning.cpp"
 #include "controls.cpp"
 #include "display/lv_conf.h"
+#include "display/lv_draw/lv_draw_rect.h"
+#include "display/lv_misc/lv_color.h"
 #include "include.cpp"
 #include "pros/motors.hpp"
 #include "pros/rtos.hpp"
@@ -124,8 +126,28 @@ void initialize() {
  * the VEX Competition Switch, following either autonomous or opcontrol. When
  * the robot is enabled, this task will exit.
  */
-void disabled() {}
+ /*lv_obj_t * //!- LVGL Reference code, adapt and remove after implimentation test
+drawRectangle( int x, int y, int width, int height, lv_color_t color ) {
+  lv_obj_t * obj1 = lv_obj_create(lv_scr_act(), NULL);
 
+  lv_style_t *style1 = (lv_style_t *)malloc( sizeof( lv_style_t ));
+  lv_style_copy(style1, &lv_style_plain_color);    *//*Copy a built-in style to initialize the new style*//*
+  style1->body.empty = 0;
+  style1->body.border.color = color;
+  style1->body.border.width = 1;
+  style1->body.border.part = LV_BORDER_FULL;
+  style1->body.main_color = color;
+
+  lv_obj_set_style(obj1, style1);
+  lv_obj_set_pos(obj1, x, y);
+  lv_obj_set_size(obj1, width, height);
+
+  return obj1;
+}*/
+
+void disabled() {
+  //lv_obj_t *obj = drawRectangle( 0, 0, 480, 240, LV_COLOR_RED);
+}
 /**
  * Runs after initialize(), and before autonomous when connected to the Field
  * Management System or the VEX Competition Switch. This is intended for
