@@ -24,6 +24,15 @@ public:
     case true: // When Controller Digital A is pushed
       // Uses held to track changes, compares it based off the
       // Controller_Digital_A value recorded
+      if (master.get_digital(DIGITAL_L1)) {
+        Motors.setSpeed(4, 135);
+      }
+      else if (master.get_digital(DIGITAL_L2)) {
+        Motors.setSpeed(4, -135);
+      }
+      else {
+        Motors.setSpeed(4, 0);
+      }
       if (!held_R1) {
         switch (flywheelState) {
         case 0:
