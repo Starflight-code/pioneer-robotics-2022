@@ -174,7 +174,7 @@ private:
     rightMotors.setLimiter(Robot.limiter);
     flywheelMotors.setLimiter(Robot.limiter);
     spinnerMotors.setLimiter(Robot.limiter);
-    launcher.init(1); 
+    launcher.init(Robot.launcher_port); 
   }
 
 private:
