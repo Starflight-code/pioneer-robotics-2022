@@ -1,6 +1,7 @@
 #include "include.cpp"
 #include "pros/motors.hpp"
 #include "pros/apix.h"
+// Deprecated, Remove once motors.cpp functionality can be confirmed
 class LinkedMtr
 {
 private:

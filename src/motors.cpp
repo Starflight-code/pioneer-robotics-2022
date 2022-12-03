@@ -8,6 +8,24 @@
 
 // CONTAINS A LOT OF DEPRECATED CODE - Will be removed once it's tested
 
+class Piston { // Piston class, supports ADI Pistons and includes tracking/setting
+  
+  private:
+  std::vector<pros::ADIDigitalOut> piston;
+  bool piston_state; // Allows for toggle/state fetching
+  public:
+  void init(int ADI_Port) { // Initializes the piston, this needs to be completed before it can be used
+  piston[0] = pros::ADIDigitalOut(ADI_Port);
+  piston[0].set_value(false); // Retracts the piston, syncing it's state
+  piston_state = false; // Sets the piston state, allowing for tracking
+  }
+  void set(bool state) {
+    piston[0].set_value(state); // Sets the piston value to whatever was supplied
+    piston_state = state; // Updates the tracker
+  }
+  bool get() {
+    return piston_state; // Returns the piston_state tracker value
+  }};
 class MotorGroup {
 private:
   int current_limiter = 100;
@@ -134,6 +152,7 @@ private:
   MotorGroup rightMotors;
   MotorGroup flywheelMotors;
   MotorGroup spinnerMotors;
+  Piston launcher;
   public:
   robot Robot;
 
@@ -155,6 +174,7 @@ private:
     rightMotors.setLimiter(Robot.limiter);
     flywheelMotors.setLimiter(Robot.limiter);
     spinnerMotors.setLimiter(Robot.limiter);
+    launcher.init(1); // Placeholder port given, replace once decided
   }
 
 private:
@@ -285,16 +305,6 @@ public:
     default:
       return 0;
     }
-  }
-  pros::ADIDigitalOut
-  initPiston(int port) { // Initializes the piston and outputs its constructor
-    pros::ADIDigitalOut piston(port);
-    return piston;
-  }
-  void setPiston(pros::ADIDigitalOut piston,
-                 bool state) { // Sets the piston state using the constructor
-                               // and a given value
-    piston.set_value(state);   // true extends the piston, false retracts it
   }
   float getFastVelocity(int motorSet) {
     /*pros::Motor L1(8, true); // Motor L1: Normal

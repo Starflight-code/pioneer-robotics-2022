@@ -5,43 +5,16 @@ class cl {
 private:
   double local_limiter = 100;
   double sc = 0;
-  const int _RANGE = 127;
+  const int _RANGE = 127; // Range of vex motors/controls (max value allowed)
   const int _SPINNER_SPEED = 60; // Speed that spinner will spin at
   const int _SPINNER_DRIVE_SPEED = 10; // Speed for drive motors to push robot forward, keeping contact with spinner
   bool spinnerActive = false; // Allows for control while pushing robot forward for spinner (Quality of Life)
-  Control Flywheels;
+  Control Flywheels; // PID and other control alogrithms
   public:
   Motor_Class Motors;
-  void run() {
-
-    pros::Controller master(pros::E_CONTROLLER_MASTER); // Imports Controller as "master"
-    bool held_R1 = false; // Held tracks the current E-CONTROLLER_DIGITAL_R1
-                          // state; Halfcourt
-    bool held_R2 = false; // Held tracks the current E-CONTROLLER_DIGITAL_R2
-                          // state; Point-Blank
-
-    /* Tracks flywheel state 0: off 1: Halfcourt 2: Point-Blank
-       Sets the motors to the values of the analog sticks. Calls the motorSpeed
-       function from motors.cpp  */
-       int flywheelState = 0; 
-    
-
-    if (master.get_digital(DIGITAL_L1)) {
-      spinnerActive = true;
-      Motors.setSpeed(4, _SPINNER_SPEED);}
-    else if (master.get_digital(DIGITAL_L2)) {
-      spinnerActive = true;
-      Motors.setSpeed(4, -_SPINNER_SPEED);}
-    else{
-      spinnerActive = false;
-      Motors.setSpeed(4, 0);
-    }
-    
-    //master.get_digital(pros::E_CONTROLLER_DIGITAL_R2);
-    if (Motors.Robot.training and master.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT)) { // Calculates local limmiter from left stick's x value, uses the full stick range.
-    local_limiter = (master.get_analog(ANALOG_LEFT_X) + _RANGE) / 2.54;
-    }
-    switch(Motors.Robot.controlScheme) {
+  void controls() {
+pros::Controller master(pros::E_CONTROLLER_MASTER); // Imports Controller as "master"
+switch(Motors.Robot.controlScheme) {
       case 0: // Tank control
       if (-1 < (master.get_analog(ANALOG_LEFT_Y)) and (master.get_analog(ANALOG_LEFT_Y) < 1) and spinnerActive) {
         Motors.setSpeed(1, _SPINNER_DRIVE_SPEED);
@@ -71,11 +44,54 @@ private:
       // There is an error in variables.cpp in the Robot.controlScheme variable preset
       break;
     }
+  }
+  void run() {
+
+    pros::Controller master(pros::E_CONTROLLER_MASTER); // Imports Controller as "master"
+    //bool held_R1 = false; // Held tracks the current E-CONTROLLER_DIGITAL_R1
+                          // state; Halfcourt
+    //bool held_R2 = false; // Held tracks the current E-CONTROLLER_DIGITAL_R2
+                          // state; Point-Blank
+    bool R1_State = false; //Tracker allowing for R1 toggle to function
+    bool R2_State = false; // Tracker allowing for R2 toggle to function
+
+    /* Tracks flywheel state 0: off 1: Halfcourt 2: Point-Blank
+       Sets the motors to the values of the analog sticks. Calls the motorSpeed
+       function from motors.cpp  */
+       //int flywheelState = 0; /PART OF DEPRECATED CODE, pending re-implimentation. See message below.
+
+    controls(); // Applies motor speeds following the preset control scheme for the drive
+
+    if (master.get_digital(DIGITAL_L1)) {
+      spinnerActive = true;
+      Motors.setSpeed(4, _SPINNER_SPEED);}
+    else if (master.get_digital(DIGITAL_L2)) {
+      spinnerActive = true;
+      Motors.setSpeed(4, -_SPINNER_SPEED);}
+    else{
+      spinnerActive = false;
+      Motors.setSpeed(4, 0);
+    }
+    
+    //master.get_digital(pros::E_CONTROLLER_DIGITAL_R2);
+    if (Motors.Robot.training and master.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT)) { // Calculates local limmiter from left stick's x value, uses the full stick range.
+    local_limiter = (master.get_analog(ANALOG_LEFT_X) + _RANGE) / 2.54;
+    }
     
 
-    // Toggle-able flywheel logic (Hold DIGITAL_A on the controller to
+if (master.get_digital(DIGITAL_R1)) { // Toggles on button press, doesn't hold up the control loop
+  
+  if (not (R1_State == (Motors.getSpeed(3) == _RANGE))) {R1_State = !R1_State;} // If motors are active and that's not the same as R1's state, it has changed
+  Motors.setSpeed(3, R1_State * _RANGE);
+}
+if (master.get_digital(DIGITAL_R2)) { // Toggles on button press, doesn't hold up the control loop
+  
+  if (not (R2_State == (Motors.getSpeed(3) == _RANGE))) {R2_State = !R2_State;} // If motors are active and that's not the same as R1's state, it has changed
+  Motors.setSpeed(3, R2_State * _RANGE);
+}
+    // Toggle-able flywheel logic (Hold DIGITAL_A on the controller to --DEPRECATED-- pending re-implimentation in a less complex way
     // activate/deactivate the flywheel)
-    switch (master.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
+    /*switch (master.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
     case true: // When Controller Digital A is pushed
       // Uses held to track changes, compares it based off the
       // Controller_Digital_A value recorded
@@ -129,5 +145,5 @@ private:
     default:
       return; // Returns if an erroneous values are detected. Should never
               // happen, since digital outputs should be a 0 or 1.
-    }
+    }*/
   }};

@@ -7,4 +7,3 @@
 #include <exception>
 #include <iostream>
 #include <math.h>
-//#include "variables.cpp"

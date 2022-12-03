@@ -1,5 +1,6 @@
 #include "absolute_positioning.cpp"
 #include "controls.cpp"
+#include "display/lv_conf.h"
 #include "include.cpp"
 #include "pros/motors.hpp"
 #include "pros/rtos.hpp"
@@ -147,7 +148,25 @@ void competition_initialize() {}
  * will be stopped. Re-enabling the robot will restart the task, not re-start it
  * from where it left off.
  */
-void autonomous() {}
+void autonomous() {
+  double Move_Dist = 1;
+  double Init_Pos;
+  Motor_Class Motors;
+  Motors.setSpeed(1, 30);
+  Motors.setSpeed(2, 30);
+  pros::delay(1000); // Sets motors to quarter speed to prevent slipping from the intial acceleration
+  Motors.setSpeed(1, 60);
+  Motors.setSpeed(2, 60);
+  pros::delay(4500); // Move robot forward at ~half speed for 4.5 seconds
+  Motors.setSpeed(1, 10); // Decreases the drive speed and spins the spinner wheel at ~half speed
+  Motors.setSpeed(2, 10);
+  Motors.setSpeed(4, 60);
+  // pros::delay(1000); // If we can't get encoders to work, using a delay would be inaccurate but acceptable as a last resort
+  while (abs(Motors.getPosition(4) - Init_Pos) < Move_Dist) {} // Holds up further execution until distance is reached/exceeded (Lower speed if it's exceeded by an unacceptable degree)
+  Motors.setSpeed(1, 0);
+  Motors.setSpeed(2, 0);
+  Motors.setSpeed(4, 0); // Stop motors and halts autonomous
+}
 /*
 Psudocode
 
@@ -155,6 +174,11 @@ Dump all disks in corner || try to shoot && fetch a few disks on each bot before
 Dimensions 12 ft by 12 ft field
 Disk locations: UNKNOWN
 Initial Position: UNKNOWN
+
+Scaled down Psudocode for first comp.
+
+Drive forward 1/2 speed for 3-5 seconds
+Spin the spinner, using the encoder to reach a proper color. No visual/sensor checks available (not on robot).
 */
 /**
  * Runs the operator control code. This function will be started in its own task

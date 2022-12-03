@@ -29,6 +29,7 @@ class robot {
     std::vector<bool> rightAlt_Rev_States;
     std::vector<bool> flywheelAlt_Rev_States;
     std::vector<bool> spinnerAlt_Rev_States;
+    int launcher_port;
 
 /// Should be 'a' for Artie or 'c' for Chance
     void init(char robot_initial)
@@ -48,6 +49,7 @@ class robot {
         spinnerAlt_Rev_States = {false, false};
         controlScheme = 0; // 0 for tank, 1 for split arcade
         limiter = 1;
+        launcher_port = 1; // Placeholder port given, replace once decided
         break;
         case 2: // Loads configs for Chance
         name = "Chance";
@@ -61,6 +63,7 @@ class robot {
         spinnerAlt_Rev_States = {false, false};
         controlScheme = 0; // 0 for tank, 1 for split arcade
         limiter = 1;
+        launcher_port = 1; // Placeholder port given, replace once decided
 
         break;
     }

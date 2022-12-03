@@ -1,5 +1,6 @@
 #include "LinkedMtr.hpp"
 #include "include.cpp"
+// DEPRECATED, Remove once motors.cpp functionality can be confirmed
 LinkedMtr::LinkedMtr(const int count, const int mtr_ports[], bool altReverse)
 {
     mtr_count = count;
