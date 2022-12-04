@@ -24,6 +24,7 @@ public:
      * to reverse. Starting with `true`.
      */
     void alt_reverse();
+    void alt_reverse(bool start_reversed);
 
     // --------------------------------------------------
     // Alternative methods for those that would appear on

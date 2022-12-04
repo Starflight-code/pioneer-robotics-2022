@@ -12,7 +12,12 @@ MtrGroup::MtrGroup(const int count, const int mtr_ports[])
 
 void MtrGroup::alt_reverse()
 {
-    bool reversed = true;
+    alt_reverse(true);
+}
+
+void MtrGroup::alt_reverse(bool start_reversed)
+{
+    bool reversed = start_reversed;
 
     for (pros::Motor m : motors)
     {
