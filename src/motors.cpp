@@ -1,5 +1,6 @@
 #include "pros/motors.hpp"
 #include "include.cpp"
+#include "pros/adi.hpp"
 
 class Motor_Class {
 private:
@@ -11,9 +12,15 @@ private:
 
 public:
   void setModifier(float x) { modifier = x; }
+  void launcher(bool state) {
+    pros::ADIDigitalOut launcher('A');
+    launcher.set_value(state);
+  }
   void setSpeed(int motorSet, int speed) {
 // -- Motor Import/Config --
-    /*pros::Motor L1(9, true); // Motor L1: Normal
+    // Artie
+
+    pros::Motor L1(9, true); // Motor L1: Normal
     pros::Motor L2(5,false);  // Motor L2: Reversed
     pros::Motor L3(4, true);   // Motor L3: Normal
     pros::Motor L4(8,false);   // Motor L4: Reversed
@@ -26,12 +33,13 @@ public:
     pros::Motor flywheel(3, false);
     pros::Motor flywheel_2(4, true);
     pros::Motor spinner(16, false);
-    */
 
+    // Chance
+    /*
     pros::Motor L1(16, true); // Motor L1: Normal
     pros::Motor L2(6,false);  // Motor L2: Reversed
-    pros::Motor L3(3, true);   // Motor L3: Normal
-    pros::Motor L4(8,false);   // Motor L4: Reversed
+    pros::Motor L3(8, true);   // Motor L3: Normal
+    pros::Motor L4(3,true);   // Motor L4: Reversed
 
     pros::Motor R1(20, false);   // Motor R1: Reversed
     pros::Motor R2(19,true); // Motor R2: Normal
@@ -40,7 +48,7 @@ public:
 
     pros::Motor flywheel(3, false);
     pros::Motor flywheel_2(4, true);
-    pros::Motor spinner(13,false);
+    pros::Motor spinner(14,false);*/
 // -- END OF MOTOR IMPORT/CONFIG
     switch (motorSet) {
 

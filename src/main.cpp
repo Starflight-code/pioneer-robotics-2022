@@ -83,6 +83,7 @@ void autonomous() {}
  */
 void opcontrol() {
   cl Control_Listener;
+  Control_Listener.Motors.launcher(false);
   // pros::Task controls_fn(nullptr); removed code that interacts with the PROS scheduler
   while (true) {
     Control_Listener.run(); // Calls control listener from controls.cpp, look

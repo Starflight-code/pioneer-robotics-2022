@@ -2,9 +2,10 @@
 
 class cl {
 public:
+bool spinnerActive = false;
+Motor_Class Motors;
+FlywheelClass Flywheels;
   void run() {
-    Motor_Class Motors;
-    FlywheelClass Flywheels;
     pros::Controller master(
         pros::E_CONTROLLER_MASTER); // Imports Controller as "master"
     bool held_R1 = false; // Held tracks the current E-CONTROLLER_DIGITAL_R1
@@ -15,24 +16,32 @@ public:
     // Sets the motors to the values of the analog sticks. Calls the motorSpeed
     // function from motors.cpp
     master.get_digital(pros::E_CONTROLLER_DIGITAL_R2);
+    if (master.get_digital(DIGITAL_A)) {
+      Motors.launcher(true);
+    }
+    if (master.get_digital(DIGITAL_B)) {
+      Motors.launcher(false);
+    }
     Motors.setSpeed(1, master.get_analog(ANALOG_LEFT_Y));
     Motors.setSpeed(2, master.get_analog(ANALOG_RIGHT_Y));
 
     // Toggle-able flywheel logic (Hold DIGITAL_A on the controller to
     // activate/deactivate the flywheel)
+    if (master.get_digital(DIGITAL_L1)) {
+      spinnerActive = true;
+      Motors.setSpeed(4, 135);
+    } else if (master.get_digital(DIGITAL_L2)) {
+      spinnerActive = true;
+      Motors.setSpeed(4, -135);
+    } else {
+      spinnerActive = false;
+      Motors.setSpeed(4, 0);
+    }
     switch (master.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
     case true: // When Controller Digital A is pushed
       // Uses held to track changes, compares it based off the
       // Controller_Digital_A value recorded
-      if (master.get_digital(DIGITAL_L1)) {
-        Motors.setSpeed(4, 135);
-      }
-      else if (master.get_digital(DIGITAL_L2)) {
-        Motors.setSpeed(4, -135);
-      }
-      else {
-        Motors.setSpeed(4, 0);
-      }
+      
       if (!held_R1) {
         switch (flywheelState) {
         case 0:
