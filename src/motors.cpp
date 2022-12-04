@@ -11,11 +11,11 @@
 class Piston { // Piston class, supports ADI Pistons and includes tracking/setting
   
   private:
-  std::vector<pros::ADIDigitalOut> piston;
+  std::vector<pros::ADIDigitalOut> piston = {};
   bool piston_state; // Allows for toggle/state fetching
   public:
   void init(int ADI_Port) { // Initializes the piston, this needs to be completed before it can be used
-  piston[0] = pros::ADIDigitalOut(ADI_Port);
+  piston.push_back(pros::ADIDigitalOut(ADI_Port));
   piston[0].set_value(false); // Retracts the piston, syncing it's state
   piston_state = false; // Sets the piston state, allowing for tracking
   }
