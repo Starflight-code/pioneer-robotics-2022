@@ -113,7 +113,7 @@ void on_center_button() {
  * to keep execution time for this mode under a few seconds.
  */
 void initialize() {
-  pros::lcd::initialize();
+  //pros::lcd::initialize();
   //pros::Motor L1(8, true);
   //L1 = 90;
   //pros::delay(5000);

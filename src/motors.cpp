@@ -78,9 +78,9 @@ public:
       motors[i] =  speed/* (current_limiter / 100)*/;
     }
   }
-  void debug() {
+  /*void debug() {
     motors[0] = 90;
-  }
+  }*/
   int getSpeed() { return current_speed; }     // Fetches speed from tracker
   int getLimiter() { return current_limiter; } // Fetches limiter from variable
   void setLimiter(int limiter_setting) {
@@ -191,8 +191,8 @@ private:
 
 public:
   void setSpeed(int motorSet, int speed) {
-    pros::lcd::print(3, "Motors SetSpeed Executed");
-  pros::Motor L1(8, true);  // Motor L1: Normal
+  //  pros::lcd::print(3, "Motors SetSpeed Executed");
+  /*pros::Motor L1(8, true);  // Motor L1: Normal
   pros::Motor L2(6, false); // Motor L2: Reversed
   pros::Motor L3(5, true);  // Motor L3: Normal
   pros::Motor L4(9, false); // Motor L4: Reversed
@@ -203,7 +203,7 @@ public:
   pros::Motor R4(17, true);  // Motor R4: Normal
 
     pros::Motor F1(3, false);
-    pros::Motor F2(4, true);
+    pros::Motor F2(4, true);*/
     switch (motorSet) {
 
     case 1: // motorSpeed(1, speed) to set left motor group's speed

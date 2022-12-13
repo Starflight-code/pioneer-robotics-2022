@@ -20,7 +20,7 @@ public:
         pros::E_CONTROLLER_MASTER); // Imports Controller as "master"
     switch (Motors.Robot.controlScheme) {
     case 0: // Tank control
-    pros::lcd::print(0, "Tank Control Ran");
+    //pros::lcd::print(0, "Tank Control Ran");
     
     //pros::lcd::set_background_color( (master.get_analog(ANALOG_LEFT_Y) * (255/127)), (master.get_analog(ANALOG_LEFT_Y) * (255/127)), (master.get_analog(ANALOG_LEFT_Y) * (255/127)) );
       if (-1 < (master.get_analog(ANALOG_LEFT_Y)) and
@@ -35,7 +35,7 @@ public:
       }
       break;
     case 1: // Split Arcade
-    pros::lcd::print(0, "Arcade Control Ran");
+    //pros::lcd::print(0, "Arcade Control Ran");
       if (-1 < (master.get_analog(ANALOG_LEFT_Y)) and
           (master.get_analog(ANALOG_LEFT_Y) < 1) and spinnerActive) {
         Motors.setSpeed(1, _SPINNER_DRIVE_SPEED);

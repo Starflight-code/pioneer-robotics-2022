@@ -40,7 +40,7 @@ class robot {
     //RID = 1 or 2 Override whatever was given
     switch(RID) {
         case 1: // Loads configs for Artie
-        pros::lcd::print(1, "Artie");
+        //pros::lcd::print(1, "Artie");
         name = "Artie";
         leftPorts = {16, 6, 3, 8}; // Ports of left motors, from L1 to L4
         rightPorts = {20, 19, 18, 17}; // Ports of right motors, from R1 to R4
