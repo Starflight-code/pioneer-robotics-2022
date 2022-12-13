@@ -32,7 +32,7 @@ class robot {
     std::vector<bool> spinnerAlt_Rev_States;
     int launcher_port;
 
-/// Should be 'a' for Artie or 'c' for Chance
+/// Should be 'a' for Artie, 'c' for Chance or 'd' for debug (custom/nonspecific robot)
     void init(char robot_initials)
     {
     RID = ((robot_initials == 'a') * 1) + ((robot_initials == 'c') * 2) + ((robot_initials == 'd') * 3); // Branchless method to generate robot identification numbers w/ characters

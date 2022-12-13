@@ -161,14 +161,6 @@ public:
 
   Motor_Class() {
     Robot.init('a'); // Sets up preset for robot 'a' for Artie and 'c' for Chance
-    
-    /*std::vector<int> leftPorts = {16, 6, 3, DEPRECATED - REMOVE ONCE PRESETS ARE TESTED
-                                  8}; // Ports of left motors, from L1 to L4
-    std::vector<int> rightPorts = {20, 19, 18,
-                                   17}; // Ports of right motors, from R1 to R4
-    std::vector<int> flywheelPorts = {1,
-        4}; // Ports of flywheel motors, from F1 to F2
-    std::vector<int> spinnerPorts = {13};*/
     leftMotors.init(Robot.leftPorts, Robot.leftAlt_Rev_States[0], Robot.leftAlt_Rev_States[1]);
     rightMotors.init(Robot.rightPorts, Robot.rightAlt_Rev_States[0], Robot.rightAlt_Rev_States[1]);
     flywheelMotors.init(Robot.flywheelPorts, Robot.flywheelAlt_Rev_States[0], Robot.flywheelAlt_Rev_States[1]);
@@ -207,29 +199,15 @@ public:
     switch (motorSet) {
 
     case 1: // motorSpeed(1, speed) to set left motor group's speed
-       //L1 = speed * modifier;
-       //L2 = speed * modifier;
-       //L3 = speed * modifier;
-       //L4 = speed * modifier;
-      //leftMotors.debug();
       leftMotors.set(speed);
       break;
     case 2: // motorSpeed(2, speed) to set the right motor group's speed
-       //R1 = speed * modifier;
-       //R2 = speed * modifier;
-       //R3 = speed * modifier;
-       //R4 = speed * modifier;
-      //rightMotors.debug();
       rightMotors.set(speed);
       break;
     case 3: // motorSpeed(3, speed) to set flywheel motor group's speed
-      // F1 = speed;
-      // F2 = speed;
       flywheelMotors.set(speed);
       break;
     case 4: // motorSpeed(3, speed) to set spinner motor group's speed
-      // F1 = speed;
-      // F2 = speed;
       spinnerMotors.set(speed);
       break;
     default:
@@ -275,10 +253,6 @@ public:
 */
     switch (motorSet) {
     case 1:
-      // std::vector<double> x = mtrgroup[0].get_actual_velocities();
-      /*for (i = 0; i < 4;) {
-
-      }*/
       return leftMotors.getVelocity();
       // Returns the left motor group encoder value (average speed
       // of the motor set)
@@ -302,10 +276,6 @@ public:
     double total;
     switch (motorSet) {
     case 1:
-      // std::vector<double> x = mtrgroup[0].get_actual_velocities();
-      /*for (i = 0; i < 4;) {
-
-      }*/
       return leftMotors.getPosition();
       // Returns the left motor group encoder value (average speed
       // of the motor set)
@@ -326,12 +296,6 @@ public:
     }
   }
   float getFastVelocity(int motorSet) {
-    /*pros::Motor L1(8, true); // Motor L1: Normal
-
-    pros::Motor R1(20, false); // Motor R1: Reversed
-
-    pros::Motor F1(3, false);
-    */
     switch (motorSet) {
     case 1:
       return leftMotors
@@ -350,12 +314,6 @@ public:
     }
   }
   float getFastPosititon(int motorSet) {
-    /*pros::Motor L1(8, true); // Motor L1: Normal
-
-    pros::Motor R1(20, false); // Motor R1: Reversed
-
-    pros::Motor F1(3, false);
-    */
     switch (motorSet) {
     case 1:
       return leftMotors
