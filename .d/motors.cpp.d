@@ -78,7 +78,7 @@ bin/motors.cpp.o: src/motors.cpp include/pros/motors.hpp \
  include/pros/vision.h include/pros/link.hpp include/pros/link.h \
  include/pros/apix.h include/api.h include/pros/serial.h \
  include/pros/serial.hpp include/pros/apix.h include/pros/adi.hpp \
- src/variables.cpp
+ src/variables.cpp include/pros/llemu.hpp
 include/pros/motors.hpp:
 include/pros/motors.h:
 include/pros/rtos.hpp:
@@ -241,3 +241,4 @@ include/pros/serial.hpp:
 include/pros/apix.h:
 include/pros/adi.hpp:
 src/variables.cpp:
+include/pros/llemu.hpp:

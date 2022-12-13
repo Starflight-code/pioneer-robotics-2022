@@ -4,6 +4,7 @@
 #include "display/lv_draw/lv_draw_rect.h"
 #include "display/lv_misc/lv_color.h"
 #include "include.cpp"
+#include "pros/llemu.hpp"
 #include "pros/motors.hpp"
 #include "pros/rtos.hpp"
 //#include "variables.cpp"
@@ -112,6 +113,11 @@ void on_center_button() {
  * to keep execution time for this mode under a few seconds.
  */
 void initialize() {
+  pros::lcd::initialize();
+  //pros::Motor L1(8, true);
+  //L1 = 90;
+  //pros::delay(5000);
+  //L1 = 0;
   //initialize_btn();
   // Sets the background to the image contained within waifu_elijah.c
   /* -- Removed photo, screen will be blank. Replace with a logo once created.*/ 
@@ -178,7 +184,7 @@ void autonomous() {
   Motors.setSpeed(2, 30);
   pros::delay(1000); // Sets motors to quarter speed to prevent slipping from the intial acceleration
   Motors.setSpeed(1, 60);
-  Motors.setSpeed(2, 60);
+  Motors.setSpeed(2, -60);
   pros::delay(4500); // Move robot forward at ~half speed for 4.5 seconds
   Motors.setSpeed(1, 10); // Decreases the drive speed and spins the spinner wheel at ~half speed
   Motors.setSpeed(2, 10);

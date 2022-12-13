@@ -2,8 +2,8 @@
 #include "include.cpp"
 #include "pros/adi.hpp"
 #include "pros/rtos.hpp"
+#include <algorithm>
 #include <vector>
-#include <string>
 #include "variables.cpp"
 
 // CONTAINS A LOT OF DEPRECATED CODE - Will be removed once it's tested
@@ -28,7 +28,7 @@ class Piston { // Piston class, supports ADI Pistons and includes tracking/setti
   }};
 class MotorGroup {
 private:
-  int current_limiter = 100;
+  int current_limiter;
   double current_speed;
   std::vector<pros::Motor> motors = {};
 
@@ -48,6 +48,7 @@ public:
     // to a reversed one bool initial_reverse_state tells our initializer what
     // the first (or all values for non-alternating) reverse state will be. For
     // alternating, the next reverse state will always be opposite of this one.
+    current_limiter = 100;
     if (alternating) {
       bool t =
           initial_reverse_state; // Reverse state is used, as the contructor
@@ -74,8 +75,11 @@ public:
     // Sets the speed of all motors within vector<pros::Motor> motors to speed,
     // taking the limiter into account
     for (int i = 0; i < motors.size(); i++) {
-      motors[i] = speed * (current_limiter / 100);
+      motors[i] =  speed/* (current_limiter / 100)*/;
     }
+  }
+  void debug() {
+    motors[0] = 90;
   }
   int getSpeed() { return current_speed; }     // Fetches speed from tracker
   int getLimiter() { return current_limiter; } // Fetches limiter from variable
@@ -147,13 +151,12 @@ private:
   // std::vector<pros::Motor> leftMotors;
   // std::vector<pros::Motor> rightMotors;
   // std::vector<pros::Motor> flywheelMotors;
-
   MotorGroup leftMotors;
   MotorGroup rightMotors;
   MotorGroup flywheelMotors;
   MotorGroup spinnerMotors;
   Piston launcher;
-  public:
+public:
   robot Robot;
 
   Motor_Class() {
@@ -184,23 +187,39 @@ private:
   int right_motors = 0;
   int flywheels = 0;
   bool init = true;
+  
 
 public:
   void setSpeed(int motorSet, int speed) {
+    pros::lcd::print(3, "Motors SetSpeed Executed");
+  pros::Motor L1(8, true);  // Motor L1: Normal
+  pros::Motor L2(6, false); // Motor L2: Reversed
+  pros::Motor L3(5, true);  // Motor L3: Normal
+  pros::Motor L4(9, false); // Motor L4: Reversed
+
+  pros::Motor R1(20, false); // Motor R1: Reversed
+  pros::Motor R2(19, true);  // Motor R2: Normal
+  pros::Motor R3(18, false); // Motor R3: Reversed
+  pros::Motor R4(17, true);  // Motor R4: Normal
+
+    pros::Motor F1(3, false);
+    pros::Motor F2(4, true);
     switch (motorSet) {
 
     case 1: // motorSpeed(1, speed) to set left motor group's speed
-      // L1 = speed * modifier;
-      // L2 = speed * modifier;
-      // L3 = speed * modifier;
-      // L4 = speed * modifier;
+       //L1 = speed * modifier;
+       //L2 = speed * modifier;
+       //L3 = speed * modifier;
+       //L4 = speed * modifier;
+      //leftMotors.debug();
       leftMotors.set(speed);
       break;
     case 2: // motorSpeed(2, speed) to set the right motor group's speed
-      // R1 = speed * modifier;
-      // R2 = speed * modifier;
-      // R3 = speed * modifier;
-      // R4 = speed * modifier;
+       //R1 = speed * modifier;
+       //R2 = speed * modifier;
+       //R3 = speed * modifier;
+       //R4 = speed * modifier;
+      //rightMotors.debug();
       rightMotors.set(speed);
       break;
     case 3: // motorSpeed(3, speed) to set flywheel motor group's speed

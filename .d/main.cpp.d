@@ -79,7 +79,8 @@ bin/main.cpp.o: src/main.cpp src/absolute_positioning.cpp src/include.cpp \
  include/pros/apix.h include/api.h include/pros/serial.h \
  include/pros/serial.hpp include/pros/apix.h include/pros/motors.hpp \
  src/controls.cpp src/PID.cpp src/motors.cpp include/pros/adi.hpp \
- src/variables.cpp include/display/lv_draw/lv_draw_rect.h
+ src/variables.cpp include/pros/llemu.hpp \
+ include/display/lv_draw/lv_draw_rect.h
 src/absolute_positioning.cpp:
 src/include.cpp:
 include/main.h:
@@ -246,4 +247,5 @@ src/PID.cpp:
 src/motors.cpp:
 include/pros/adi.hpp:
 src/variables.cpp:
+include/pros/llemu.hpp:
 include/display/lv_draw/lv_draw_rect.h:

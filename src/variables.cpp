@@ -1,4 +1,5 @@
 // for driving motors
+#include "pros/llemu.hpp"
 #include <string>
 #include <vector>
 
@@ -34,10 +35,12 @@ class robot {
 /// Should be 'a' for Artie or 'c' for Chance
     void init(char robot_initials)
     {
-    RID = ((robot_initials == 'a') * 1) + (robot_initials == 'c') * 2; // Branchless method to generate robot identification numbers w/ characters
+    RID = ((robot_initials == 'a') * 1) + ((robot_initials == 'c') * 2) + ((robot_initials == 'd') * 3); // Branchless method to generate robot identification numbers w/ characters
+    
     //RID = 1 or 2 Override whatever was given
     switch(RID) {
         case 1: // Loads configs for Artie
+        pros::lcd::print(1, "Artie");
         name = "Artie";
         leftPorts = {16, 6, 3, 8}; // Ports of left motors, from L1 to L4
         rightPorts = {20, 19, 18, 17}; // Ports of right motors, from R1 to R4
@@ -65,6 +68,21 @@ class robot {
         limiter = 1;
         launcher_port = 1; // Placeholder port given, replace once decided
 
+        break;
+        
+        case 3: // Loads configs for Debug
+        name = "Custom/Debug";
+        leftPorts = {16, 6, 3, 8}; // Ports of left motors, from L1 to L4
+        rightPorts = {20, 19, 18, 17}; // Ports of right motors, from R1 to R4
+        flywheelPorts = {1, 4}; // Ports of flywheel motors, from F1 to F2
+        spinnerPorts = {13}; // Port for the spinner motor
+        leftAlt_Rev_States = {true,true};
+        rightAlt_Rev_States = {true, false};
+        flywheelAlt_Rev_States = {true, false};
+        spinnerAlt_Rev_States = {false, false};
+        controlScheme = 0; // 0 for tank, 1 for split arcade
+        limiter = 1;
+        launcher_port = 1; // Placeholder port given, replace once decided
         break;
     }
     
