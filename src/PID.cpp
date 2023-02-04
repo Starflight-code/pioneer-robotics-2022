@@ -15,10 +15,17 @@ private: // TODO: Tune constants as PID will have a decreased/reverse effect wit
   Motor_Class Motors;
 
 public:
+<<<<<<< HEAD
   /*int PID(int distance) {
     // desiredVelocity is in RPM
     //error = Motors.getVelocity(3) - desiredVelocity; !! DEPRECATED Velocity PID
     //error = distance - Motors.getPosition(1);
+=======
+  int PID(int distance) {
+    // desiredVelocity is in RPM
+    //error = Motors.getVelocity(3) - desiredVelocity; !! DEPRECATED Velocity PID
+    error = distance - Motors.getPosition(1);
+>>>>>>> testing
     integral = prevIntegral + error;
     prevIntegral = integral;
     derivative = error - prevError;
@@ -29,12 +36,20 @@ public:
   int PID_Velocity(int desiredVelocity) {
 
     // desiredVelocity is in RPM
+<<<<<<< HEAD
     //error = Motors.getVelocity(3) - desiredVelocity; 
+=======
+    error = Motors.getVelocity(3) - desiredVelocity; 
+>>>>>>> testing
     integral = prevIntegral + error;
     prevIntegral = integral;
     derivative = error - prevError;
     prevError = error;
 
     return ((kP * error) + (kD * derivative) + (kI * integral)) * 127;
+<<<<<<< HEAD
   }*/
+=======
+  }
+>>>>>>> testing
 };

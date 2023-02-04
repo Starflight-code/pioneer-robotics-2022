@@ -78,7 +78,18 @@ bin/PID.cpp.o: src/PID.cpp src/include.cpp include/main.h include/api.h \
  include/pros/vision.h include/pros/link.hpp include/pros/link.h \
  include/pros/apix.h include/api.h include/pros/serial.h \
  include/pros/serial.hpp include/pros/apix.h include/pros/motors.hpp \
+<<<<<<< HEAD
  src/motors.cpp include/pros/adi.hpp
+=======
+<<<<<<<< HEAD:.d/tasks.cpp.d
+ src/motors.cpp include/pros/adi.hpp
+src/controls.cpp:
+src/flywheel.cpp:
+========
+ src/motors.cpp include/pros/adi.hpp src/variables.cpp \
+ include/pros/llemu.hpp
+>>>>>>>> testing:.d/PID.cpp.d
+>>>>>>> testing
 src/include.cpp:
 include/main.h:
 include/api.h:
@@ -241,3 +252,11 @@ include/pros/apix.h:
 include/pros/motors.hpp:
 src/motors.cpp:
 include/pros/adi.hpp:
+<<<<<<< HEAD
+=======
+<<<<<<<< HEAD:.d/tasks.cpp.d
+========
+src/variables.cpp:
+include/pros/llemu.hpp:
+>>>>>>>> testing:.d/PID.cpp.d
+>>>>>>> testing
