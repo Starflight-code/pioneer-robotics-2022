@@ -1,6 +1,7 @@
 #include "PID.cpp"
 #include "pros/llemu.hpp"
 #include "pros/misc.h"
+#include <cmath>
 
 class cl {
 private:
@@ -16,31 +17,48 @@ private:
 public:
   Motor_Class Motors;
   void controls() {
+    int controller_value;
+    int controller_x_value;
     pros::Controller master(
         pros::E_CONTROLLER_MASTER); // Imports Controller as "master"
+    
+    if (Motors.Robot.exponential_control) { // Scales control system to x^1.5 (by default), x is between 0 and 1 (spped should look like an exponential curve maxing out at 170)
+    int negativeCarry = (master.get_analog(ANALOG_LEFT_Y) < 0) * -1; // Carrys the negative, would otherwise be lost during exponent calcualtion
+    controller_value = negativeCarry * round(pow((master.get_analog(ANALOG_LEFT_Y) / 170), Motors.Robot.control_exponent_value));
+    if (Motors.Robot.controlScheme == 1) { // Adds calculation for x stick if arcade control is being used
+      int negativeCarry_x = (master.get_analog(ANALOG_RIGHT_X) < 0) * -1;
+      controller_x_value = negativeCarry * round(pow((master.get_analog(ANALOG_RIGHT_X) / 170), Motors.Robot.control_exponent_value));
+    }
+    } else {
+      controller_value = master.get_analog(ANALOG_LEFT_Y);
+      if (Motors.Robot.controlScheme == 1) {
+        controller_x_value = master.get_analog(ANALOG_RIGHT_X);
+      }
+    }
+
     switch (Motors.Robot.controlScheme) {
     case 0: // Tank control
-        if (-1 < (master.get_analog(ANALOG_LEFT_Y)) and
-          (master.get_analog(ANALOG_LEFT_Y) < 1) and spinnerActive) {
+        if (-1 < (controller_value) and
+          ((controller_value) < 1) and (spinnerActive)) {
         Motors.setSpeed(1, _SPINNER_DRIVE_SPEED);
         Motors.setSpeed(2, _SPINNER_DRIVE_SPEED);
       } else {
         Motors.setSpeed(
-            1, int(master.get_analog(ANALOG_LEFT_Y) * (local_limiter / 100)));
+            1, int(controller_value * (local_limiter / 100)));
         Motors.setSpeed(
-            2, int(master.get_analog(ANALOG_RIGHT_Y) * (local_limiter / 100)));
+            2, int(controller_value * (local_limiter / 100)));
       }
       break;
     case 1: // Split Arcade
-        if (-1 < (master.get_analog(ANALOG_LEFT_Y)) and
-          (master.get_analog(ANALOG_LEFT_Y) < 1) and spinnerActive) {
+        if (-1 < (controller_value) and
+          (controller_value < 1) and spinnerActive) {
         Motors.setSpeed(1, _SPINNER_DRIVE_SPEED);
         Motors.setSpeed(2, _SPINNER_DRIVE_SPEED);
       } else {
         // Designed to allow a mix of left/right forward/backwards inputs, so
         // the scaling coefficient prevents overflow (values >170)
-        sc = (abs(master.get_analog(ANALOG_LEFT_Y)) +
-              abs(master.get_analog(ANALOG_RIGHT_X)));
+        sc = (abs(controller_value) +
+              abs(controller_x_value));
         if (sc < _RANGE) {
           sc = _RANGE;
         } // If it isn't limiting the value (making the value larger instead),
@@ -50,12 +68,12 @@ public:
         // stick ranges Left_Y stick controls forward/backwards Right_X stick
         // controls left/right and local limiter still works
         Motors.setSpeed(
-            1, int((-(master.get_analog(ANALOG_LEFT_Y) / (sc / _RANGE) +
-                      master.get_analog(ANALOG_RIGHT_X) / (sc / _RANGE)) *
+            1, int((-(controller_value / (sc / _RANGE) +
+                      controller_x_value / (sc / _RANGE)) *
                     (local_limiter / 100))));
         Motors.setSpeed(
-            2, int(((master.get_analog(ANALOG_LEFT_Y) / (sc / _RANGE) -
-                     master.get_analog(ANALOG_RIGHT_X) / (sc / _RANGE)) *
+            2, int(((controller_value / (sc / _RANGE) -
+                     controller_x_value / (sc / _RANGE)) *
                     (local_limiter / 100))));
       }
       break;
