@@ -18,9 +18,11 @@ const int flywheel_mtr_count = 2,
 class robot {
     public:
     std::string name; // Robot Name
-    int RID; // Robot Identification Number () 
+    int RID; // Robot Identification Number
+    int DID; // Driver Identification Number
     int controlScheme;
     double limiter;
+    bool debug = false; // Enables debug functionality, DISABLE BEFORE COMPETITION
     bool training = false; // Enables training/testing functionality that should be disabled at a competition
     std::vector<int> leftPorts; // Left Motor Port Array
     std::vector<int> rightPorts; // Right Motor Port Array
@@ -33,10 +35,16 @@ class robot {
     int launcher_port;
 
 /// Should be 'a' for Artie, 'c' for Chance or 'd' for debug (custom/nonspecific robot)
-    void init(char robot_initials)
+/// Should be 'b' for Bryce, 'm' for Malachi, or 'd' for debug (no override)
+    void init(char robot_initial, char driver_initial)
     {
-    RID = ((robot_initials == 'a') * 1) + ((robot_initials == 'c') * 2) + ((robot_initials == 'd') * 3); // Branchless method to generate robot identification numbers w/ characters
-    
+    // -- OVERRIDE --
+    //robot_initial = 'a';
+    //driver_initial = 'm';
+
+    // Robot Identifier (Branchless robot initials to ID integer)
+    RID = ((robot_initial == 'a') * 1) + ((robot_initial == 'c') * 2) + ((robot_initial == 'd') * 3); // Branchless method to generate robot identification numbers w/ characters
+    DID = ((driver_initial == 'b') * 1) + ((driver_initial == 'm') * 2 + ((driver_initial == 'd') * 3)); // Branchless method to generate driver identification numbers w/ characters
     //RID = 1 or 2 Override whatever was given
     switch(RID) {
         case 1: // Loads configs for Artie
@@ -54,6 +62,7 @@ class robot {
         limiter = 1;
         launcher_port = 1; // Placeholder port given, replace once decided
         break;
+
         case 2: // Loads configs for Chance
         name = "Chance";
         leftPorts = {16, 6, 3, 8}; // Ports of left motors, from L1 to L4
@@ -67,7 +76,6 @@ class robot {
         controlScheme = 0; // 0 for tank, 1 for split arcade
         limiter = 1;
         launcher_port = 1; // Placeholder port given, replace once decided
-
         break;
         
         case 3: // Loads configs for Debug
@@ -83,8 +91,23 @@ class robot {
         controlScheme = 0; // 0 for tank, 1 for split arcade
         limiter = 1;
         launcher_port = 1; // Placeholder port given, replace once decided
+        debug = true; // Enables debug mode, can be used for verbose logging (not implimented yet)
         break;
     }
+    switch(DID) {
+        case 1: // Bryce
+
+        break;
+
+        case 2: // Malachi
+        controlScheme = 0; // 0 for tank, 1 for split arcade
+        break;
+        
+        case 3: // None
+
+        break;
+    }
+    
     
     }
 };

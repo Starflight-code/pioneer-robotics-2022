@@ -160,7 +160,7 @@ public:
   robot Robot;
 
   Motor_Class() {
-    Robot.init('a'); // Sets up preset for robot 'a' for Artie and 'c' for Chance
+    Robot.init('a','m'); // Sets up preset for robot 'a' for Artie and 'c' for Chance
     leftMotors.init(Robot.leftPorts, Robot.leftAlt_Rev_States[0], Robot.leftAlt_Rev_States[1]);
     rightMotors.init(Robot.rightPorts, Robot.rightAlt_Rev_States[0], Robot.rightAlt_Rev_States[1]);
     flywheelMotors.init(Robot.flywheelPorts, Robot.flywheelAlt_Rev_States[0], Robot.flywheelAlt_Rev_States[1]);
