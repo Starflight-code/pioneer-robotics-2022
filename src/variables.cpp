@@ -30,10 +30,10 @@ class robot {
     std::vector<int> rightPorts; // Right Motor Port Array
     std::vector<int> flywheelPorts; // Flywheel Motor Port Array
     std::vector<int> spinnerPorts; // Spinner Motor Port Array
-    std::vector<bool> leftAlt_Rev_States;
-    std::vector<bool> rightAlt_Rev_States;
-    std::vector<bool> flywheelAlt_Rev_States;
-    std::vector<bool> spinnerAlt_Rev_States;
+    std::vector<bool> leftAlt_Rev_States; // 0: Alternating (bool) 1: Initial Reverse State (bool)
+    std::vector<bool> rightAlt_Rev_States; // 0: Alternating (bool) 1: Initial Reverse State (bool)
+    std::vector<bool> flywheelAlt_Rev_States; // 0: Alternating (bool) 1: Initial Reverse State (bool)
+    std::vector<bool> spinnerAlt_Rev_States; // 0: Alternating (bool) 1: Initial Reverse State (bool)
     int launcher_port;
 
 /// Should be 'a' for Artie, 'c' for Chance or 'd' for debug (custom/nonspecific robot)
@@ -56,10 +56,10 @@ class robot {
         rightPorts = {20, 19, 18, 17}; // Ports of right motors, from R1 to R4
         flywheelPorts = {1, 4}; // Ports of flywheel motors, from F1 to F2
         spinnerPorts = {13}; // Port for the spinner motor
-        leftAlt_Rev_States = {true,true};
-        rightAlt_Rev_States = {true, false};
-        flywheelAlt_Rev_States = {true, false};
-        spinnerAlt_Rev_States = {false, false};
+        leftAlt_Rev_States = {true,true}; // 0: Alternating (bool) 1: Initial Reverse State (bool)
+        rightAlt_Rev_States = {true, false}; 
+        flywheelAlt_Rev_States = {true, false}; 
+        spinnerAlt_Rev_States = {false, false}; 
         controlScheme = 0; // 0 for tank, 1 for split arcade
         limiter = 1;
         launcher_port = 1; // Placeholder port given, replace once decided
@@ -71,7 +71,7 @@ class robot {
         rightPorts = {20, 19, 18, 17}; // Ports of right motors, from R1 to R4
         flywheelPorts = {1, 4}; // Ports of flywheel motors, from F1 to F2
         spinnerPorts = {13}; // Port for the spinner motor
-        leftAlt_Rev_States = {true,true};
+        leftAlt_Rev_States = {true,true}; // 0: Alternating (bool) 1: Initial Reverse State (bool)
         rightAlt_Rev_States = {true, false};
         flywheelAlt_Rev_States = {true, false};
         spinnerAlt_Rev_States = {false, false};
@@ -98,11 +98,16 @@ class robot {
     }
     switch(DID) {
         case 1: // Bryce
-
+        exponential_control = true; // Enables exponent based control system
+        control_exponent_value = 1.5; // Greater the value, the steeper the exponential control curve
+        training = true;
         break;
 
         case 2: // Malachi
         controlScheme = 0; // 0 for tank, 1 for split arcade
+        exponential_control = true; // Enables exponent based control system
+        control_exponent_value = 1.5; // Greater the value, the steeper the exponential control curve
+        training = true;
         break;
         
         case 3: // None
