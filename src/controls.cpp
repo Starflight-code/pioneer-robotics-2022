@@ -24,10 +24,10 @@ public:
     
     if (Motors.Robot.exponential_control) { // Scales control system to x^1.5 (by default), x is between 0 and 1 (spped should look like an exponential curve maxing out at 170)
     int negativeCarry = (master.get_analog(ANALOG_LEFT_Y) < 0) * -1; // Carrys the negative, would otherwise be lost during exponent calcualtion
-    controller_value = negativeCarry * round(pow((master.get_analog(ANALOG_LEFT_Y) / 170), Motors.Robot.control_exponent_value));
+    controller_value = negativeCarry * _RANGE * round(pow((master.get_analog(ANALOG_LEFT_Y) / _RANGE), Motors.Robot.control_exponent_value));
     if (Motors.Robot.controlScheme == 1) { // Adds calculation for x stick if arcade control is being used
       int negativeCarry_x = (master.get_analog(ANALOG_RIGHT_X) < 0) * -1;
-      controller_x_value = negativeCarry * round(pow((master.get_analog(ANALOG_RIGHT_X) / 170), Motors.Robot.control_exponent_value));
+      controller_x_value = negativeCarry * _RANGE * round(pow((master.get_analog(ANALOG_RIGHT_X) / _RANGE), Motors.Robot.control_exponent_value));
     }
     } else {
       controller_value = master.get_analog(ANALOG_LEFT_Y);
