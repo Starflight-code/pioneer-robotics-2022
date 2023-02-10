@@ -20,12 +20,14 @@ class robot {
     std::string name; // Robot Name
     int RID; // Robot Identification Number
     int DID; // Driver Identification Number
+    /// 0 for tank, 1 for split arcade
     int controlScheme;
     double limiter;
     bool debug = false; // Enables debug functionality, DISABLE BEFORE COMPETITION
     bool training = false; // Enables training/testing functionality that should be disabled at a competition
     bool exponential_control = true; // Enables exponent based control system
     double control_exponent_value = 1.5; // Greater the value, the steeper the exponential control curve
+    int control_switch_value;
     std::vector<int> leftPorts; // Left Motor Port Array
     std::vector<int> rightPorts; // Right Motor Port Array
     std::vector<int> flywheelPorts; // Flywheel Motor Port Array
@@ -114,7 +116,11 @@ class robot {
 
         break;
     }
+    precalcuate_control_variables();
     
     
+    }
+    void precalcuate_control_variables() {
+        
     }
 };
