@@ -16,18 +16,25 @@ private:
   Control Flywheels;          // PID and other control alogrithms
 public:
   Motor_Class Motors;
+  /// Scales control system to x^1.5 (by default), x is between 0 and 1 (speed should look like an exponential curve maxing out at 170)
+  int exponential_control(int controlInput, double exponent) {
+    int negativeCarry = (controlInput < 0) * -1; // Carrys the negative, would otherwise be lost during exponent calcualtion
+    return negativeCarry * round(_RANGE * pow((controlInput / _RANGE), exponent));
+  }
   void controls() {
     int controller_value;
     int controller_x_value;
     pros::Controller master(
         pros::E_CONTROLLER_MASTER); // Imports Controller as "master"
     
-    if (Motors.Robot.exponential_control) { // Scales control system to x^1.5 (by default), x is between 0 and 1 (spped should look like an exponential curve maxing out at 170)
-    int negativeCarry = (master.get_analog(ANALOG_LEFT_Y) < 0) * -1; // Carrys the negative, would otherwise be lost during exponent calcualtion
-    controller_value = negativeCarry * round(_RANGE * pow((master.get_analog(ANALOG_LEFT_Y) / _RANGE), Motors.Robot.control_exponent_value));
+    if (Motors.Robot.exponential_control) { // Scales control system to x^1.5 (by default), x is between 0 and 1 (speed should look like an exponential curve maxing out at 170)
+    //int negativeCarry = (master.get_analog(ANALOG_LEFT_Y) < 0) * -1; // Carrys the negative, would otherwise be lost during exponent calcualtion
+    //controller_value = negativeCarry * round(_RANGE * pow((master.get_analog(ANALOG_LEFT_Y) / _RANGE), Motors.Robot.control_exponent_value));
+    controller_value = exponential_control(master.get_analog(ANALOG_LEFT_Y), Motors.Robot.control_exponent_value);
     if (Motors.Robot.controlScheme == 1) { // Adds calculation for x stick if arcade control is being used
-      int negativeCarry_x = (master.get_analog(ANALOG_RIGHT_X) < 0) * -1;
-      controller_x_value = negativeCarry * round(_RANGE * pow((master.get_analog(ANALOG_RIGHT_X) / _RANGE), Motors.Robot.control_exponent_value));
+      //int negativeCarry_x = (master.get_analog(ANALOG_RIGHT_X) < 0) * -1;
+      //controller_x_value = negativeCarry * round(_RANGE * pow((master.get_analog(ANALOG_RIGHT_X) / _RANGE), Motors.Robot.control_exponent_value));
+      controller_x_value = exponential_control(master.get_analog(ANALOG_RIGHT_X), Motors.Robot.control_exponent_value);
     }
     } else {
       controller_value = master.get_analog(ANALOG_LEFT_Y);
