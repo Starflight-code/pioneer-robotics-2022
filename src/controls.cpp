@@ -14,6 +14,9 @@ private:
   bool spinnerActive = false; // Allows for control while pushing robot forward
                               // for spinner (Quality of Life)
   Control Flywheels;          // PID and other control alogrithms
+
+  /// Scales control system to x^1.5 (by default), x is between 0 and 1 (speed should look like an exponential curve maxing out at 170)
+  /// Created to improve low speed precision while perserving access to high speed settings
   int exponential_control(int controlInput, double exponent) {
     int negativeCarry = (controlInput < 0) * -1; // Carrys the negative, would otherwise be lost during exponent calcualtion
     return negativeCarry * round(_RANGE * pow((controlInput / _RANGE), exponent));
@@ -49,7 +52,6 @@ private:
   
 public:
   Motor_Class Motors;
-  /// Scales control system to x^1.5 (by default), x is between 0 and 1 (speed should look like an exponential curve maxing out at 170)
   
   
   void controls() {
