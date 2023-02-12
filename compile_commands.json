@@ -73,11 +73,11 @@
             "-funwind-tables",
             "--std=gnu++17",
             "-o",
-            "bin/controls.cpp.o",
-            "src\\controls.cpp"
+            "bin/motors.cpp.o",
+            "src\\motors.cpp"
         ],
         "directory": "C:\\Users\\benko\\Documents\\Robot Code\\pioneer-robotics-2022",
-        "file": "src\\controls.cpp"
+        "file": "src\\motors.cpp"
     },
     {
         "arguments": [
@@ -153,11 +153,11 @@
             "-funwind-tables",
             "--std=gnu++17",
             "-o",
-            "bin/motors.cpp.o",
-            "src\\motors.cpp"
+            "bin/PID.cpp.o",
+            "src\\PID.cpp"
         ],
         "directory": "C:\\Users\\benko\\Documents\\Robot Code\\pioneer-robotics-2022",
-        "file": "src\\motors.cpp"
+        "file": "src\\PID.cpp"
     },
     {
         "arguments": [
@@ -233,10 +233,10 @@
             "-funwind-tables",
             "--std=gnu++17",
             "-o",
-            "bin/PID.cpp.o",
-            "src\\PID.cpp"
+            "bin/controls.cpp.o",
+            "src\\controls.cpp"
         ],
         "directory": "C:\\Users\\benko\\Documents\\Robot Code\\pioneer-robotics-2022",
-        "file": "src\\PID.cpp"
+        "file": "src\\controls.cpp"
     }
 ]

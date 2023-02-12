@@ -4,8 +4,6 @@
       "name": "PROS Project",
       "includePath": [
         "${workspaceFolder}/**",
-        "j:\\Pioneer-Robotics-2022\\robot\\include",
-        "j:\\Pioneer-Robotics-2022\\pioneer-robotics-2022\\include",
         "c:\\Users\\benko\\Documents\\Robot Code\\pioneer-robotics-2022\\include"
       ],
       "defines": [
@@ -24,8 +22,7 @@
         ],
         "limitSymbolsToIncludedHeaders": true,
         "databaseFilename": ""
-      },
-      "configurationProvider": "ms-vscode.makefile-tools"
+      }
     }
   ],
   "version": 4

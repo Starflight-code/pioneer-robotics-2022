@@ -1,8 +1,38 @@
 #include "PID.cpp"
+#include "pros/adi.hpp"
 #include "pros/llemu.hpp"
 #include "pros/misc.h"
+#include "pros/vision.hpp"
+#include <algorithm>
 #include <cmath>
 
+class event {
+private:
+  pros::Controller *master; // Sets up a pointer to controller master, will be configured by the constructor
+  bool tracker;
+  pros::controller_digital_e_t button;
+  bool execution_hold;
+  int hold_index;
+public:
+event(pros::controller_digital_e_t button_to_watch, bool hold_up_execution) {
+  pros::Controller master(pros::E_CONTROLLER_MASTER); // Imports Controller as "master"
+  button = button_to_watch;
+  execution_hold = hold_up_execution;
+  if (not execution_hold) {hold_index = 0;} // TUrns bool into True: 1 or False: 0 (For a switch statement)
+  else {hold_index = 1;}
+}
+void check() {
+switch (hold_index) {
+  case 0:
+  
+  break;
+  case 1:
+
+  break;
+}
+}
+
+};
 class cl {
 private:
   double local_limiter = 100;
@@ -15,17 +45,15 @@ private:
                               // for spinner (Quality of Life)
   Control Flywheels;          // PID and other control alogrithms
 
-  /// Scales control system to x^1.5 (by default), x is between 0 and 1 (speed should look like an exponential curve maxing out at 170)
-  /// Created to improve low speed precision while perserving access to high speed settings
+  /// Scales control system to x^1.5 (by default), x is between 0 and 1 (speed should look like an exponential curve maxing out at 170).
+  /// Created to improve low speed precision while perserving access to high speed settings.
   int exponential_control(int controlInput, double exponent) {
     int negativeCarry = (controlInput < 0) * -1; // Carrys the negative, would otherwise be lost during exponent calcualtion
     return negativeCarry * round(_RANGE * pow((controlInput / _RANGE), exponent));
   }
-  void tank_control(int controlInput) {
-    Motors.setSpeed(
-            1, int(controlInput * (local_limiter / 100)));
-        Motors.setSpeed(
-            2, int(controlInput * (local_limiter / 100)));
+  void tank_control(int control_input_left, int control_input_right) {
+    Motors.setSpeed(1, int(control_input_left * (local_limiter / 100)));
+    Motors.setSpeed(2, int(control_input_right * (local_limiter / 100)));
   }
   void arcade_control(int controlInput_y, int controlInput_x) {
         // Designed to allow a mix of left/right forward/backwards inputs, so
@@ -53,7 +81,7 @@ private:
 public:
   Motor_Class Motors;
   
-  
+  /// Applies motor speeds following the preset control scheme for the drive.
   void controls() {
     /// 0: ANALOG_LEFT_Y value 1: ANALOG_RIGHT_X (if applicable)
     int controller_values[2];
@@ -62,12 +90,13 @@ public:
     pros::Controller master(
         pros::E_CONTROLLER_MASTER); // Imports Controller as "master"
     
-    if (Motors.Robot.exponential_control){
-      switch(Motors.Robot.controlScheme) {
-      case 0:
+    if (Motors.Robot.exponential_control){ // Prepares controller values, either processed via the exponential control system or places the raw data
+      switch(Motors.Robot.controlScheme) { // into the controller_values array. Allowing them to be used to set speeds following the control scheme preset.
+      case 0: // Tank control
       controller_values[0] = exponential_control(master.get_analog(ANALOG_LEFT_Y), Motors.Robot.control_exponent_value);
+      controller_values[1] = exponential_control(master.get_analog(ANALOG_RIGHT_Y), Motors.Robot.control_exponent_value);
       break;
-      case 1:
+      case 1: // Arcade control
       controller_values[0] = exponential_control(master.get_analog(ANALOG_LEFT_Y), Motors.Robot.control_exponent_value);
       controller_values[1] = exponential_control(master.get_analog(ANALOG_RIGHT_X), Motors.Robot.control_exponent_value);
       break;
@@ -75,6 +104,7 @@ public:
       switch (Motors.Robot.controlScheme) {
         case 0:
         controller_values[0] = master.get_analog(ANALOG_LEFT_Y);
+        controller_values[1] = master.get_analog(ANALOG_RIGHT_Y);
         break;
         case 1:
         controller_values[0] = master.get_analog(ANALOG_LEFT_Y);
@@ -99,7 +129,7 @@ public:
       }
     }*/
 
-    switch (Motors.Robot.controlScheme) {
+    switch (Motors.Robot.controlScheme) { 
     case 0: // Tank control
         /*if (-1 < (controller_value) and
           ((controller_value) < 1) and (spinnerActive)) {
@@ -112,7 +142,7 @@ public:
         Motors.setSpeed(
             2, int(controller_value * (local_limiter / 100)));*/
       //}
-      tank_control(controller_values[0]);
+      tank_control(controller_values[0], controller_values[1]);
       break;
     case 1: // Split Arcade
 
@@ -150,6 +180,9 @@ public:
       break;
     }
   }
+  void event_listener() {
+
+  }
   void run() {
 
     pros::Controller master(
@@ -169,6 +202,7 @@ public:
 
     controls(); // Applies motor speeds following the preset control scheme for
                 // the drive
+
 
     if (master.get_digital(DIGITAL_L1)) {
       spinnerActive = true;
