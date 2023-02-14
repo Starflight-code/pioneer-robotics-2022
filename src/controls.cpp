@@ -2,9 +2,12 @@
 #include "pros/adi.hpp"
 #include "pros/llemu.hpp"
 #include "pros/misc.h"
+#include "pros/motors.hpp"
+#include "pros/rtos.hpp"
 #include "pros/vision.hpp"
 #include <algorithm>
 #include <cmath>
+#include <vector>
 
 class event {
 private:
@@ -13,21 +16,33 @@ private:
   pros::controller_digital_e_t button;
   bool execution_hold;
   int hold_index;
+  bool reverse_check;
+  std::vector<MotorGroup> Motors;
 public:
-event(pros::controller_digital_e_t button_to_watch, bool hold_up_execution) {
+event(pros::controller_digital_e_t button_to_watch, bool hold_up_execution, MotorGroup& MG, bool reverse = false) {
   pros::Controller master(pros::E_CONTROLLER_MASTER); // Imports Controller as "master"
+  reverse_check = reverse;
   button = button_to_watch;
   execution_hold = hold_up_execution;
-  if (not execution_hold) {hold_index = 0;} // TUrns bool into True: 1 or False: 0 (For a switch statement)
+  Motors.push_back(MG);
+  if (not execution_hold) {hold_index = 0;} // Turns bool into True: 1 or False: 0 (For a switch statement)
   else {hold_index = 1;}
 }
 void check() {
 switch (hold_index) {
   case 0:
-  
+  if(reverse_check ? not button : button) { // Set the speed to 0 be default, and 170 upon button press when reverse_check is false
+  Motors[0].set(0);
+  } else {
+  Motors[0].set(170);
+  }
   break;
   case 1:
-
+  while(reverse_check ? not button : button) {
+  Motors[0].set(0);
+  pros::delay(50);
+  }
+  Motors[0].set(170);
   break;
 }
 }

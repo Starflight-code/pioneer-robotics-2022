@@ -59,9 +59,9 @@ class robot {
         flywheelPorts = {1, 4}; // Ports of flywheel motors, from F1 to F2
         spinnerPorts = {13}; // Port for the spinner motor
         leftAlt_Rev_States = {true,true}; // 0: Alternating (bool) 1: Initial Reverse State (bool)
-        rightAlt_Rev_States = {true, false}; 
-        flywheelAlt_Rev_States = {true, false}; 
-        spinnerAlt_Rev_States = {false, false}; 
+        rightAlt_Rev_States = {true, false}; // Alternating: True, False, True ...
+        flywheelAlt_Rev_States = {true, false}; // (Non Alternating) Initial Reverse State False: False, False, False
+        spinnerAlt_Rev_States = {false, false}; // Initial Reverse State True: True, True, True
         controlScheme = 0; // 0 for tank, 1 for split arcade
         limiter = 1;
         launcher_port = 1; // Placeholder port given, replace once decided
@@ -116,11 +116,11 @@ class robot {
 
         break;
     }
-    precalcuate_control_variables();
+    //precalcuate_control_variables();
     
     
     }
-    void precalcuate_control_variables() {
+    //void precalcuate_control_variables() {
         
-    }
+    //}
 };
