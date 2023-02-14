@@ -145,7 +145,7 @@ public:
     }*/
 
     switch (Motors.Robot.controlScheme) { 
-    case 0: // Tank control
+    case 0: // Tank control --- REMOVE THIS CODE AND ALL (COMMENTED OUT) CONTROL SCHEME CODE ONCE FUNCTIONALITY OF MODULAR SYSTEM CAN BE VERIFIED ---
         /*if (-1 < (controller_value) and
           ((controller_value) < 1) and (spinnerActive)) {
         Motors.setSpeed(1, _SPINNER_DRIVE_SPEED);
@@ -255,6 +255,8 @@ public:
         // changed
       Motors.setSpeed(3, R2_State * _RANGE);
     }
+    // REPLACE W/ Modular systems possibly in an event listener file, impliment in a future update
+
     // Toggle-able flywheel logic (Hold DIGITAL_A on the controller to
     // --DEPRECATED-- pending re-implimentation in a less complex way
     // activate/deactivate the flywheel)
