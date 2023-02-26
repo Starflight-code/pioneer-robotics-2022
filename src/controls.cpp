@@ -6,6 +6,7 @@
 #include "pros/rtos.hpp"
 #include "pros/vision.hpp"
 #include <algorithm>
+#include <array>
 #include <cmath>
 #include <vector>
 
@@ -26,7 +27,7 @@ public:
         button = button_to_watch;
         execution_hold = hold_up_execution;
         Motors.push_back(MG);
-        if (not execution_hold) {
+        if(not execution_hold) {
             hold_index = 0;
         } // Turns bool into True: 1 or False: 0 (For a switch statement)
         else {
@@ -34,16 +35,16 @@ public:
         }
     }
     void check() {
-        switch (hold_index) {
+        switch(hold_index) {
         case 0:
-            if (reverse_check ? not button : button) { // Set the speed to 0 be default, and 170 upon button press when reverse_check is false
+            if(reverse_check ? not button : button) { // Set the speed to 0 be default, and 170 upon button press when reverse_check is false
                 Motors[0].set(0);
             } else {
                 Motors[0].set(170);
             }
             break;
         case 1:
-            while (reverse_check ? not button : button) {
+            while(reverse_check ? not button : button) {
                 Motors[0].set(0);
                 pros::delay(50);
             }
@@ -52,6 +53,7 @@ public:
         }
     }
 };
+
 class cl {
 private:
     double local_limiter = 100;
@@ -79,7 +81,7 @@ private:
         // the scaling coefficient prevents overflow (values >170)
         double sc = (abs(controlInput_y) +
                      abs(controlInput_x));
-        if (sc < _RANGE) {
+        if(sc < _RANGE) {
             sc = _RANGE;
         }
         double scalingConstant = sc / _RANGE;
@@ -105,35 +107,52 @@ public:
     /// Applies motor speeds following the preset control scheme for the drive.
     void controls() {
         /// 0: ANALOG_LEFT_Y value 1: ANALOG_RIGHT_X (if applicable)
-        int controller_values[2];
+        std::array<int, 2> controller_values;
+        std::array<pros::controller_analog_e_t, 2> sticks;
+
         // int controller_value;
         // int controller_x_value;
         pros::Controller master(
             pros::E_CONTROLLER_MASTER); // Imports Controller as "master"
+        // Set sticks arrays to correct values for current configuration
+        if(Motors.Robot.controlScheme == 0) { // Tank control
+            sticks = {ANALOG_LEFT_Y, ANALOG_RIGHT_Y};
+        } else { // Arcade Control
+            sticks = {ANALOG_LEFT_Y, ANALOG_RIGHT_X};
+        }
 
-        if (Motors.Robot.exponential_control) {   // Prepares controller values, either processed via the exponential control system or places the raw data
-            switch (Motors.Robot.controlScheme) { // into the controller_values array. Allowing them to be used to set speeds following the control scheme preset.
-            case 0:                               // Tank control
-                controller_values[0] = exponential_control(master.get_analog(ANALOG_LEFT_Y), Motors.Robot.control_exponent_value);
-                controller_values[1] = exponential_control(master.get_analog(ANALOG_RIGHT_Y), Motors.Robot.control_exponent_value);
-                break;
-            case 1: // Arcade control
-                controller_values[0] = exponential_control(master.get_analog(ANALOG_LEFT_Y), Motors.Robot.control_exponent_value);
-                controller_values[1] = exponential_control(master.get_analog(ANALOG_RIGHT_X), Motors.Robot.control_exponent_value);
-                break;
-            }
-        } else {
-            switch (Motors.Robot.controlScheme) {
-            case 0:
-                controller_values[0] = master.get_analog(ANALOG_LEFT_Y);
-                controller_values[1] = master.get_analog(ANALOG_RIGHT_Y);
-                break;
-            case 1:
-                controller_values[0] = master.get_analog(ANALOG_LEFT_Y);
-                controller_values[1] = master.get_analog(ANALOG_RIGHT_X);
-                break;
+        for(int i = 0; i < controller_values.size(); i++) { // Populate controller_values array with stick values
+            controller_values[i] = master.get_analog(sticks[i]);
+        }
+        if(Motors.Robot.exponential_control) { // Apply exponential control altering
+            for(int i = 0; i < controller_values.size(); i++) {
+                controller_values[i] = exponential_control(controller_values[i], Motors.Robot.control_exponent_value);
             }
         }
+        /*
+                if(Motors.Robot.exponential_control) {   // Prepares controller values, either processed via the exponential control system or places the raw data
+                    switch(Motors.Robot.controlScheme) { // into the controller_values array. Allowing them to be used to set speeds following the control scheme preset.
+                    case 0:                              // Tank control
+                        controller_values[0] = exponential_control(master.get_analog(ANALOG_LEFT_Y), Motors.Robot.control_exponent_value);
+                        controller_values[1] = exponential_control(master.get_analog(ANALOG_RIGHT_Y), Motors.Robot.control_exponent_value);
+                        break;
+                    case 1: // Arcade control
+                        controller_values[0] = exponential_control(master.get_analog(ANALOG_LEFT_Y), Motors.Robot.control_exponent_value);
+                        controller_values[1] = exponential_control(master.get_analog(ANALOG_RIGHT_X), Motors.Robot.control_exponent_value);
+                        break;
+                    }
+                } else {
+                    switch(Motors.Robot.controlScheme) {
+                    case 0:
+                        controller_values[0] = master.get_analog(ANALOG_LEFT_Y);
+                        controller_values[1] = master.get_analog(ANALOG_RIGHT_Y);
+                        break;
+                    case 1:
+                        controller_values[0] = master.get_analog(ANALOG_LEFT_Y);
+                        controller_values[1] = master.get_analog(ANALOG_RIGHT_X);
+                        break;
+                    }
+                }*/
         /*
             if (Motors.Robot.exponential_control) { // Scales control system to x^1.5 (by default), x is between 0 and 1 (speed should look like an exponential curve maxing out at 170)
             //int negativeCarry = (master.get_analog(ANALOG_LEFT_Y) < 0) * -1; // Carrys the negative, would otherwise be lost during exponent calcualtion
@@ -151,7 +170,7 @@ public:
               }
             }*/
 
-        switch (Motors.Robot.controlScheme) {
+        switch(Motors.Robot.controlScheme) {
         case 0: // Tank control --- REMOVE THIS CODE AND ALL (COMMENTED OUT) CONTROL SCHEME CODE ONCE FUNCTIONALITY OF MODULAR SYSTEM CAN BE VERIFIED ---
             /*if (-1 < (controller_value) and
               ((controller_value) < 1) and (spinnerActive)) {
@@ -224,37 +243,37 @@ public:
         controls(); // Applies motor speeds following the preset control scheme for
                     // the drive
 
-        if (master.get_digital(DIGITAL_L1)) {
+        if(master.get_digital(DIGITAL_L1)) {
             spinnerActive = true;
             Motors.setSpeed(4, _SPINNER_SPEED);
-        } else if (master.get_digital(DIGITAL_L2)) {
+        } else if(master.get_digital(DIGITAL_L2)) {
             spinnerActive = true;
             Motors.setSpeed(4, -_SPINNER_SPEED);
         } else {
             spinnerActive = false;
             Motors.setSpeed(4, 0);
         }
-        if (Motors.Robot.training and
-            master.get_digital(
-                pros::E_CONTROLLER_DIGITAL_LEFT)) { // Calculates local limmiter
-                                                    // from left stick's x value,
-                                                    // uses the full stick range.
+        if(Motors.Robot.training and
+           master.get_digital(
+               pros::E_CONTROLLER_DIGITAL_LEFT)) { // Calculates local limmiter
+                                                   // from left stick's x value,
+                                                   // uses the full stick range.
             local_limiter = (master.get_analog(ANALOG_LEFT_X) + _RANGE) / 2.54;
         }
 
-        if (master.get_digital(DIGITAL_R1)) { // Toggles on button press, doesn't
-                                              // hold up the control loop
+        if(master.get_digital(DIGITAL_R1)) { // Toggles on button press, doesn't
+                                             // hold up the control loop
 
-            if (not(R1_State == (Motors.getSpeed(3) == _RANGE))) {
+            if(not(R1_State == (Motors.getSpeed(3) == _RANGE))) {
                 R1_State = !R1_State;
             } // If motors are active and that's not the same as R1's state, it has
               // changed
             Motors.setSpeed(3, R1_State * _RANGE);
         }
-        if (master.get_digital(DIGITAL_R2)) { // Toggles on button press, doesn't
-                                              // hold up the control loop
+        if(master.get_digital(DIGITAL_R2)) { // Toggles on button press, doesn't
+                                             // hold up the control loop
 
-            if (not(R2_State == (Motors.getSpeed(3) == _RANGE))) {
+            if(not(R2_State == (Motors.getSpeed(3) == _RANGE))) {
                 R2_State = !R2_State;
             } // If motors are active and that's not the same as R1's state, it has
               // changed

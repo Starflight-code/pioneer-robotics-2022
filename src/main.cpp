@@ -12,8 +12,8 @@
 // Controls listener task
 void controls_fn(void* param) {
     cl Control_Listener;
-    while (true) {
-        switch (Control_Listener.Motors.Robot.RID) {
+    while(true) {
+        switch(Control_Listener.Motors.Robot.RID) {
         case 1: // Artie Control Scheme
             Control_Listener.run();
             break;
@@ -190,7 +190,7 @@ void autonomous() {
     Motors.setSpeed(2, 10);
     Motors.setSpeed(4, 60);
     // pros::delay(1000); // If we can't get encoders to work, using a delay would be inaccurate but acceptable as a last resort
-    while (abs(Motors.getPosition(4) - Init_Pos) < Move_Dist) {
+    while(abs(Motors.getPosition(4) - Init_Pos) < Move_Dist) {
         pros::delay(50);
     } // Holds up further execution until distance is reached/exceeded (Lower speed if it's exceeded by an unacceptable degree)
     Motors.setSpeed(1, 0);
@@ -227,7 +227,7 @@ void opcontrol() {
     // cl Control_Listener;
     pros::Task controls(
         controls_fn); // removed code that interacts with the PROS scheduler
-    while (true) {
+    while(true) {
         // Control_Listener.run(); // Calls control listener from controls.cpp, look
         //  there to change the controls
 
