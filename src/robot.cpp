@@ -39,10 +39,10 @@ public:
 
     /// Should be 'a' for Artie, 'c' for Chance or 'd' for debug (custom/nonspecific robot)
     /// Should be 'b' for Bryce, 'm' for Malachi, or 'd' for debug (no override)
-    void init(char robot_initial, char driver_initial) {
-        // -- OVERRIDE --
-        // robot_initial = 'a';
-        // driver_initial = 'm';
+    void init(/*char robot_initial, char driver_initial*/) {
+        // -- CONFIGURATIAON --
+        char robot_initial = 'a';
+        char driver_initial = 'm';
 
         // Robot Identifier (Branchless robot initials to ID integer)
         RID = ((robot_initial == 'a') * 1) + ((robot_initial == 'c') * 2) + ((robot_initial == 'd') * 3);    // Branchless method to generate robot identification numbers w/ characters
