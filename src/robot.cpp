@@ -48,7 +48,7 @@ public:
         RID = ((robot_initial == 'a') * 1) + ((robot_initial == 'c') * 2) + ((robot_initial == 'd') * 3);    // Branchless method to generate robot identification numbers w/ characters
         DID = ((driver_initial == 'b') * 1) + ((driver_initial == 'm') * 2 + ((driver_initial == 'd') * 3)); // Branchless method to generate driver identification numbers w/ characters
         // RID = 1 or 2 Override whatever was given
-        switch (RID) {
+        switch(RID) {
         case 1: // Loads configs for Artie
             // pros::lcd::print(1, "Artie");
             name = "Artie";
@@ -96,7 +96,7 @@ public:
             debug = true;      // Enables debug mode, can be used for verbose logging (not implimented yet)
             break;
         }
-        switch (DID) {
+        switch(DID) {
         case 1:                           // Bryce
             exponential_control = true;   // Enables exponent based control system
             control_exponent_value = 1.5; // Greater the value, the steeper the exponential control curve
