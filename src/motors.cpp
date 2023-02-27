@@ -4,6 +4,7 @@
 #include "pros/rtos.hpp"
 #include "variables.cpp"
 #include <algorithm>
+#include <array>
 #include <vector>
 
 // CONTAINS A LOT OF DEPRECATED CODE - Will be removed once it's tested
@@ -109,6 +110,7 @@ public: // Phase out old Motor_Class functions (setSpeed, getSpeed, etc), and me
     MotorGroup rightMotors;
     MotorGroup flywheelMotors;
     MotorGroup spinnerMotors;
+    std::array<MotorGroup, 4> Motors = {leftMotors, rightMotors, flywheelMotors, spinnerMotors};
     Piston launcher;
 
 public:

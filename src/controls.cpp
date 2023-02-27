@@ -1,4 +1,5 @@
 #include "PID.cpp"
+#include "algorithms.cpp"
 #include "pros/adi.hpp"
 #include "pros/llemu.hpp"
 #include "pros/misc.h"
@@ -103,6 +104,7 @@ private:
 
 public:
     Motor_Class Motors;
+    algorithms algo;
 
     /// Applies motor speeds following the preset control scheme for the drive.
     void controls() {
@@ -121,12 +123,13 @@ public:
             sticks = {ANALOG_LEFT_Y, ANALOG_RIGHT_X};
         }
 
-        for(int i = 0; i < controller_values.size(); i++) { // Populate controller_values array with stick values
-            controller_values[i] = master.get_analog(sticks[i]);
-        }
-        if(Motors.Robot.exponential_control) { // Apply exponential control altering
+        if(Motors.Robot.exponential_control) { // Apply exponential control altering and populate controller_values array
             for(int i = 0; i < controller_values.size(); i++) {
-                controller_values[i] = exponential_control(controller_values[i], Motors.Robot.control_exponent_value);
+                controller_values[i] = algo.exponential_control(master.get_analog(sticks[i]), Motors.Robot.control_exponent_value);
+            }
+        } else {
+            for(int i = 0; i < controller_values.size(); i++) { // Populate controller_values array with raw stick values
+                controller_values[i] = master.get_analog(sticks[i]);
             }
         }
         /*
@@ -183,7 +186,11 @@ public:
             Motors.setSpeed(
                 2, int(controller_value * (local_limiter / 100)));*/
             //}
-            tank_control(controller_values[0], controller_values[1]);
+            for(int i = 0; i < controller_values.size(); i++) {
+                Motors.Motors[i].set(algo.tank_control(controller_values[i], local_limiter));
+            }
+
+            // tank_control(controller_values[0], controller_values[1]);
             break;
         case 1: // Split Arcade
 
@@ -211,7 +218,11 @@ public:
                 2, int(((controller_value / (sc / _RANGE) -
                          controller_x_value / (sc / _RANGE)) *
                         (local_limiter / 100))));*/
-            arcade_control(controller_values[0], controller_values[1]);
+            std::array<int, 2> motorValues;
+            motorValues = algo.arcade_control(controller_values[0], controller_values[1], local_limiter);
+            for(int i = 0; i < motorValues.size(); i++) {
+                Motors.Motors[i].set(motorValues[i]);
+            }
             //}
             break;
         default:
