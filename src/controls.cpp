@@ -57,7 +57,7 @@ public:
 
 class cl {
 private:
-    double local_limiter = 100;
+    double limiter;
     double sc = 0;
     const int _RANGE = 127;              // Range of vex motors/controls (max value allowed)
     const int _SPINNER_SPEED = 60;       // Speed that spinner will spin at
@@ -66,7 +66,14 @@ private:
     bool spinnerActive = false;          // Allows for control while pushing robot forward
                                          // for spinner (Quality of Life)
     Control Flywheels;                   // PID and other control alogrithms
+public:
+    Motor_Class Motors;
+    algorithms algo;
+    cl() {
+        limiter = Motors.Robot.limiter;
+    }
 
+private:
     /// Scales control system to x^1.5 (by default), x is between 0 and 1 (speed should look like an exponential curve maxing out at 170).
     /// Created to improve low speed precision while perserving access to high speed settings.
     int exponential_control(int controlInput, double exponent) {
@@ -74,8 +81,8 @@ private:
         return negativeCarry * round(_RANGE * pow((controlInput / _RANGE), exponent));
     }
     void tank_control(int control_input_left, int control_input_right) {
-        Motors.setSpeed(1, int(control_input_left * (local_limiter / 100)));
-        Motors.setSpeed(2, int(control_input_right * (local_limiter / 100)));
+        Motors.setSpeed(1, int(control_input_left * (limiter)));
+        Motors.setSpeed(2, int(control_input_right * (limiter)));
     }
     void arcade_control(int controlInput_y, int controlInput_x) {
         // Designed to allow a mix of left/right forward/backwards inputs, so
@@ -95,16 +102,12 @@ private:
         Motors.setSpeed(
             1, int((-(controlInput_y / scalingConstant +
                       controlInput_x / scalingConstant) *
-                    (local_limiter / 100))));
+                    (limiter))));
         Motors.setSpeed(
             2, int(((controlInput_y / scalingConstant -
                      controlInput_x / scalingConstant) *
-                    (local_limiter / 100))));
+                    (limiter))));
     }
-
-public:
-    Motor_Class Motors;
-    algorithms algo;
 
     /// Applies motor speeds following the preset control scheme for the drive.
     void controls() {
@@ -187,7 +190,7 @@ public:
                 2, int(controller_value * (local_limiter / 100)));*/
             //}
             for(int i = 0; i < controller_values.size(); i++) {
-                Motors.Motors[i].set(algo.tank_control(controller_values[i], local_limiter));
+                Motors.Motors[i].set(algo.tank_control(controller_values[i], limiter));
             }
 
             // tank_control(controller_values[0], controller_values[1]);
@@ -219,7 +222,7 @@ public:
                          controller_x_value / (sc / _RANGE)) *
                         (local_limiter / 100))));*/
             std::array<int, 2> motorValues;
-            motorValues = algo.arcade_control(controller_values[0], controller_values[1], local_limiter);
+            motorValues = algo.arcade_control(controller_values[0], controller_values[1], limiter);
             for(int i = 0; i < motorValues.size(); i++) {
                 Motors.Motors[i].set(motorValues[i]);
             }
@@ -234,6 +237,11 @@ public:
     }
     void event_listener() {
     }
+    /// Control Listening Service
+    ///
+    /// Pulls from control inputs based on robot.cpp's config.
+    /// Sends calculated output to motors.
+public:
     void run() {
 
         pros::Controller master(
@@ -253,23 +261,24 @@ public:
 
         controls(); // Applies motor speeds following the preset control scheme for
                     // the drive
-
-        if(master.get_digital(DIGITAL_L1)) {
-            spinnerActive = true;
-            Motors.setSpeed(4, _SPINNER_SPEED);
-        } else if(master.get_digital(DIGITAL_L2)) {
-            spinnerActive = true;
-            Motors.setSpeed(4, -_SPINNER_SPEED);
-        } else {
-            spinnerActive = false;
-            Motors.setSpeed(4, 0);
-        }
+                    /*
+                    if(master.get_digital(DIGITAL_L1)) {
+                        spinnerActive = true;
+                        Motors.setSpeed(4, _SPINNER_SPEED);
+                    } else if(master.get_digital(DIGITAL_L2)) {
+                        spinnerActive = true;
+                        Motors.setSpeed(4, -_SPINNER_SPEED);
+                    } else {
+                        spinnerActive = false;
+                        Motors.setSpeed(4, 0);
+                    }
+                    */
         if(Motors.Robot.training and
            master.get_digital(
                pros::E_CONTROLLER_DIGITAL_LEFT)) { // Calculates local limmiter
                                                    // from left stick's x value,
                                                    // uses the full stick range.
-            local_limiter = (master.get_analog(ANALOG_LEFT_X) + _RANGE) / 2.54;
+            limiter = (double)(master.get_analog(ANALOG_LEFT_X) + _RANGE) / 254;
         }
 
         if(master.get_digital(DIGITAL_R1)) { // Toggles on button press, doesn't

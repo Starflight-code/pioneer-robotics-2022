@@ -7,17 +7,18 @@ private:
 public:
     int castToInt(double x) { return (int)x; }
     int castToInt(int x) { return x; }
-    int applyLimiter(int x, int limiter) {
-        return x * ((double)limiter / 100);
+    /// Applys a limiter by multiplying a given value by the limiter, then casting as an int
+    int applyLimiter(int x, double limiter) {
+        return (int)x * limiter;
     }
     int exponential_control(int controlInput, double exponent) {
         int negativeCarry = (controlInput < 0) * -1; // Carrys the negative, would otherwise be lost during exponent calcualtion
         return negativeCarry * round(_RANGE * pow((controlInput / _RANGE), exponent));
     }
-    int tank_control(int control_input, int limiter) {
-        return control_input * (limiter / 100);
+    int tank_control(int control_input, double limiter) {
+        return applyLimiter(control_input, limiter);
     }
-    std::array<int, 2> arcade_control(int controlInput_y, int controlInput_x, int limiter) {
+    std::array<int, 2> arcade_control(int controlInput_y, int controlInput_x, double limiter) {
         std::array<int, 2> motorOutput;
         // Designed to allow a mix of left/right forward/backwards inputs, so
         // the scaling coefficient prevents overflow (values >170)
