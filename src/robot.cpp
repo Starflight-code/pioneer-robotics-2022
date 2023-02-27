@@ -35,7 +35,7 @@ public:
     std::vector<bool> rightAlt_Rev_States;    // 0: Alternating (bool) 1: Initial Reverse State (bool)
     std::vector<bool> flywheelAlt_Rev_States; // 0: Alternating (bool) 1: Initial Reverse State (bool)
     std::vector<bool> spinnerAlt_Rev_States;  // 0: Alternating (bool) 1: Initial Reverse State (bool)
-    int launcher_port;
+    // int launcher_port;
 
     /// Should be 'a' for Artie, 'c' for Chance or 'd' for debug (custom/nonspecific robot)
     /// Should be 'b' for Bryce, 'm' for Malachi, or 'd' for debug (no override)
@@ -62,7 +62,7 @@ public:
             spinnerAlt_Rev_States = {false, false}; // Initial Reverse State True: True, True, True
             controlScheme = 0;                      // 0 for tank, 1 for split arcade
             limiter = 1;
-            launcher_port = 1; // Placeholder port given, replace once decided
+            // launcher_port = 1; // Placeholder port given, replace once decided
             break;
 
         case 2: // Loads configs for Chance
@@ -77,7 +77,7 @@ public:
             spinnerAlt_Rev_States = {false, false};
             controlScheme = 0; // 0 for tank, 1 for split arcade
             limiter = 1;
-            launcher_port = 1; // Placeholder port given, replace once decided
+            // launcher_port = 1; // Placeholder port given, replace once decided
             break;
 
         case 3: // Loads configs for Debug
@@ -92,8 +92,8 @@ public:
             spinnerAlt_Rev_States = {false, false};
             controlScheme = 0; // 0 for tank, 1 for split arcade
             limiter = 1;
-            launcher_port = 1; // Placeholder port given, replace once decided
-            debug = true;      // Enables debug mode, can be used for verbose logging (not implimented yet)
+            // launcher_port = 1; // Placeholder port given, replace once decided
+            debug = true; // Enables debug mode, can be used for verbose logging (not implimented yet)
             break;
         }
         switch(DID) {

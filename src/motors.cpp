@@ -9,7 +9,7 @@
 
 // CONTAINS A LOT OF DEPRECATED CODE - Will be removed once it's tested
 
-class Piston { // Piston class, supports ADI Pistons and includes tracking/setting
+/*class Piston { // Piston class, supports ADI Pistons and includes tracking/setting
 
 private:
     std::vector<pros::ADIDigitalOut> piston = {};
@@ -27,7 +27,7 @@ public:
     bool get() {
         return piston_state; // Returns the piston_state tracker value
     }
-};
+};*/
 class MotorGroup {
 private:
     int current_limiter;
@@ -111,7 +111,7 @@ public: // Phase out old Motor_Class functions (setSpeed, getSpeed, etc), and me
     MotorGroup flywheelMotors;
     MotorGroup spinnerMotors;
     std::array<MotorGroup, 4> Motors = {leftMotors, rightMotors, flywheelMotors, spinnerMotors};
-    Piston launcher;
+    // Piston launcher;
 
 public:
     robot Robot;
@@ -126,7 +126,7 @@ public:
         rightMotors.setLimiter(Robot.limiter);
         flywheelMotors.setLimiter(Robot.limiter);
         spinnerMotors.setLimiter(Robot.limiter);
-        launcher.init(Robot.launcher_port);
+        // launcher.init(Robot.launcher_port);
     }
 
 private:
