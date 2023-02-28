@@ -4,33 +4,14 @@
       "name": "PROS Project",
       "includePath": [
         "${workspaceFolder}/**",
-<<<<<<< HEAD
-        "j:\\Pioneer-Robotics-2022\\pioneer-robotics-2022\\include"
-=======
         "c:\\Users\\benko\\Documents\\Robot Code\\pioneer-robotics-2022\\include"
->>>>>>> testing
       ],
       "defines": [
         "_DEBUG",
         "UNICODE",
         "_UNICODE"
       ],
-<<<<<<< HEAD
-      "compilerPath": "c:\\Users\\kobiskeb\\AppData\\Roaming\\Code\\User\\globalStorage\\sigbots.pros\\install\\pros-toolchain-windows\\usr\\bin\\arm-none-eabi-g++",
-      "cStandard": "c17",
-      "cppStandard": "c++17",
-      "intelliSenseMode": "gcc-arm",
-      "compileCommands": "j:\\Pioneer-Robotics-2022\\pioneer-robotics-2022\\compile_commands.json",
-      "browse": {
-        "path": [
-          "j:\\Pioneer-Robotics-2022\\pioneer-robotics-2022"
-        ],
-        "limitSymbolsToIncludedHeaders": true,
-        "databaseFilename": ""
-      },
-      "configurationProvider": "ms-vscode.makefile-tools"
-=======
-      "compilerPath": "c:\\Users\\benko\\AppData\\Roaming\\Code\\User\\globalStorage\\sigbots.pros\\install\\pros-toolchain-windows\\usr\\bin\\arm-none-eabi-g++",
+      "compilerPath": "c:\\Users\\benko\\AppData\\Roaming\\VSCodium\\User\\globalStorage\\sigbots.pros\\install\\pros-toolchain-windows\\usr\\bin\\arm-none-eabi-g++",
       "cStandard": "c17",
       "cppStandard": "c++17",
       "intelliSenseMode": "gcc-arm",
@@ -42,7 +23,6 @@
         "limitSymbolsToIncludedHeaders": true,
         "databaseFilename": ""
       }
->>>>>>> testing
     }
   ],
   "version": 4

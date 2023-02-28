@@ -77,13 +77,8 @@ bin/LinkedMtr.cpp.o: src/LinkedMtr.cpp src/LinkedMtr.hpp src/include.cpp \
  include/pros/screen.hpp include/pros/screen.h include/pros/vision.hpp \
  include/pros/vision.h include/pros/link.hpp include/pros/link.h \
  include/pros/apix.h include/api.h include/pros/serial.h \
-<<<<<<< HEAD:.d/flywheel.cpp.d
- include/pros/serial.hpp include/pros/apix.h include/pros/motors.hpp \
- src/motors.cpp include/pros/adi.hpp
-=======
  include/pros/serial.hpp include/pros/apix.h include/pros/motors.hpp
 src/LinkedMtr.hpp:
->>>>>>> testing:.d/LinkedMtr.cpp.d
 src/include.cpp:
 include/main.h:
 include/api.h:
@@ -244,8 +239,3 @@ include/pros/serial.h:
 include/pros/serial.hpp:
 include/pros/apix.h:
 include/pros/motors.hpp:
-<<<<<<< HEAD:.d/flywheel.cpp.d
-src/motors.cpp:
-include/pros/adi.hpp:
-=======
->>>>>>> testing:.d/LinkedMtr.cpp.d
