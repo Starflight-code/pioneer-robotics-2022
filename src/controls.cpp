@@ -5,12 +5,13 @@
 #include "pros/misc.h"
 #include "pros/motors.hpp"
 #include "pros/rtos.hpp"
+#include "pros/screen.hpp"
 #include "pros/vision.hpp"
 #include <algorithm>
 #include <array>
 #include <cmath>
 #include <vector>
-
+/*
 class event {
 private:
     pros::Controller* master; // Sets up a pointer to controller master, will be configured by the constructor
@@ -53,7 +54,7 @@ public:
             break;
         }
     }
-};
+};*/
 
 class cl {
 private:
@@ -111,6 +112,7 @@ private:
 
     /// Applies motor speeds following the preset control scheme for the drive.
     void controls() {
+        // pros::lcd::print(0, "Debug 1");
         /// 0: ANALOG_LEFT_Y value 1: ANALOG_RIGHT_X (if applicable)
         std::array<int, 2> controller_values;
         std::array<pros::controller_analog_e_t, 2> sticks;
@@ -131,10 +133,17 @@ private:
                 controller_values[i] = algo.exponential_control(master.get_analog(sticks[i]), Motors.Robot.control_exponent_value);
             }
         } else {
-            for(int i = 0; i < controller_values.size(); i++) { // Populate controller_values array with raw stick values
+            for(int i = 0; i < controller_values.size(); i++) { // Populate controller_values
+                                                                // array with raw stick values
                 controller_values[i] = master.get_analog(sticks[i]);
             }
         }
+
+        Motors.setSpeed(1, controller_values[0]);
+        // pros::lcd::print(2, (const char*)(controller_values[0] + controller_values[1]));
+        Motors.setSpeed(2, controller_values[1]);
+        // Motors.setSpeed(1, 50);
+        // pros::delay(200);
         /*
                 if(Motors.Robot.exponential_control) {   // Prepares controller values, either processed via the exponential control system or places the raw data
                     switch(Motors.Robot.controlScheme) { // into the controller_values array. Allowing them to be used to set speeds following the control scheme preset.

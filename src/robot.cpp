@@ -52,8 +52,8 @@ public:
         case 1: // Loads configs for Artie
             // pros::lcd::print(1, "Artie");
             name = "Artie";
-            leftPorts = {16, 6, 3, 8};              // Ports of left motors, from L1 to L4
-            rightPorts = {20, 19, 18, 17};          // Ports of right motors, from R1 to R4
+            leftPorts = {9, 8, 5, 3};               // Ports of left motors, from L1 to L4
+            rightPorts = {20, 18, 14, 11};          // Ports of right motors, from R1 to R4
             flywheelPorts = {1, 4};                 // Ports of flywheel motors, from F1 to F2
             spinnerPorts = {13};                    // Port for the spinner motor
             leftAlt_Rev_States = {true, true};      // 0: Alternating (bool) 1: Initial Reverse State (bool)

@@ -113,12 +113,13 @@ void on_center_button() {
  */
 void initialize() {
     // pros::lcd::initialize();
-    // pros::Motor L1(8, true);
-    // L1 = 90;
-    // pros::delay(5000);
-    // L1 = 0;
-    // initialize_btn();
-    //  Sets the background to the image contained within waifu_elijah.c
+    //  pros::lcd::initialize();
+    //  pros::Motor L1(8, true);
+    //  L1 = 90;
+    //  pros::delay(5000);
+    //  L1 = 0;
+    //  initialize_btn();
+    //   Sets the background to the image contained within waifu_elijah.c
     /* -- Removed photo, screen will be blank. Replace with a logo once created.*/
     /*lv_obj_t* background = lv_img_create(lv_scr_act(), NULL);
     LV_IMG_DECLARE(waifu_elijah);

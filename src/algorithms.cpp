@@ -1,5 +1,7 @@
+#include "include.cpp"
 #include <array>
 #include <math.h>
+
 class algorithms {
 private:
     const int _RANGE = 170;
@@ -12,8 +14,9 @@ public:
         return (int)x * limiter;
     }
     int exponential_control(int controlInput, double exponent) {
-        int negativeCarry = (controlInput < 0) * -1; // Carrys the negative, would otherwise be lost during exponent calcualtion
-        return negativeCarry * round(_RANGE * pow((controlInput / _RANGE), exponent));
+        int negativeCarry = controlInput < 0 ? -1 : 1; // Carrys the negative, would otherwise be lost during exponent calcualtion
+        //  return controlInput;
+        return (int)/*controlInput <= 0 ? -1 : 1) */ negativeCarry * abs((_RANGE * pow(((double)abs(controlInput) / _RANGE), exponent)));
     }
     int tank_control(int control_input, double limiter) {
         return applyLimiter(control_input, limiter);
