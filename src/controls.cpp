@@ -58,8 +58,8 @@ public:
 
 class cl {
 private:
-    double limiter;
-    double sc = 0;
+    double limiter;                      // Global limiter value (double w/ range [0 <-> 1])
+    double sc = 0;                       // Scaling constant, for use with arcade control system
     const int _RANGE = 127;              // Range of vex motors/controls (max value allowed)
     const int _SPINNER_SPEED = 60;       // Speed that spinner will spin at
     const int _SPINNER_DRIVE_SPEED = 10; // Speed for drive motors to push robot
@@ -77,6 +77,7 @@ public:
 private:
     /// Scales control system to x^1.5 (by default), x is between 0 and 1 (speed should look like an exponential curve maxing out at 170).
     /// Created to improve low speed precision while perserving access to high speed settings.
+    /*
     int exponential_control(int controlInput, double exponent) {
         int negativeCarry = (controlInput < 0) * -1; // Carrys the negative, would otherwise be lost during exponent calcualtion
         return negativeCarry * round(_RANGE * pow((controlInput / _RANGE), exponent));
@@ -108,7 +109,7 @@ private:
             2, int(((controlInput_y / scalingConstant -
                      controlInput_x / scalingConstant) *
                     (limiter))));
-    }
+    }*/
 
     /// Applies motor speeds following the preset control scheme for the drive.
     void controls() {
@@ -118,9 +119,9 @@ private:
 
         pros::Controller master(pros::E_CONTROLLER_MASTER); // Imports Controller as "master"
         // Set sticks arrays to correct values for current configuration
-        if(Motors.Robot.controlScheme == 0) {       
+        if(Motors.Robot.controlScheme == 0) {
             sticks = {ANALOG_LEFT_Y, ANALOG_RIGHT_Y}; // Tank control
-        } else {                                    
+        } else {
             sticks = {ANALOG_LEFT_Y, ANALOG_RIGHT_X}; // Arcade Control
         }
 
