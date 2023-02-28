@@ -112,20 +112,16 @@ private:
 
     /// Applies motor speeds following the preset control scheme for the drive.
     void controls() {
-        // pros::lcd::print(0, "Debug 1");
-        /// 0: ANALOG_LEFT_Y value 1: ANALOG_RIGHT_X (if applicable)
+
         std::array<int, 2> controller_values;
         std::array<pros::controller_analog_e_t, 2> sticks;
 
-        // int controller_value;
-        // int controller_x_value;
-        pros::Controller master(
-            pros::E_CONTROLLER_MASTER); // Imports Controller as "master"
+        pros::Controller master(pros::E_CONTROLLER_MASTER); // Imports Controller as "master"
         // Set sticks arrays to correct values for current configuration
-        if(Motors.Robot.controlScheme == 0) { // Tank control
-            sticks = {ANALOG_LEFT_Y, ANALOG_RIGHT_Y};
-        } else { // Arcade Control
-            sticks = {ANALOG_LEFT_Y, ANALOG_RIGHT_X};
+        if(Motors.Robot.controlScheme == 0) {       
+            sticks = {ANALOG_LEFT_Y, ANALOG_RIGHT_Y}; // Tank control
+        } else {                                    
+            sticks = {ANALOG_LEFT_Y, ANALOG_RIGHT_X}; // Arcade Control
         }
 
         if(Motors.Robot.exponential_control) { // Apply exponential control altering and populate controller_values array

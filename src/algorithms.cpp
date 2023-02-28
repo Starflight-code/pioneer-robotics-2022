@@ -7,20 +7,48 @@ private:
     const int _RANGE = 170;
 
 public:
+    /** Converts an integer or double into an int
+     * @param x | any number (double or integer)
+     * @return x converted to an int datatype
+     */
     int castToInt(double x) { return (int)x; }
+    /** Converts an integer or double into an int
+     * @param x | any number (double or integer)
+     * @return x converted to an int datatype
+     */
     int castToInt(int x) { return x; }
-    /// Applys a limiter by multiplying a given value by the limiter, then casting as an int
+    /** Converts an integer or double into an int
+     * @param x | a motor value (integer w/ range [-170 <-> 170])
+     * @param limiter | global limiter value (double w/ range [0 <-> 1])
+     * @return motor value with limiter applies (integer)
+     */
     int applyLimiter(int x, double limiter) {
         return (int)x * limiter;
     }
+    /** Exponential control system allows high precision at lower speeds and access to higher speeds when desired
+     * @param controlInput | a motor value (integer w/ range [-170 <-> 170])
+     * @param exponent | a number which the motor value will be raised to (double)
+     * @return a modified motor value that can be piped into a motor array (integer w/ range [-170 <-> 170])
+     */
     int exponential_control(int controlInput, double exponent) {
         int negativeCarry = controlInput < 0 ? -1 : 1; // Carrys the negative, would otherwise be lost during exponent calcualtion
-        //  return controlInput;
-        return (int)/*controlInput <= 0 ? -1 : 1) */ negativeCarry * abs((_RANGE * pow(((double)abs(controlInput) / _RANGE), exponent)));
+        return (int)negativeCarry * abs((_RANGE * pow(((double)abs(controlInput) / _RANGE), exponent)));
     }
+    /** Impliments a two stick tank style control system, outputs motor array values
+     * @param control_input | a controller output value (integer w/ range [-170 <-> 170])
+     * @param limiter | a global limiter value (double w/ range [0 <-> 1])
+     * @return a modified motor value that can be piped into a motor array (integer w/ range [-170 <-> 170])
+     */
     int tank_control(int control_input, double limiter) {
         return applyLimiter(control_input, limiter);
     }
+    /**
+     * Impliments a two stick arcade style control system, outputs left and right motor array values
+     * @param controlInput_y | Accepts input values for the left stick, y axis (int w/ range [-170 <-> 170])
+     * @param controlInput_x | Accepts input values for the right stick, x axis (int w/ range [-170 <-> 170])
+     * @param limiter | Accepts the global limiter value (double w/ range [0 <-> 1])
+     * @return 2 motor values in an integer array, pipe these into the motor arrays [index 0, left | index 1, right]
+     */
     std::array<int, 2> arcade_control(int controlInput_y, int controlInput_x, double limiter) {
         std::array<int, 2> motorOutput;
         // Designed to allow a mix of left/right forward/backwards inputs, so
