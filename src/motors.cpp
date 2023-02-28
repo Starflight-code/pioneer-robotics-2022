@@ -1,11 +1,15 @@
 #include "pros/motors.hpp"
 #include "include.cpp"
 #include "pros/adi.hpp"
+<<<<<<< HEAD
+=======
 #include "pros/rtos.hpp"
 #include "robot.cpp"
 #include <algorithm>
 #include <array>
 #include <vector>
+#include "variables.cpp"
+>>>>>>> testing
 
 // CONTAINS A LOT OF DEPRECATED CODE - Will be removed once it's tested
 
@@ -130,52 +134,69 @@ public:
     }
 
 private:
-    float modifier = 1; // This reduced the motor power by POWER * modifier,
-                        // should be between 0 and 1 or it will return an error.
-    int left_motors = 0;
-    int right_motors = 0;
-    int flywheels = 0;
-    bool init = true;
+  float modifier = 1; // This reduced the motor power by POWER * modifier,
+                      // should be between 0 and 1 or it will return an error.
+  int left_motors = 0;
+  int right_motors = 0;
+  int flywheels = 0;
+  bool init = true;
+  
 
 public:
-    void setSpeed(int motorSet, int speed) {
-        switch(motorSet) {
-        case 1: // motorSpeed(1, speed) to set left motor group's speed
-            leftMotors.set(speed);
-            break;
-        case 2: // motorSpeed(2, speed) to set the right motor group's speed
-            rightMotors.set(speed);
-            break;
-        case 3: // motorSpeed(3, speed) to set flywheel motor group's speed
-            flywheelMotors.set(speed);
-            break;
-        case 4: // motorSpeed(3, speed) to set spinner motor group's speed
-            spinnerMotors.set(speed);
-            break;
-        default:
-            return;
-        }
-        return;
-    };
+  void setSpeed(int motorSet, int speed) {
+  //  pros::lcd::print(3, "Motors SetSpeed Executed");
+  /*pros::Motor L1(8, true);  // Motor L1: Normal
+  pros::Motor L2(6, false); // Motor L2: Reversed
+  pros::Motor L3(5, true);  // Motor L3: Normal
+  pros::Motor L4(9, false); // Motor L4: Reversed
 
-    int getSpeed(int motorSet) {
-        switch(motorSet) {
-        case 1:
-            return leftMotors.getSpeed(); // Returns the left motor group tracker
-                                          // value (speed of the motor set)
-        case 2:
-            return rightMotors.getSpeed(); // Returns the right motor group tracker
-                                           // value (speed of the motor set)
-        case 3:
-            return flywheelMotors.getSpeed(); // Returns the flywheel motor group tracker value (speed
-                                              // of the motor set)
-        case 4:
-            return spinnerMotors.getSpeed(); // Returns the spinner motor group tracker value (speed
-                                             // of the motor set)
-        default:
-            return 0; // Returns ZERO if an erroneous input was given.
-        }
+  pros::Motor R1(20, false); // Motor R1: Reversed
+  pros::Motor R2(19, true);  // Motor R2: Normal
+  pros::Motor R3(18, false); // Motor R3: Reversed
+  pros::Motor R4(17, true);  // Motor R4: Normal
+
+    pros::Motor F1(3, false);
+    pros::Motor F2(4, true);*/
+    switch (motorSet) {
+
+    case 1: // motorSpeed(1, speed) to set left motor group's speed
+      leftMotors.set(speed);
+      break;
+    case 2: // motorSpeed(2, speed) to set the right motor group's speed
+      rightMotors.set(speed);
+      break;
+    case 3: // motorSpeed(3, speed) to set flywheel motor group's speed
+      flywheelMotors.set(speed);
+      break;
+    case 4: // motorSpeed(3, speed) to set spinner motor group's speed
+      spinnerMotors.set(speed);
+      break;
+    default:
+      return;
     }
+    return;
+  };
+
+  int getSpeed(int motorSet) {
+    switch (motorSet) {
+    case 1:
+      return leftMotors.getSpeed(); // Returns the left motor group tracker
+                                    // value (speed of the motor set)
+    case 2:
+      return rightMotors.getSpeed(); // Returns the right motor group tracker
+                                     // value (speed of the motor set)
+    case 3:
+      return flywheelMotors
+          .getSpeed(); // Returns the flywheel motor group tracker value (speed
+                       // of the motor set)
+    case 4:
+      return spinnerMotors
+          .getSpeed(); // Returns the spinner motor group tracker value (speed
+                       // of the motor set)
+    default:
+      return 0; // Returns ZERO if an erroneous input was given.
+    }
+  }
 
     float getVelocity(int motorSet) {
         switch(motorSet) {
