@@ -225,18 +225,12 @@ Spin the spinner, using the encoder to reach a proper color. No visual/sensor ch
  * task, not resume it from where it left off.
  */
 void opcontrol() {
-<<<<<<< HEAD
-  cl Control_Listener;
-  Control_Listener.Motors.launcher(false);
-  // pros::Task controls_fn(nullptr); removed code that interacts with the PROS scheduler
-=======
-  // cl Control_Listener;
-  pros::Task controls(
-      controls_fn); // removed code that interacts with the PROS scheduler
->>>>>>> testing
-  while (true) {
-    // Control_Listener.run(); // Calls control listener from controls.cpp, look
-    //  there to change the controls
+    // cl Control_Listener;
+    pros::Task controls(
+        controls_fn); // removed code that interacts with the PROS scheduler
+    while(true) {
+        // Control_Listener.run(); // Calls control listener from controls.cpp, look
+        //  there to change the controls
 
         // Waits 50 milliseconds and gives CPU some time to sleep. Increase this
         // value if the CPU overheats.

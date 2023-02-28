@@ -15,33 +15,26 @@ private:                  // TODO: Tune constants as PID will have a decreased/r
     Motor_Class Motors;
 
 public:
-<<<<<<< HEAD
-  /*int PID(int distance) {
-    // desiredVelocity is in RPM
-    //error = Motors.getVelocity(3) - desiredVelocity; !! DEPRECATED Velocity PID
-    //error = distance - Motors.getPosition(1);
-=======
-  int PID(int distance) {
-    // desiredVelocity is in RPM
-    //error = Motors.getVelocity(3) - desiredVelocity; !! DEPRECATED Velocity PID
-    error = distance - Motors.getPosition(1);
->>>>>>> testing
-    integral = prevIntegral + error;
-    prevIntegral = integral;
-    derivative = error - prevError;
-    prevError = error;
+    int PID(int distance) {
+        // desiredVelocity is in RPM
+        // error = Motors.getVelocity(3) - desiredVelocity; !! DEPRECATED Velocity PID
+        error = distance - Motors.getPosition(1);
+        integral = prevIntegral + error;
+        prevIntegral = integral;
+        derivative = error - prevError;
+        prevError = error;
 
         return ((kP * error) + (kD * derivative) + (kI * integral)) * 127;
     }
     int PID_Velocity(int desiredVelocity) {
 
-    // desiredVelocity is in RPM
-    error = Motors.getVelocity(3) - desiredVelocity; 
-    integral = prevIntegral + error;
-    prevIntegral = integral;
-    derivative = error - prevError;
-    prevError = error;
+        // desiredVelocity is in RPM
+        error = Motors.getVelocity(3) - desiredVelocity;
+        integral = prevIntegral + error;
+        prevIntegral = integral;
+        derivative = error - prevError;
+        prevError = error;
 
-    return ((kP * error) + (kD * derivative) + (kI * integral)) * 127;
-  }
+        return ((kP * error) + (kD * derivative) + (kI * integral)) * 127;
+    }
 };
