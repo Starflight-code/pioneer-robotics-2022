@@ -160,22 +160,22 @@ void autonomous() {
     double Move_Dist = 1;
     double Init_Pos;
     Motor_Class Motors;
-    Motors.setSpeed(1, 30);
-    Motors.setSpeed(2, 30);
+    Motors.leftMotors.set(30);
+    Motors.rightMotors.set(30);
     pros::delay(1000); // Sets motors to quarter speed to prevent slipping from the intial acceleration
-    Motors.setSpeed(1, 60);
-    Motors.setSpeed(2, -60);
-    pros::delay(4500);      // Move robot forward at ~half speed for 4.5 seconds
-    Motors.setSpeed(1, 10); // Decreases the drive speed and spins the spinner wheel at ~half speed
-    Motors.setSpeed(2, 10);
-    Motors.setSpeed(4, 60);
+    Motors.leftMotors.set(-60);
+    Motors.rightMotors.set(60);
+    pros::delay(4500);         // Move robot forward at ~half speed for 4.5 seconds
+    Motors.leftMotors.set(10); // Decreases the drive speed and spins the spinner wheel at ~half speed
+    Motors.rightMotors.set(10);
+    Motors.spinnerMotors.set(60);
     // pros::delay(1000); // If we can't get encoders to work, using a delay would be inaccurate but acceptable as a last resort
-    while(abs(Motors.getPosition(4) - Init_Pos) < Move_Dist) {
+    while(abs(Motors.spinnerMotors.getFastPosition() - Init_Pos) < Move_Dist) {
         pros::delay(50);
     } // Holds up further execution until distance is reached/exceeded (Lower speed if it's exceeded by an unacceptable degree)
-    Motors.setSpeed(1, 0);
-    Motors.setSpeed(2, 0);
-    Motors.setSpeed(4, 0); // Stop motors and halts autonomous
+    Motors.leftMotors.set(0);
+    Motors.rightMotors.set(0);
+    Motors.spinnerMotors.set(0); // Stop motors and halts autonomous
 }
 /*
 Psudocode

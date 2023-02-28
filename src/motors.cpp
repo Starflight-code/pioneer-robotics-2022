@@ -137,7 +137,7 @@ private:
     int flywheels = 0;
     bool init = true;
 
-public:
+private:
     void setSpeed(int motorSet, int speed) {
         switch(motorSet) {
         case 1: // motorSpeed(1, speed) to set left motor group's speed

@@ -67,6 +67,9 @@ private:
     bool spinnerActive = false;          // Allows for control while pushing robot forward
                                          // for spinner (Quality of Life)
     Control Flywheels;                   // PID and other control alogrithms
+    std::array<int, 2> controller_values;
+    std::array<pros::controller_analog_e_t, 2> sticks;
+
 public:
     Motor_Class Motors;
     algorithms algo;
@@ -114,9 +117,6 @@ private:
     /// Applies motor speeds following the preset control scheme for the drive.
     void controls() {
 
-        std::array<int, 2> controller_values;
-        std::array<pros::controller_analog_e_t, 2> sticks;
-
         pros::Controller master(pros::E_CONTROLLER_MASTER); // Imports Controller as "master"
         // Set sticks arrays to correct values for current configuration
         if(Motors.Robot.controlScheme == 0) {
@@ -136,9 +136,9 @@ private:
             }
         }
 
-        Motors.setSpeed(1, controller_values[0]);
+        Motors.leftMotors.set(controller_values[0]);
         // pros::lcd::print(2, (const char*)(controller_values[0] + controller_values[1]));
-        Motors.setSpeed(2, controller_values[1]);
+        Motors.rightMotors.set(controller_values[1]);
         // Motors.setSpeed(1, 50);
         // pros::delay(200);
         /*
@@ -267,43 +267,30 @@ public:
 
         controls(); // Applies motor speeds following the preset control scheme for
                     // the drive
-                    /*
-                    if(master.get_digital(DIGITAL_L1)) {
-                        spinnerActive = true;
-                        Motors.setSpeed(4, _SPINNER_SPEED);
-                    } else if(master.get_digital(DIGITAL_L2)) {
-                        spinnerActive = true;
-                        Motors.setSpeed(4, -_SPINNER_SPEED);
-                    } else {
-                        spinnerActive = false;
-                        Motors.setSpeed(4, 0);
-                    }
-                    */
-        if(Motors.Robot.training and
-           master.get_digital(
-               pros::E_CONTROLLER_DIGITAL_LEFT)) { // Calculates local limmiter
-                                                   // from left stick's x value,
-                                                   // uses the full stick range.
+
+        if(Motors.Robot.training and master.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT)) { // Calculates local limmiter
+                                                                                            // from left stick's x value,
+                                                                                            // uses the full stick range.
             limiter = (double)(master.get_analog(ANALOG_LEFT_X) + _RANGE) / 254;
         }
 
         if(master.get_digital(DIGITAL_R1)) { // Toggles on button press, doesn't
                                              // hold up the control loop
 
-            if(not(R1_State == (Motors.getSpeed(3) == _RANGE))) {
+            if(not(R1_State == (Motors.flywheelMotors.getSpeed() == _RANGE))) {
                 R1_State = !R1_State;
             } // If motors are active and that's not the same as R1's state, it has
               // changed
-            Motors.setSpeed(3, R1_State * _RANGE);
+            Motors.flywheelMotors.set(R1_State * _RANGE);
         }
         if(master.get_digital(DIGITAL_R2)) { // Toggles on button press, doesn't
                                              // hold up the control loop
 
-            if(not(R2_State == (Motors.getSpeed(3) == _RANGE))) {
+            if(not(R2_State == (Motors.flywheelMotors.getSpeed() == _RANGE))) {
                 R2_State = !R2_State;
             } // If motors are active and that's not the same as R1's state, it has
               // changed
-            Motors.setSpeed(3, R2_State * _RANGE);
+            Motors.flywheelMotors.set(R2_State * _RANGE);
         }
         // REPLACE W/ Modular systems possibly in an event listener file, impliment in a future update
 
