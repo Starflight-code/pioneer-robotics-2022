@@ -28,6 +28,7 @@ public:
     bool exponential_control = true;     // Enables exponent based control system
     double control_exponent_value = 1.5; // Greater the value, the steeper the exponential control curve
     int control_switch_value;
+    bool task_scheduler = true;
     std::vector<int> leftPorts;               // Left Motor Port Array
     std::vector<int> rightPorts;              // Right Motor Port Array
     std::vector<int> flywheelPorts;           // Flywheel Motor Port Array

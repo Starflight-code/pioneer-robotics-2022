@@ -210,9 +210,11 @@ Spin the spinner, using the color sensor to reach a proper color. Await color se
  */
 std::array<uint32_t, 2> cycleRun(uint32_t currentTime, int taskIndex, std::array<uint32_t, 2> milis_cycle, int desiredWaitTime) {
     milis_cycle[taskIndex - 1 < 0 ? milis_cycle.size() - 1 : taskIndex - 1] = (uint32_t)pros::millis; // Prevents the index from reaching -1, instead setting it to the max index value if it is
-    int waitTime = desiredWaitTime - (currentTime - milis_cycle[taskIndex]);
-    pros::c::delay(waitTime < 0 ? 0 : waitTime);
-    return milis_cycle;
+                                                                                                      // Sets current time as the finishing time of the last task
+    int waitTime = desiredWaitTime - (currentTime - milis_cycle[taskIndex]);                          // Calculates current wait time by checking desiredWaitTime(default:50) - time passed since task finished
+
+    pros::c::delay(waitTime < 0 ? 0 : waitTime); // Waits for the wait time, if it is still positive (has not passed)
+    return milis_cycle;                          // Sends the updated array back, allows persistance between method executions
 }
 void opcontrol() {
     std::array<uint32_t, 2> milis_cycle = {0, 0};
@@ -220,19 +222,26 @@ void opcontrol() {
     int waitTime;
     cl Control_Listener;
     Motor_Class Motors;
+    if(Motors.Robot.task_scheduler) {
+        // pros::Task controls(controls_container, (void*)Motors); // control code that interacts with the PROS scheduler
+        // pros::Task events(event_listener_container);            // event listener code that interacts with the PROS scheduler
+        while(true) {
+            // Control_Listener.run(); // Calls control listener from controls.cpp, look
+            //  there to change the controls
 
-    // pros::Task controls(controls_container, (void*)Motors); // control code that interacts with the PROS scheduler
-    // pros::Task events(event_listener_container);            // event listener code that interacts with the PROS scheduler
-    while(true) {
-        // Control_Listener.run(); // Calls control listener from controls.cpp, look
-        //  there to change the controls
+            Control_Listener.controls();
+            milis_cycle = cycleRun((uint32_t)pros::millis, 0, milis_cycle, desiredWaitTime);
 
-        Control_Listener.controls();
-        milis_cycle = cycleRun((uint32_t)pros::millis, 0, milis_cycle, desiredWaitTime);
-
-        Control_Listener.run();
-        milis_cycle = cycleRun((uint32_t)pros::millis, 1, milis_cycle, desiredWaitTime);
-        // Waits 50 milliseconds and gives CPU some time to sleep. Increase this
-        // value if the CPU overheats.
+            Control_Listener.run();
+            milis_cycle = cycleRun((uint32_t)pros::millis, 1, milis_cycle, desiredWaitTime);
+            // Waits 50 milliseconds and gives CPU some time to sleep. Increase this
+            // value if the CPU overheats.
+        }
+    } else {
+        while(true) {
+            Control_Listener.controls();
+            Control_Listener.run();
+            pros::c::delay(50);
+        }
     }
 }
