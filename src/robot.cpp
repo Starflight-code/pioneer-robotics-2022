@@ -16,10 +16,9 @@ const int flywheel_mtr_count = 2,
 /// Robot Preset System allows centralized configuration of all configurable systems.
 /// Configuration is hard coded and requires manual re-configuration to update it.
 class robot {
-private:
-    int RID; // Robot Identification Number [Internally Used]
-    int DID; // Driver Identification Number
 public:
+    int RID;          // Robot Identification Number [Internally Used]
+    int DID;          // Driver Identification Number
     std::string name; // Robot Name [Artie or Chance]
     /// 0 for tank, 1 for split arcade
     int controlScheme;

@@ -7,22 +7,23 @@
 #include "pros/llemu.hpp"
 #include "pros/motors.hpp"
 #include "pros/rtos.hpp"
+
 // #include "variables.cpp"
 
 // Controls listener task
-void controls_fn(void* param) {
-    cl Control_Listener;
+void controls_container(void* params) {
+    // Motor_Class Motors = *(Motor_Class*)params;
+    Motor_Class Motors;
+    cl Control_Listener((Motor_Class)Motors);
     while(true) {
-        switch(Control_Listener.Motors.Robot.RID) {
-        case 1: // Artie Control Scheme
-            Control_Listener.run();
-            break;
-        case 2: // Chance Control Scheme
-            Control_Listener.run();
-            break;
-        default:
-            break;
-        }
+        Control_Listener.controls();
+        pros::c::delay(50);
+    }
+}
+void event_listener_container(void* params) {
+    // cl Control_Listener;
+    while(true) {
+        //    Control_Listener.run();
         pros::c::delay(50);
     }
 }
@@ -204,8 +205,10 @@ Spin the spinner, using the color sensor to reach a proper color. Await color se
  * task, not resume it from where it left off.
  */
 void opcontrol() {
-    // cl Control_Listener;
-    pros::Task controls(controls_fn); // code that interacts with the PROS scheduler
+    cl Control_Listener;
+    Motor_Class* Motors;
+    pros::Task controls(controls_container, (void*)Motors); // control code that interacts with the PROS scheduler
+    pros::Task events(event_listener_container);            // event listener code that interacts with the PROS scheduler
     while(true) {
         // Control_Listener.run(); // Calls control listener from controls.cpp, look
         //  there to change the controls
