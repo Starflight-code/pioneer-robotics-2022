@@ -225,22 +225,19 @@ void opcontrol() {
         // pros::Task controls(controls_container, (void*)Motors); // control code that interacts with the PROS scheduler
         // pros::Task events(event_listener_container);            // event listener code that interacts with the PROS scheduler
         while(true) {
-            // Control_Listener.run(); // Calls control listener from controls.cpp, look
-            //  there to change the controls
 
-            Control_Listener.controls(); // Task 0
-            milis_cycle = cycleRun((uint32_t)pros::millis, 0, milis_cycle, desiredWaitTime);
+            milis_cycle = cycleRun((uint32_t)pros::millis, 0, milis_cycle, desiredWaitTime); // Should be placed before the task
+            Control_Listener.controls();                                                     // Task 0
 
-            Control_Listener.run(); // Task 1
             milis_cycle = cycleRun((uint32_t)pros::millis, 1, milis_cycle, desiredWaitTime);
-            // Waits 50 milliseconds and gives CPU some time to sleep. Increase this
-            // value if the CPU overheats.
+            Control_Listener.run(); // Task 1
         }
     } else {
         while(true) {
             Control_Listener.controls();
             Control_Listener.run();
-            pros::c::delay(50);
+            pros::c::delay(50); // Waits 50 milliseconds and gives CPU some time to sleep. Increase this
+                                // value if the CPU overheats.
         }
     }
 }
