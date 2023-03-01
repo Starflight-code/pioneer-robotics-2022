@@ -211,16 +211,18 @@ Spin the spinner, using the color sensor to reach a proper color. Await color se
 std::vector<uint32_t> cycleRun(short int taskIndex, std::vector<uint32_t> millis_array, short desiredWait) {
     // Integrated a historical task time skipping system, where if the wait time is greater than the historical
     // time taken for all other tasks on the cycle, processing is freed for other tasks. Leaving no impact on the task's timing.
+    
     short lastTaskIndex = taskIndex - 1 < 0 ? millis_array.size() - 1 : taskIndex - 1;
     short waitTime = desiredWait - ((uint32_t)pros::millis() - millis_array[taskIndex]); // Calculates current wait time by checking desiredWaitTime(default:50) - time passed since task finished
     short historicWait = millis_array[lastTaskIndex] - millis_array[taskIndex];
-    if(not millis_array[lastTaskIndex] % 100 == 0) {                        // Checks for a artifact from the historical wait time system
+    bool carryWaitTime = millis_array[taskIndex] % 100 == 0;
+    if(not carryWaitTime) {                        // Checks for a artifact from the historical wait time system
         millis_array[lastTaskIndex] = (uint32_t)pros::millis;               // Prevents the index from reaching -1, instead setting it to the max index value if it is
     }                                                                       // Sets current time as the finishing time of the last task
-    pros::c::delay(waitTime < 0 || waitTime % 100 == 0 ? waitTime / 100 > historicWait : waitTime > historicWait ? 0 : waitTime); // Waits for the wait time, if it is still positive (has not passed)
-    if(waitTime > historicWait && not millis_array[taskIndex] % 100 == 0) {
+    if(waitTime > historicWait && not carryWaitTime) {
         millis_array[taskIndex] = millis_array[taskIndex] * 100;
     }
+    pros::c::delay(waitTime < 0 || carryWaitTime ? waitTime / 100 > historicWait : waitTime > historicWait ? 0 : waitTime); // Waits for the wait time, if it is still positive (has not passed)
     return millis_array; // Sends the updated array back, allows persistance between method executions
 }
 void opcontrol() {
