@@ -14,7 +14,7 @@
 
 // #include "variables.cpp"
 
-// Controls listener task
+// Controls listener tasks - DEPRECATED
 void controls_container(void* params) {
     // Motor_Class Motors = *(Motor_Class*)params;
     Motor_Class Motors;

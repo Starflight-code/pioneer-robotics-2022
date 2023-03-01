@@ -17,6 +17,9 @@ private:
     std::vector<pros::Controller> control;
     Motor_Class Motors;
     algorithms algo;
+    /** This loop is for training commands, and will only be active while training mode is active.
+
+    */
     void training() {
         if(control[0].get_digital(pros::E_CONTROLLER_DIGITAL_LEFT)) {
             Motors.Robot.limiter = (double)(control[0].get_analog(ANALOG_LEFT_X) + algo._RANGE) / 254;
@@ -38,9 +41,9 @@ public:
 
 class cl {
 private:
-    double limiter; // Global limiter value (double w/ range [0 <-> 1])
-    double sc = 0;  // Scaling constant, for use with arcade control system
-    // const int _RANGE = 170;              // Range of vex motors/controls (max value allowed)
+    // double limiter; // Global limiter value (double w/ range [0 <-> 1]) FUNCTIONALITY SENT TO robots.cpp
+    double sc = 0; // Scaling constant, for use with arcade control system
+    // const int _RANGE = 170;              // Range of vex motors/controls (max value allowed) FUNCTIONALITY SENT TO algorithms.cpp
     const int _SPINNER_SPEED = 60;       // Speed that spinner will spin at
     const int _SPINNER_DRIVE_SPEED = 10; // Speed for drive motors to push robot
                                          // forward, keeping contact with spinner
@@ -56,7 +59,7 @@ public:
 
     cl(Motor_Class Motor_Object) {
         this->Motors = Motor_Object;
-        limiter = Motors.Robot.limiter;
+        // limiter = Motors.Robot.limiter;
     }
     /// Applies motor speeds following the preset control scheme for the drive.
     /// @return N/A
@@ -87,7 +90,7 @@ public:
         switch(Motors.Robot.controlScheme) {
         case 0: // Tank Control
             for(int i = 0; i < controller_values.size(); i++) {
-                Motors.Motors[i].set(algo.tank_control(controller_values[i], limiter));
+                Motors.Motors[i].set(algo.tank_control(controller_values[i], Motors.Robot.limiter));
             }
             break;
         case 1: // Split Arcade
@@ -117,7 +120,7 @@ public:
                          controller_x_value / (sc / _RANGE)) *
                         (local_limiter / 100))));*/
             std::array<int, 2> motorValues;
-            motorValues = algo.arcade_control(controller_values[0], controller_values[1], limiter);
+            motorValues = algo.arcade_control(controller_values[0], controller_values[1], Motors.Robot.limiter);
             for(int i = 0; i < motorValues.size(); i++) {
                 Motors.Motors[i].set(motorValues[i]);
             }
