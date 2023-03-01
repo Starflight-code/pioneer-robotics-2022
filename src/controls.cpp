@@ -115,6 +115,7 @@ private:
     }*/
 
     /// Applies motor speeds following the preset control scheme for the drive.
+    /// @return N/A
     void controls() {
 
         pros::Controller master(pros::E_CONTROLLER_MASTER); // Imports Controller as "master"
@@ -241,17 +242,20 @@ private:
             break;
         }
     }
+
     void event_listener() {
     }
-    /// Control Listening Service
-    ///
-    /// Pulls from control inputs based on robot.cpp's config.
-    /// Sends calculated output to motors.
+
 public:
+    /** Control Listening Service
+     *
+     * Pulls from control inputs based on robot.cpp's config.
+     * Sends calculated output to motors.
+     * @return N/A
+     */
     void run() {
 
-        pros::Controller master(
-            pros::E_CONTROLLER_MASTER); // Imports Controller as "master"
+        pros::Controller master(pros::E_CONTROLLER_MASTER); // Imports Controller as "master"
         // bool held_R1 = false; // Held tracks the current E-CONTROLLER_DIGITAL_R1
         //  state; Halfcourt
         // bool held_R2 = false; // Held tracks the current E-CONTROLLER_DIGITAL_R2

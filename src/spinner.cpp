@@ -1,3 +1,4 @@
+/// Allows interaction with color sensor and running automated spinner systems
 class spin {
 private:
     int spin_color;

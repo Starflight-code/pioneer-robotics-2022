@@ -13,12 +13,14 @@ const int num_motors_pre_side = 4,
 const int flywheel_mtr_count = 2,
           flywheel_mtr_ports[flywheel_mtr_count] = {9, 10};*/
 
-/// Robot Presets
+/// Robot Preset System allows centralized configuration of all configurable systems.
+/// Configuration is hard coded and requires manual re-configuration to update it.
 class robot {
+private:
+    int RID; // Robot Identification Number [Internally Used]
+    int DID; // Driver Identification Number
 public:
-    std::string name; // Robot Name
-    int RID;          // Robot Identification Number
-    int DID;          // Driver Identification Number
+    std::string name; // Robot Name [Artie or Chance]
     /// 0 for tank, 1 for split arcade
     int controlScheme;
     double limiter;
@@ -39,6 +41,10 @@ public:
 
     /// Should be 'a' for Artie, 'c' for Chance or 'd' for debug (custom/nonspecific robot)
     /// Should be 'b' for Bryce, 'm' for Malachi, or 'd' for debug (no override)
+
+    /** Initializes the Robot Preset System, all configuration is hard coded and this class does not accept any external parameters
+     * @return N/A
+     */
     void init(/*char robot_initial, char driver_initial*/) {
         // -- CONFIGURATIAON --
         char robot_initial = 'a';
@@ -49,7 +55,7 @@ public:
         DID = ((driver_initial == 'b') * 1) + ((driver_initial == 'm') * 2 + ((driver_initial == 'd') * 3)); // Branchless method to generate driver identification numbers w/ characters
         // RID = 1 or 2 Override whatever was given
         switch(RID) {
-        case 1: // Loads configs for Artie
+        case 1: // Loads configuration for Artie
             // pros::lcd::print(1, "Artie");
             name = "Artie";
             leftPorts = {9, 8, 5, 3};               // Ports of left motors, from L1 to L4
@@ -65,7 +71,7 @@ public:
             // launcher_port = 1; // Placeholder port given, replace once decided
             break;
 
-        case 2: // Loads configs for Chance
+        case 2: // Loads configuration for Chance
             name = "Chance";
             leftPorts = {16, 6, 3, 8};         // Ports of left motors, from L1 to L4
             rightPorts = {20, 19, 18, 17};     // Ports of right motors, from R1 to R4
@@ -80,7 +86,7 @@ public:
             // launcher_port = 1; // Placeholder port given, replace once decided
             break;
 
-        case 3: // Loads configs for Debug
+        case 3: // Loads debug configuration
             name = "Custom/Debug";
             leftPorts = {16, 6, 3, 8};     // Ports of left motors, from L1 to L4
             rightPorts = {20, 19, 18, 17}; // Ports of right motors, from R1 to R4
@@ -97,7 +103,7 @@ public:
             break;
         }
         switch(DID) {
-        case 1:                           // Bryce
+        case 1:                           // Bryce - REPLACE ONCE NEW DRIVER IS DECIDED
             exponential_control = true;   // Enables exponent based control system
             control_exponent_value = 1.5; // Greater the value, the steeper the exponential control curve
             training = true;
