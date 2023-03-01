@@ -208,29 +208,30 @@ Spin the spinner, using the color sensor to reach a proper color. Await color se
  * operator control task will be stopped. Re-enabling the robot will restart the
  * task, not resume it from where it left off.
  */
-std::array<uint32_t, 2> cycleRun(uint32_t currentTime, int taskIndex, std::array<uint32_t, 2> milis_cycle, int desiredWaitTime) {
-    milis_cycle[taskIndex - 1 < 0 ? milis_cycle.size() - 1 : taskIndex - 1] = (uint32_t)pros::millis; // Prevents the index from reaching -1, instead setting it to the max index value if it is
+std::vector<uint32_t> cycleRun(short int taskIndex, std::vector<uint32_t> milis_array, short desiredWait) {
+    milis_array[taskIndex - 1 < 0 ? milis_array.size() - 1 : taskIndex - 1] = (uint32_t)pros::millis; // Prevents the index from reaching -1, instead setting it to the max index value if it is
                                                                                                       // Sets current time as the finishing time of the last task
-    int waitTime = desiredWaitTime - (currentTime - milis_cycle[taskIndex]);                          // Calculates current wait time by checking desiredWaitTime(default:50) - time passed since task finished
+    int waitTime = desiredWait - ((uint32_t)pros::millis() - milis_array[taskIndex]);                 // Calculates current wait time by checking desiredWaitTime(default:50) - time passed since task finished
 
     pros::c::delay(waitTime < 0 ? 0 : waitTime); // Waits for the wait time, if it is still positive (has not passed)
-    return milis_cycle;                          // Sends the updated array back, allows persistance between method executions
+    return milis_array;                          // Sends the updated array back, allows persistance between method executions
 }
 void opcontrol() {
-    std::array<uint32_t, 2> milis_cycle = {0, 0}; // Increase array size when adding new tasks (only up to current amount of tasks)
-    int desiredWaitTime = 50;                     // per task wait in milliseconds
+    std::vector<uint32_t> milis_cycle = {0, 0}; // Increase array size when adding new tasks (only up to current amount of tasks)
+    short desiredWaitTime = 50;                 // per task wait in milliseconds
     Motor_Class Motors;
     cl Control_Listener(Motors); // Control Listener Initialization
+    events event_listener(Motors);
     if(Motors.Robot.task_scheduler) {
         // pros::Task controls(controls_container, (void*)Motors); // control code that interacts with the PROS scheduler
         // pros::Task events(event_listener_container);            // event listener code that interacts with the PROS scheduler
         while(true) {
 
-            milis_cycle = cycleRun((uint32_t)pros::millis, 0, milis_cycle, desiredWaitTime); // Should be placed before the task
-            Control_Listener.controls();                                                     // Task 0
+            milis_cycle = cycleRun(0, milis_cycle, desiredWaitTime); // Should be placed before the task
+            Control_Listener.controls();                             // Task 0
 
-            milis_cycle = cycleRun((uint32_t)pros::millis, 1, milis_cycle, desiredWaitTime);
-            Control_Listener.run(); // Task 1
+            milis_cycle = cycleRun(1, milis_cycle, desiredWaitTime);
+            event_listener.main(); // Task 1
         }
     } else {
         while(true) {

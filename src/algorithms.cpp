@@ -3,10 +3,8 @@
 #include <math.h>
 
 class algorithms {
-private:
-    const int _RANGE = 170;
-
 public:
+    const int _RANGE = 170;
     /** Converts an integer or double into an int
      * @param x | any number (double or integer)
      * @return x converted to an int datatype

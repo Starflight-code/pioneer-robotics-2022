@@ -14,14 +14,21 @@
 #include <vector>
 class events {
 private:
-    pros::Controller* master;
+    std::vector<pros::Controller> control;
     Motor_Class Motors;
+    algorithms algo;
+    void training() {
+        if(control[0].get_digital(pros::E_CONTROLLER_DIGITAL_LEFT)) {
+            Motors.Robot.limiter = (double)(control[0].get_analog(ANALOG_LEFT_X) + algo._RANGE) / 254;
+        }
+    }
+
+public:
     events(Motor_Class Motor_Class_Object) {
         this->Motors = Motor_Class_Object;
-        pros::Controller master(pros::E_CONTROLLER_MASTER);
+        control.push_back(pros::Controller(pros::E_CONTROLLER_MASTER));
     }
-    void training() {
-    }
+
     void main() {
         if(Motors.Robot.training) {
             training();
@@ -31,9 +38,9 @@ private:
 
 class cl {
 private:
-    double limiter;                      // Global limiter value (double w/ range [0 <-> 1])
-    double sc = 0;                       // Scaling constant, for use with arcade control system
-    const int _RANGE = 127;              // Range of vex motors/controls (max value allowed)
+    double limiter; // Global limiter value (double w/ range [0 <-> 1])
+    double sc = 0;  // Scaling constant, for use with arcade control system
+    // const int _RANGE = 170;              // Range of vex motors/controls (max value allowed)
     const int _SPINNER_SPEED = 60;       // Speed that spinner will spin at
     const int _SPINNER_DRIVE_SPEED = 10; // Speed for drive motors to push robot
                                          // forward, keeping contact with spinner
@@ -153,29 +160,31 @@ public:
         // controls(); // Applies motor speeds following the preset control scheme for
         //  the drive
 
-        if(Motors.Robot.training and master.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT)) { // Calculates local limmiter
+        /*if(Motors.Robot.training and master.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT)) { // Calculates local limmiter
                                                                                             // from left stick's x value,
                                                                                             // uses the full stick range.
-            limiter = (double)(master.get_analog(ANALOG_LEFT_X) + _RANGE) / 254;
-        }
+            limiter = (double)(master.get_analog(ANALOG_LEFT_X) + algo._RANGE) / 254;
+        }*/
+
+        // -- All listeners that are being used have been re-implimented --
 
         if(master.get_digital(DIGITAL_R1)) { // Toggles on button press, doesn't
                                              // hold up the control loop
 
-            if(not(R1_State == (Motors.flywheelMotors.getSpeed() == _RANGE))) {
+            if(not(R1_State == (Motors.flywheelMotors.getSpeed() == algo._RANGE))) {
                 R1_State = !R1_State;
             } // If motors are active and that's not the same as R1's state, it has
               // changed
-            Motors.flywheelMotors.set(R1_State * _RANGE);
+            Motors.flywheelMotors.set(R1_State * algo._RANGE);
         }
         if(master.get_digital(DIGITAL_R2)) { // Toggles on button press, doesn't
                                              // hold up the control loop
 
-            if(not(R2_State == (Motors.flywheelMotors.getSpeed() == _RANGE))) {
+            if(not(R2_State == (Motors.flywheelMotors.getSpeed() == algo._RANGE))) {
                 R2_State = !R2_State;
             } // If motors are active and that's not the same as R1's state, it has
               // changed
-            Motors.flywheelMotors.set(R2_State * _RANGE);
+            Motors.flywheelMotors.set(R2_State * algo._RANGE);
         }
         // REPLACE W/ Modular systems possibly in an event listener file, impliment in a future update
 
