@@ -12,34 +12,9 @@
 #include <array>
 #include <cmath>
 #include <vector>
-class events {
-private:
-    std::vector<pros::Controller> control;
-    Motor_Class Motors;
-    algorithms algo;
-    /** This loop is for training commands, and will only be active while training mode is active.
-
-    */
-    void training() {
-        if(control[0].get_digital(pros::E_CONTROLLER_DIGITAL_LEFT)) {
-            Motors.Robot.limiter = (double)(control[0].get_analog(ANALOG_LEFT_X) + algo._RANGE) / 254;
-        }
-    }
-
-public:
-    events(Motor_Class Motor_Class_Object) {
-        this->Motors = Motor_Class_Object;
-        control.push_back(pros::Controller(pros::E_CONTROLLER_MASTER));
-    }
-
-    void main() {
-        if(Motors.Robot.training) {
-            training();
-        }
-    }
-};
 
 class cl {
+
 private:
     // double limiter; // Global limiter value (double w/ range [0 <-> 1]) FUNCTIONALITY SENT TO robots.cpp
     double sc = 0; // Scaling constant, for use with arcade control system
@@ -57,9 +32,24 @@ public:
     Motor_Class Motors;
     algorithms algo;
 
-    cl(Motor_Class Motor_Object) {
-        this->Motors = Motor_Object;
-        // limiter = Motors.Robot.limiter;
+    cl(/*Motor_Class Motor_Object*/) {
+        // this->Motors = Motor_Object;
+        //  limiter = Motors.Robot.limiter;
+    }
+
+private:
+    void training() {
+        pros::Controller master(pros::E_CONTROLLER_MASTER);
+        if(master.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT)) {
+            Motors.Robot.limiter = (double)(master.get_analog(ANALOG_LEFT_X) + algo._RANGE) / 254;
+        }
+    }
+
+public:
+    void event_listener() {
+        if(Motors.Robot.training) {
+            training();
+        }
     }
     /// Applies motor speeds following the preset control scheme for the drive.
     /// @return N/A
@@ -132,9 +122,6 @@ public:
             // the Robot.controlScheme variable preset
             break;
         }
-    }
-
-    void event_listener() {
     }
 
 public:

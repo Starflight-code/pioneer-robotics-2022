@@ -18,7 +18,7 @@
 void controls_container(void* params) {
     // Motor_Class Motors = *(Motor_Class*)params;
     Motor_Class Motors;
-    cl Control_Listener((Motor_Class)Motors);
+    cl Control_Listener /*((Motor_Class)Motors)*/;
     while(true) {
         Control_Listener.controls();
         pros::c::delay(50);
@@ -208,20 +208,26 @@ Spin the spinner, using the color sensor to reach a proper color. Await color se
  * operator control task will be stopped. Re-enabling the robot will restart the
  * task, not resume it from where it left off.
  */
-std::vector<uint32_t> cycleRun(short int taskIndex, std::vector<uint32_t> milis_array, short desiredWait) {
-    milis_array[taskIndex - 1 < 0 ? milis_array.size() - 1 : taskIndex - 1] = (uint32_t)pros::millis; // Prevents the index from reaching -1, instead setting it to the max index value if it is
-                                                                                                      // Sets current time as the finishing time of the last task
-    int waitTime = desiredWait - ((uint32_t)pros::millis() - milis_array[taskIndex]);                 // Calculates current wait time by checking desiredWaitTime(default:50) - time passed since task finished
-
-    pros::c::delay(waitTime < 0 ? 0 : waitTime); // Waits for the wait time, if it is still positive (has not passed)
-    return milis_array;                          // Sends the updated array back, allows persistance between method executions
+std::vector<uint32_t> cycleRun(short int taskIndex, std::vector<uint32_t> millis_array, short desiredWait) {
+    // Integrated a historical task time skipping system, where if the wait time is greater than the historical
+    // time taken for all other tasks on the cycle, processing is freed for other tasks. Leaving no impact on the task's timing.
+    short lastTaskIndex = taskIndex - 1 < 0 ? millis_array.size() - 1 : taskIndex - 1;
+    short waitTime = desiredWait - ((uint32_t)pros::millis() - millis_array[taskIndex]); // Calculates current wait time by checking desiredWaitTime(default:50) - time passed since task finished
+    short historicWait = millis_array[lastTaskIndex] - millis_array[taskIndex];
+    if(not millis_array[lastTaskIndex] % 100 == 0) {                        // Checks for a artifact from the historical wait time system
+        millis_array[lastTaskIndex] = (uint32_t)pros::millis;               // Prevents the index from reaching -1, instead setting it to the max index value if it is
+    }                                                                       // Sets current time as the finishing time of the last task
+    pros::c::delay(waitTime < 0 || waitTime > historicWait ? 0 : waitTime); // Waits for the wait time, if it is still positive (has not passed)
+    if(waitTime > historicWait && not millis_array[taskIndex] % 100 == 0) {
+        millis_array[taskIndex] = millis_array[taskIndex] * 100;
+    }
+    return millis_array; // Sends the updated array back, allows persistance between method executions
 }
 void opcontrol() {
     std::vector<uint32_t> milis_cycle = {0, 0}; // Increase array size when adding new tasks (only up to current amount of tasks)
     short desiredWaitTime = 50;                 // per task wait in milliseconds
     Motor_Class Motors;
-    cl Control_Listener(Motors); // Control Listener Initialization
-    events event_listener(Motors);
+    cl Control_Listener;
     if(Motors.Robot.task_scheduler) {
         // pros::Task controls(controls_container, (void*)Motors); // control code that interacts with the PROS scheduler
         // pros::Task events(event_listener_container);            // event listener code that interacts with the PROS scheduler
@@ -231,12 +237,12 @@ void opcontrol() {
             Control_Listener.controls();                             // Task 0
 
             milis_cycle = cycleRun(1, milis_cycle, desiredWaitTime);
-            event_listener.main(); // Task 1
+            Control_Listener.event_listener(); // Task 1
         }
     } else {
         while(true) {
             Control_Listener.controls();
-            Control_Listener.run();
+            Control_Listener.event_listener();
             pros::c::delay(50); // Waits 50 milliseconds and gives CPU some time to sleep. Increase this
                                 // value if the CPU overheats.
         }

@@ -79,7 +79,8 @@ bin/controls.cpp.o: src/controls.cpp src/PID.cpp src/include.cpp \
  include/pros/apix.h include/api.h include/pros/serial.h \
  include/pros/serial.hpp include/pros/apix.h include/pros/motors.hpp \
  src/motors.cpp include/pros/adi.hpp src/robot.cpp include/pros/llemu.hpp \
- src/algorithms.cpp include/pros/screen.hpp include/pros/vision.hpp
+ src/algorithms.cpp include/pros/misc.hpp include/pros/screen.hpp \
+ include/pros/vision.hpp
 src/PID.cpp:
 src/include.cpp:
 include/main.h:
@@ -246,5 +247,6 @@ include/pros/adi.hpp:
 src/robot.cpp:
 include/pros/llemu.hpp:
 src/algorithms.cpp:
+include/pros/misc.hpp:
 include/pros/screen.hpp:
 include/pros/vision.hpp:
