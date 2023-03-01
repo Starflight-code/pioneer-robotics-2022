@@ -46,12 +46,10 @@ private:
 public:
     Motor_Class Motors;
     algorithms algo;
-    cl() {
-        limiter = Motors.Robot.limiter;
-    }
 
     cl(Motor_Class Motor_Object) {
         this->Motors = Motor_Object;
+        limiter = Motors.Robot.limiter;
     }
     /// Applies motor speeds following the preset control scheme for the drive.
     /// @return N/A

@@ -217,11 +217,10 @@ std::array<uint32_t, 2> cycleRun(uint32_t currentTime, int taskIndex, std::array
     return milis_cycle;                          // Sends the updated array back, allows persistance between method executions
 }
 void opcontrol() {
-    std::array<uint32_t, 2> milis_cycle = {0, 0};
-    int desiredWaitTime = 50; // per task wait in milliseconds
-    int waitTime;
-    cl Control_Listener;
+    std::array<uint32_t, 2> milis_cycle = {0, 0}; // Increase array size when adding new tasks (only up to current amount of tasks)
+    int desiredWaitTime = 50;                     // per task wait in milliseconds
     Motor_Class Motors;
+    cl Control_Listener(Motors); // Control Listener Initialization
     if(Motors.Robot.task_scheduler) {
         // pros::Task controls(controls_container, (void*)Motors); // control code that interacts with the PROS scheduler
         // pros::Task events(event_listener_container);            // event listener code that interacts with the PROS scheduler
@@ -229,10 +228,10 @@ void opcontrol() {
             // Control_Listener.run(); // Calls control listener from controls.cpp, look
             //  there to change the controls
 
-            Control_Listener.controls();
+            Control_Listener.controls(); // Task 0
             milis_cycle = cycleRun((uint32_t)pros::millis, 0, milis_cycle, desiredWaitTime);
 
-            Control_Listener.run();
+            Control_Listener.run(); // Task 1
             milis_cycle = cycleRun((uint32_t)pros::millis, 1, milis_cycle, desiredWaitTime);
             // Waits 50 milliseconds and gives CPU some time to sleep. Increase this
             // value if the CPU overheats.
