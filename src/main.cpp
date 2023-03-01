@@ -5,8 +5,12 @@
 #include "display/lv_misc/lv_color.h"
 #include "include.cpp"
 #include "pros/llemu.hpp"
+#include "pros/misc.h"
 #include "pros/motors.hpp"
+#include "pros/rtos.h"
 #include "pros/rtos.hpp"
+#include <array>
+#include <vector>
 
 // #include "variables.cpp"
 
@@ -204,17 +208,31 @@ Spin the spinner, using the color sensor to reach a proper color. Await color se
  * operator control task will be stopped. Re-enabling the robot will restart the
  * task, not resume it from where it left off.
  */
+std::array<uint32_t, 2> cycleRun(uint32_t currentTime, int taskIndex, std::array<uint32_t, 2> milis_cycle, int desiredWaitTime) {
+    milis_cycle[taskIndex - 1 < 0 ? milis_cycle.size() - 1 : taskIndex - 1] = (uint32_t)pros::millis; // Prevents the index from reaching -1, instead setting it to the max index value if it is
+    int waitTime = desiredWaitTime - (currentTime - milis_cycle[taskIndex]);
+    pros::c::delay(waitTime < 0 ? 0 : waitTime);
+    return milis_cycle;
+}
 void opcontrol() {
+    std::array<uint32_t, 2> milis_cycle = {0, 0};
+    int desiredWaitTime = 50; // per task wait in milliseconds
+    int waitTime;
     cl Control_Listener;
-    Motor_Class* Motors;
-    pros::Task controls(controls_container, (void*)Motors); // control code that interacts with the PROS scheduler
-    pros::Task events(event_listener_container);            // event listener code that interacts with the PROS scheduler
+    Motor_Class Motors;
+
+    // pros::Task controls(controls_container, (void*)Motors); // control code that interacts with the PROS scheduler
+    // pros::Task events(event_listener_container);            // event listener code that interacts with the PROS scheduler
     while(true) {
         // Control_Listener.run(); // Calls control listener from controls.cpp, look
         //  there to change the controls
 
+        Control_Listener.controls();
+        milis_cycle = cycleRun((uint32_t)pros::millis, 0, milis_cycle, desiredWaitTime);
+
+        Control_Listener.run();
+        milis_cycle = cycleRun((uint32_t)pros::millis, 1, milis_cycle, desiredWaitTime);
         // Waits 50 milliseconds and gives CPU some time to sleep. Increase this
         // value if the CPU overheats.
-        pros::delay(50);
     }
 }
