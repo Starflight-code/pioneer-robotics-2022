@@ -217,7 +217,7 @@ std::vector<uint32_t> cycleRun(short int taskIndex, std::vector<uint32_t> millis
     if(not millis_array[lastTaskIndex] % 100 == 0) {                        // Checks for a artifact from the historical wait time system
         millis_array[lastTaskIndex] = (uint32_t)pros::millis;               // Prevents the index from reaching -1, instead setting it to the max index value if it is
     }                                                                       // Sets current time as the finishing time of the last task
-    pros::c::delay(waitTime < 0 || waitTime > historicWait ? 0 : waitTime); // Waits for the wait time, if it is still positive (has not passed)
+    pros::c::delay(waitTime < 0 || waitTime % 100 == 0 ? waitTime / 100 > historicWait : waitTime > historicWait ? 0 : waitTime); // Waits for the wait time, if it is still positive (has not passed)
     if(waitTime > historicWait && not millis_array[taskIndex] % 100 == 0) {
         millis_array[taskIndex] = millis_array[taskIndex] * 100;
     }
