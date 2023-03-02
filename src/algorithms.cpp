@@ -2,6 +2,7 @@
 #include <array>
 #include <math.h>
 
+/// Includes algoritms used for control and the range definition used throughout the program
 class algorithms {
 public:
     const int _RANGE = 127;

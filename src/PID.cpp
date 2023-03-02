@@ -2,7 +2,7 @@
 #include "motors.cpp"
 
 /// Class for PID and other control algorithms
-class Control {
+class Control_Algorithms {
 private:                  // TODO: Tune constants as PID will have a decreased/reverse effect with incorrect constants
     const float kP = .2;  // Potential Constant
     const float kI = .04; // Integral Constant
@@ -15,6 +15,7 @@ private:                  // TODO: Tune constants as PID will have a decreased/r
     Motor_Class Motors;
 
 public:
+    /// WIP code for PID
     int PID(int distance) {
         // desiredVelocity is in distance (unit - unknown, not sure it matters)
         error = distance - Motors.leftMotors.getFastPosition();
@@ -25,6 +26,7 @@ public:
 
         return ((kP * error) + (kD * derivative) + (kI * integral)) * 127;
     }
+    /// WIP code for PID
     int PID_Velocity(int desiredVelocity) {
 
         // desiredVelocity is in RPM

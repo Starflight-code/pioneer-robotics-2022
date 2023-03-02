@@ -22,7 +22,6 @@ private:
                                          // forward, keeping contact with spinner
     bool spinnerActive = false;          // Allows for control while pushing robot forward
                                          // for spinner (Quality of Life)
-    Control Flywheels;                   // PID and other control alogrithms
     std::array<int, 2> controller_values;
     std::array<pros::controller_analog_e_t, 2> sticks;
 
