@@ -47,12 +47,12 @@ public:
      */
     void init(/*char robot_initial, char driver_initial*/) {
         // -- CONFIGURATIAON --
-        char robot_initial = 'a';
-        char driver_initial = 'm';
+        char robot_initial = 'a';  // 'a' for Artie, 'c' for Chance or 'd' for debug
+        char driver_initial = 'a'; // 'a' for Andrew, 'm' for Malachi, or 'd' for debug
 
         // Robot Identifier (Branchless robot initials to ID integer)
         RID = ((robot_initial == 'a') * 1) + ((robot_initial == 'c') * 2) + ((robot_initial == 'd') * 3);    // Branchless method to generate robot identification numbers w/ characters
-        DID = ((driver_initial == 'b') * 1) + ((driver_initial == 'm') * 2 + ((driver_initial == 'd') * 3)); // Branchless method to generate driver identification numbers w/ characters
+        DID = ((driver_initial == 'a') * 1) + ((driver_initial == 'm') * 2 + ((driver_initial == 'd') * 3)); // Branchless method to generate driver identification numbers w/ characters
         // RID = 1 or 2 Override whatever was given
         switch(RID) {
         case 1: // Loads configuration for Artie
