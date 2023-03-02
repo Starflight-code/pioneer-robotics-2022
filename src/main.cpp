@@ -71,19 +71,6 @@ void autonomous() {
     Motors.rightMotors.set(0);
     Motors.spinnerMotors.set(0); // Stop motors and halts autonomous
 }
-/*
-Psudocode
-
-Dump all disks in corner || try to shoot && fetch a few disks on each bot before manual starts
-Dimensions 12 ft by 12 ft field
-Disk locations: UNKNOWN
-Initial Position: UNKNOWN
-
-Scaled down Psudocode for first comp.
-
-Drive forward 1/2 speed for 3-5 seconds
-Spin the spinner, using the color sensor to reach a proper color. Await color sensor implimentation by build team.
-*/
 /**
  * Runs the operator control code. This function will be started in its own task
  * with the default priority and stack size whenever the robot is enabled via

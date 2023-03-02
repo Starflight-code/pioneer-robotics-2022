@@ -5,6 +5,7 @@
 #include "pros/rtos.hpp"
 #include <vector>
 
+/// Allows control and centralized tracking of spinner system
 class spin {
 private:
     int spin_color;

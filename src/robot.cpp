@@ -3,16 +3,6 @@
 #include <string>
 #include <vector>
 
-/* DEPRECATED - Remove after testing updated preset system
-const int num_motors_pre_side = 4,
-          left_side_mtr_ports[num_motors_pre_side] = {1, 2, 3, 4},
-          right_side_mtr_ports[num_motors_pre_side] = {5, 6, 7, 8};
-
-// for flywheel
-
-const int flywheel_mtr_count = 2,
-          flywheel_mtr_ports[flywheel_mtr_count] = {9, 10};*/
-
 /// Robot Preset System allows centralized configuration of all configurable systems.
 /// Configuration is hard coded and requires manual re-configuration to update it.
 class robot {
@@ -39,13 +29,10 @@ public:
     std::vector<bool> spinnerAlt_Rev_States;  // 0: Alternating (bool) 1: Initial Reverse State (bool)
     // int launcher_port;
 
-    /// Should be 'a' for Artie, 'c' for Chance or 'd' for debug (custom/nonspecific robot)
-    /// Should be 'b' for Bryce, 'm' for Malachi, or 'd' for debug (no override)
-
     /** Initializes the Robot Preset System, all configuration is hard coded and this class does not accept any external parameters
      * @return N/A
      */
-    void init(/*char robot_initial, char driver_initial*/) {
+    void init() {
         // -- CONFIGURATIAON --
         char robot_initial = 'a';  // 'a' for Artie, 'c' for Chance or 'd' for debug
         char driver_initial = 'a'; // 'a' for Andrew, 'm' for Malachi, or 'd' for debug
@@ -53,7 +40,6 @@ public:
         // Robot Identifier (Branchless robot initials to ID integer)
         RID = ((robot_initial == 'a') * 1) + ((robot_initial == 'c') * 2) + ((robot_initial == 'd') * 3);    // Branchless method to generate robot identification numbers w/ characters
         DID = ((driver_initial == 'a') * 1) + ((driver_initial == 'm') * 2 + ((driver_initial == 'd') * 3)); // Branchless method to generate driver identification numbers w/ characters
-        // RID = 1 or 2 Override whatever was given
         switch(RID) {
         case 1: // Loads configuration for Artie
             name = "Artie";
