@@ -16,8 +16,7 @@ private:                  // TODO: Tune constants as PID will have a decreased/r
 
 public:
     int PID(int distance) {
-        // desiredVelocity is in RPM
-        // error = Motors.getVelocity(3) - desiredVelocity; !! DEPRECATED Velocity PID
+        // desiredVelocity is in distance (unit - unknown, not sure it matters)
         error = distance - Motors.leftMotors.getFastPosition();
         integral = prevIntegral + error;
         prevIntegral = integral;

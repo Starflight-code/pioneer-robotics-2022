@@ -81,7 +81,8 @@ bin/main.cpp.o: src/main.cpp src/absolute_positioning.cpp src/include.cpp \
  src/controls.cpp src/PID.cpp src/motors.cpp include/pros/adi.hpp \
  src/robot.cpp include/pros/llemu.hpp src/algorithms.cpp \
  include/pros/misc.hpp include/pros/screen.hpp include/pros/vision.hpp \
- include/display/lv_draw/lv_draw_rect.h
+ include/display/lv_draw/lv_draw_rect.h src/spinner.cpp \
+ include/pros/optical.hpp
 src/absolute_positioning.cpp:
 src/include.cpp:
 include/main.h:
@@ -254,3 +255,5 @@ include/pros/misc.hpp:
 include/pros/screen.hpp:
 include/pros/vision.hpp:
 include/display/lv_draw/lv_draw_rect.h:
+src/spinner.cpp:
+include/pros/optical.hpp:

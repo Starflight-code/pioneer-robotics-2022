@@ -9,106 +9,9 @@
 #include "pros/motors.hpp"
 #include "pros/rtos.h"
 #include "pros/rtos.hpp"
+#include "spinner.cpp"
 #include <array>
 #include <vector>
-
-// #include "variables.cpp"
-
-// Controls listener tasks - DEPRECATED
-void controls_container(void* params) {
-    // Motor_Class Motors = *(Motor_Class*)params;
-    Motor_Class Motors;
-    cl Control_Listener /*((Motor_Class)Motors)*/;
-    while(true) {
-        Control_Listener.controls();
-        pros::c::delay(50);
-    }
-}
-void event_listener_container(void* params) {
-    // cl Control_Listener;
-    while(true) {
-        //    Control_Listener.run();
-        pros::c::delay(50);
-    }
-}
-/* Testing code for dynamic UI with touchscreen inputs, ignore for now.
-lv_obj_t *myButton;
-lv_obj_t *myButtonLabel;
-lv_obj_t *myLabel;
-
-lv_style_t myButtonStyleREL; // relesed style
-lv_style_t myButtonStylePR;  // pressed style
-
-static lv_res_t btn_click_action(lv_obj_t *btn) {
-  uint8_t id =
-      lv_obj_get_free_num(btn); // id usefull when there are multiple buttons
-
-  if (id == 0) {
-    char buffer[100];
-    sprintf(buffer, "button was clicked %i milliseconds from start",
-            pros::millis());
-    lv_label_set_text(myLabel, buffer);
-  }
-
-  return LV_RES_OK;
-}
-
-void initialize_btn() {
-  lv_style_copy(&myButtonStyleREL, &lv_style_plain);
-  myButtonStyleREL.body.main_color = LV_COLOR_MAKE(150, 0, 0);
-  myButtonStyleREL.body.grad_color = LV_COLOR_MAKE(0, 0, 150);
-  myButtonStyleREL.body.radius = 0;
-  myButtonStyleREL.text.color = LV_COLOR_MAKE(255, 255, 255);
-
-  lv_style_copy(&myButtonStylePR, &lv_style_plain);
-  myButtonStylePR.body.main_color = LV_COLOR_MAKE(255, 0, 0);
-  myButtonStylePR.body.grad_color = LV_COLOR_MAKE(0, 0, 255);
-  myButtonStylePR.body.radius = 0;
-  myButtonStylePR.text.color = LV_COLOR_MAKE(255, 255, 255);
-
-  myButton = lv_btn_create(
-      lv_scr_act(),
-      NULL); // create button, lv_scr_act() is deafult screen object
-  lv_obj_set_free_num(myButton, 0); // set button is to 0
-  lv_btn_set_action(
-      myButton, LV_BTN_ACTION_CLICK,
-      btn_click_action); // set function to be called on button click
-  lv_btn_set_style(myButton, LV_BTN_STYLE_REL,
-                   &myButtonStyleREL); // set the relesed style
-  lv_btn_set_style(myButton, LV_BTN_STYLE_PR,
-                   &myButtonStylePR); // set the pressed style
-  lv_obj_set_size(myButton, 200, 50); // set the button size
-  lv_obj_align(myButton, NULL, LV_ALIGN_IN_TOP_LEFT, 10,
-               10); // set the position to top mid
-
-  myButtonLabel = lv_label_create(
-      myButton, NULL); // create label and puts it inside of the button
-  lv_label_set_text(myButtonLabel, "Click the Button"); // sets label text
-
-  myLabel = lv_label_create(lv_scr_act(),
-                            NULL); // create label and puts it on the screen
-  lv_label_set_text(myLabel,
-                    "Button has not been clicked yet"); // sets label text
-  lv_obj_align(myLabel, NULL, LV_ALIGN_IN_LEFT_MID, 10,
-               0); // set the position to center
-}
-*/
-/**
- * A callback function for LLEMU's center button.
- *
- * When this callback is fired, it will toggle line 2 of the LCD text between
- * "I was pressed!" and nothing.
- */
-/*
-void on_center_button() {
-       static bool pressed = false;
-       pressed = !pressed;
-       if (pressed) {
-               pros::lcd::set_text(2, "I was pressed!");
-       } else {
-               pros::lcd::clear_line(2);
-       }
-}*/
 
 /**
  * Runs initialization code. This occurs as soon as the program is started.
@@ -117,20 +20,6 @@ void on_center_button() {
  * to keep execution time for this mode under a few seconds.
  */
 void initialize() {
-    // pros::lcd::initialize();
-    //  pros::lcd::initialize();
-    //  pros::Motor L1(8, true);
-    //  L1 = 90;
-    //  pros::delay(5000);
-    //  L1 = 0;
-    //  initialize_btn();
-    //   Sets the background to the image contained within waifu_elijah.c
-    /* -- Removed photo, screen will be blank. Replace with a logo once created.*/
-    /*lv_obj_t* background = lv_img_create(lv_scr_act(), NULL);
-    LV_IMG_DECLARE(waifu_elijah);
-    lv_img_set_src(background, &waifu_elijah);
-    lv_obj_set_size(background, 480, 240);
-    lv_obj_align(background, NULL, LV_ALIGN_IN_TOP_LEFT, 0, 0);*/
 }
 /**
  * Runs while the robot is in the disabled state of Field Management System or
@@ -211,28 +100,26 @@ Spin the spinner, using the color sensor to reach a proper color. Await color se
 std::vector<uint32_t> cycleRun(short int taskIndex, std::vector<uint32_t> millis_array, short desiredWait) {
     // Integrated a historical task time skipping system, where if the wait time is greater than the historical
     // time taken for all other tasks on the cycle, processing is freed for other tasks. Leaving no impact on the task's timing.
-    
+
     short lastTaskIndex = taskIndex - 1 < 0 ? millis_array.size() - 1 : taskIndex - 1;
     short waitTime = desiredWait - ((uint32_t)pros::millis() - millis_array[taskIndex]); // Calculates current wait time by checking desiredWaitTime(default:50) - time passed since task finished
     short historicWait = millis_array[lastTaskIndex] - millis_array[taskIndex];
     bool carryWaitTime = millis_array[taskIndex] % 100 == 0;
-    if(not carryWaitTime) {                        // Checks for a artifact from the historical wait time system
-        millis_array[lastTaskIndex] = (uint32_t)pros::millis;               // Prevents the index from reaching -1, instead setting it to the max index value if it is
-    }                                                                       // Sets current time as the finishing time of the last task
+    if(not carryWaitTime) {                                   // Checks for a artifact from the historical wait time system
+        millis_array[lastTaskIndex] = (uint32_t)pros::millis; // Prevents the index from reaching -1, instead setting it to the max index value if it is
+    }                                                         // Sets current time as the finishing time of the last task
     if(waitTime > historicWait && not carryWaitTime) {
         millis_array[taskIndex] = millis_array[taskIndex] * 100;
     }
-    pros::c::delay(waitTime < 0 || carryWaitTime ? waitTime / 100 > historicWait : waitTime > historicWait ? 0 : waitTime); // Waits for the wait time, if it is still positive (has not passed)
-    return millis_array; // Sends the updated array back, allows persistance between method executions
+    pros::c::delay(waitTime < 0 || carryWaitTime ? waitTime / 100 > historicWait : waitTime > historicWait ? 0
+                                                                                                           : waitTime); // Waits for the wait time, if it is still positive (has not passed)
+    return millis_array;                                                                                                // Sends the updated array back, allows persistance between method executions
 }
 void opcontrol() {
     std::vector<uint32_t> milis_cycle = {0, 0}; // Increase array size when adding new tasks (only up to current amount of tasks)
     short desiredWaitTime = 50;                 // per task wait in milliseconds
-    Motor_Class Motors;
     cl Control_Listener;
-    if(Motors.Robot.task_scheduler) {
-        // pros::Task controls(controls_container, (void*)Motors); // control code that interacts with the PROS scheduler
-        // pros::Task events(event_listener_container);            // event listener code that interacts with the PROS scheduler
+    if(Control_Listener.Motors.Robot.task_scheduler) {
         while(true) {
 
             milis_cycle = cycleRun(0, milis_cycle, desiredWaitTime); // Should be placed before the task

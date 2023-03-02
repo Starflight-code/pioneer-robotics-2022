@@ -56,7 +56,6 @@ public:
         // RID = 1 or 2 Override whatever was given
         switch(RID) {
         case 1: // Loads configuration for Artie
-            // pros::lcd::print(1, "Artie");
             name = "Artie";
             leftPorts = {9, 8, 5, 3};               // Ports of left motors, from L1 to L4
             rightPorts = {20, 18, 14, 11};          // Ports of right motors, from R1 to R4
@@ -68,7 +67,7 @@ public:
             spinnerAlt_Rev_States = {false, false}; // Initial Reverse State True: True, True, True
             controlScheme = 0;                      // 0 for tank, 1 for split arcade
             limiter = 1;
-            // launcher_port = 1; // Placeholder port given, replace once decided
+            // launcher_port = 1; // Removed, re-add for piston support
             break;
 
         case 2: // Loads configuration for Chance
@@ -83,7 +82,7 @@ public:
             spinnerAlt_Rev_States = {false, false};
             controlScheme = 0; // 0 for tank, 1 for split arcade
             limiter = 1;
-            // launcher_port = 1; // Placeholder port given, replace once decided
+            // launcher_port = 1; // Removed, re-add for piston support
             break;
 
         case 3: // Loads debug configuration
@@ -98,12 +97,12 @@ public:
             spinnerAlt_Rev_States = {false, false};
             controlScheme = 0; // 0 for tank, 1 for split arcade
             limiter = 1;
-            // launcher_port = 1; // Placeholder port given, replace once decided
+            // launcher_port = 1; // Removed, re-add for piston support
             debug = true; // Enables debug mode, can be used for verbose logging (not implimented yet)
             break;
         }
         switch(DID) {
-        case 1:                           // Bryce - REPLACE ONCE NEW DRIVER IS DECIDED
+        case 1:                           // Andrew - REPLACE ONCE NEW DRIVER IS DECIDED
             exponential_control = true;   // Enables exponent based control system
             control_exponent_value = 1.5; // Greater the value, the steeper the exponential control curve
             training = true;
@@ -120,9 +119,5 @@ public:
 
             break;
         }
-        // precalcuate_control_variables();
     }
-    // void precalcuate_control_variables() {
-
-    //}
 };
