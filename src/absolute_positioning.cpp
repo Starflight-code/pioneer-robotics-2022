@@ -37,7 +37,7 @@ public:
 
     void findPosition() {
 
-        while (true) {
+        while(true) {
             leftTranslation = rotationToTranslation(left.get_position());
             rightTranslation = rotationToTranslation(right.get_position());
             backTranslation = rotationToTranslation(back.get_position());
@@ -47,7 +47,7 @@ public:
             float arcRadiusLateral = (rightTranslation / changeInAngle) + sR;
             float arcRadiusHeading = (backTranslation / changeInAngle) + sC;
 
-            if (changeInAngle < .01 and changeInAngle > -.01) {
+            if(changeInAngle < .01 and changeInAngle > -.01) {
                 localPosition[0] = backTranslation;
                 localPosition[1] = rightTranslation;
             } else {

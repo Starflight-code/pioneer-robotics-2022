@@ -10,7 +10,7 @@
 // CONTAINS A LOT OF DEPRECATED CODE - Will be removed once it's tested
 
 /*class Piston { // Piston class, supports ADI Pistons and includes tracking/setting
-
+DO NOT REMOVE, until build team has confirmed we are not using pistons on the robot (even then, build team may end up adding them later...)
 private:
     std::vector<pros::ADIDigitalOut> piston = {};
     bool piston_state; // Allows for toggle/state fetching
@@ -28,29 +28,23 @@ public:
         return piston_state; // Returns the piston_state tracker value
     }
 };*/
+
+/// A motor group wrapper that allows tracking and setting of motors in the array, initialize with MotorGroup.init(std::vector<int> motor_ports, bool alternating, bool initial_reverse_state);
 class MotorGroup {
 private:
-    int current_limiter;
+    // int current_limiter;
     double current_speed;
     std::vector<pros::Motor> motors = {};
 
 public:
-    /*
-
-    */
+    /** Initializes the motor group, defining all motors, configuring reverse states and hooking them up to an internal array
+     * @param motor_ports | a vector of integers, containing the ports (in order) that you'd like to define (vector of ints w/ range [1 <-> 20])
+     * @param alternating | should the motor reverse states alternate every other motor (bool w/ range [false <-> true])
+     * @param initial_reverse_state | should the first motor be reversed (bool w/ range [false <-> true])
+     * @return N/A
+     */
     void init(std::vector<int> motor_ports, bool alternating,
-              bool initial_reverse_state)
-    /* This is a initializer that generates an internal vector array
-    of pros::Motor(s) Call this when instanciating the class object. */
-    {
-        // Ex MotorGroup leftMotors(left_ports, true, false); std::vector<int>
-        // motor_ports should be a vector containing the motor numbers in order,
-        // this is especially important if you are alternating them bool alternating
-        // is a boolean value that tells our initializer to change every other motor
-        // to a reversed one bool initial_reverse_state tells our initializer what
-        // the first (or all values for non-alternating) reverse state will be. For
-        // alternating, the next reverse state will always be opposite of this one.
-        current_limiter = 100;
+              bool initial_reverse_state) {
         if(alternating) {
             bool t =
                 initial_reverse_state;                            // Reverse state is used, as the contructor
@@ -68,186 +62,81 @@ public:
             }
         }
     }
+    /** Sets the motor array to a specified speed
+     * @param speed | a motor speed value (integer w/ range [-170 <-> 170])
+     * @return N/A
+     */
     void set(int speed) {
         current_speed = speed; // Sets the speed tracker
-        // Sets the speed of all motors within vector<pros::Motor> motors to speed,
-        // taking the limiter into account
         for(int i = 0; i < motors.size(); i++) {
-            motors[i] = speed /* (current_limiter / 100)*/;
+            motors[i] = speed;
         }
     }
-    /*void debug() {
-      motors[0] = 90;
-    }*/
-    int getSpeed() { return current_speed; }                                    // Fetches speed from tracker
-    int getLimiter() { return current_limiter; }                                // Fetches limiter from variable
-    void setLimiter(int limiter_setting) { current_limiter = limiter_setting; } // Sets the limiter variable
+
+    /** Gets the current speed setting for the motor array
+     * @return Current Motor Speed (integer w/ range [-170 <-> 170])
+     */
+    int getSpeed() { return current_speed; } // Fetches speed from tracker
+
+    /** Gets the average position for the array, use getFastPosition for only the first motor's position
+     * @return average position for motor array (double w/ range [unknown, TODO add once known])
+     */
     double getPosition() {
         double total = 0;
         for(int i = 0; i < motors.size(); i++) { // Loops for each motor, pulls velocities from each
             total += motors[i].get_position();
         }
-        return total / motors.size();
-    } // Returns the average of all positions
-
+        return total / motors.size(); // Returns the average of all positions
+    }
+    /** Gets the average velocity for the array, use getFastVelocity for only the first motor's position
+     * @return average velocity for motor array (double w/ range [unknown, TODO add once known])
+     */
     double getVelocity() {
         double total = 0;
         for(int i = 0; i < motors.size(); i++) { // Loops for each motor, pulls velocities from each
             total += motors[i].get_actual_velocity();
         }
         return total / motors.size();
-    } // Returns the average of all velocities
+    }
+
+    /** Gets the velocity for the first motor in the array, use getVelocity for the average array position
+     * @return velocity for first motor in the array (double w/ range [unknown, TODO add once known])
+     */
     double getFastVelocity() {
         return motors[0].get_actual_velocity(); // Returns the velocity of the first motor
     }
+
+    /** Gets the position for the first motor in the array, use getPosition for the average array position
+     * @return position for first motor in the array (double w/ range [unknown, TODO add once known])
+     */
     double getFastPosition() {
         return motors[0].get_position(); // Returns the position of the first motor
     }
 };
+/// Wrapper for motor arrays, allows easy instanciation and passthrough to other classes
 class Motor_Class {
-public: // Phase out old Motor_Class functions (setSpeed, getSpeed, etc), and merely use as a holder for motor group objects
+public: // Phase out old Motor_Class functions (setSpeed, getSpeed, etc), and merely use as a holder for motor group objects - DONE
+    /// Left Motor Group Object
     MotorGroup leftMotors;
+    /// Right Motor Group Object
     MotorGroup rightMotors;
+    /// Flywheel Motor Group Object
     MotorGroup flywheelMotors;
+    /// Spinner Motor Group Object
     MotorGroup spinnerMotors;
+    /// Array containing all motor group objects for unique scripting
     std::array<MotorGroup, 4> Motors = {leftMotors, rightMotors, flywheelMotors, spinnerMotors};
     // Piston launcher;
 
 public:
     robot Robot;
 
+    /// Initializes the Motor Class wrapper with robot.cpp configuration, no external parameters required
     Motor_Class() {
         Robot.init(/*'a', 'm'*/); // Sets up preset for robot 'a' for Artie and 'c' for Chance
         leftMotors.init(Robot.leftPorts, Robot.leftAlt_Rev_States[0], Robot.leftAlt_Rev_States[1]);
         rightMotors.init(Robot.rightPorts, Robot.rightAlt_Rev_States[0], Robot.rightAlt_Rev_States[1]);
         flywheelMotors.init(Robot.flywheelPorts, Robot.flywheelAlt_Rev_States[0], Robot.flywheelAlt_Rev_States[1]);
         spinnerMotors.init(Robot.spinnerPorts, Robot.spinnerAlt_Rev_States[0], Robot.spinnerAlt_Rev_States[1]);
-        leftMotors.setLimiter(Robot.limiter);
-        rightMotors.setLimiter(Robot.limiter);
-        flywheelMotors.setLimiter(Robot.limiter);
-        spinnerMotors.setLimiter(Robot.limiter);
-        // launcher.init(Robot.launcher_port);
-    }
-
-private:
-    float modifier = 1; // This reduced the motor power by POWER * modifier,
-                        // should be between 0 and 1 or it will return an error.
-    int left_motors = 0;
-    int right_motors = 0;
-    int flywheels = 0;
-    bool init = true;
-
-public:
-    void setSpeed(int motorSet, int speed) {
-        switch(motorSet) {
-        case 1: // motorSpeed(1, speed) to set left motor group's speed
-            leftMotors.set(speed);
-            break;
-        case 2: // motorSpeed(2, speed) to set the right motor group's speed
-            rightMotors.set(speed);
-            break;
-        case 3: // motorSpeed(3, speed) to set flywheel motor group's speed
-            flywheelMotors.set(speed);
-            break;
-        case 4: // motorSpeed(3, speed) to set spinner motor group's speed
-            spinnerMotors.set(speed);
-            break;
-        default:
-            return;
-        }
-        return;
-    };
-
-    int getSpeed(int motorSet) {
-        switch(motorSet) {
-        case 1:
-            return leftMotors.getSpeed(); // Returns the left motor group tracker
-                                          // value (speed of the motor set)
-        case 2:
-            return rightMotors.getSpeed(); // Returns the right motor group tracker
-                                           // value (speed of the motor set)
-        case 3:
-            return flywheelMotors.getSpeed(); // Returns the flywheel motor group tracker value (speed
-                                              // of the motor set)
-        case 4:
-            return spinnerMotors.getSpeed(); // Returns the spinner motor group tracker value (speed
-                                             // of the motor set)
-        default:
-            return 0; // Returns ZERO if an erroneous input was given.
-        }
-    }
-
-    float getVelocity(int motorSet) {
-        switch(motorSet) {
-        case 1:
-            return leftMotors.getVelocity();
-            // Returns the left motor group encoder value (average speed
-            // of the motor set)
-        case 2:
-            return rightMotors.getVelocity();
-            // Returns the right motor group encoder value (average speed
-            // of the motor set)
-        case 3:
-            return flywheelMotors.getVelocity(); // Returns the flywheel motor group encoder value
-                                                 // (average speed of the motor set)
-        case 4:
-            return spinnerMotors.getVelocity(); // Returns the spinner motor group encoder value
-                                                // (average speed of the motor set)
-        default:
-            return 0;
-        }
-    }
-    float getPosition(int motorSet) {
-        double total;
-        switch(motorSet) {
-        case 1:
-            return leftMotors.getPosition();
-            // Returns the left motor group encoder value (average speed
-            // of the motor set)
-        case 2:
-            return rightMotors.getPosition();
-            // Returns the right motor group encoder value (average speed
-            // of the motor set)
-        case 3:
-            return flywheelMotors.getPosition();
-            // Returns the flywheel motor group encoder value (average speed
-            // of the motor set)
-        case 4:
-            return spinnerMotors.getPosition();
-            // Returns the flywheel motor group encoder value
-            // (average speed of the motor set)
-        default:
-            return 0;
-        }
-    }
-    float getFastVelocity(int motorSet) {
-        switch(motorSet) {
-        case 1:
-            return leftMotors.getFastVelocity(); // Returns the left motor group encoder value
-                                                 // (speed of first motor in the motor set)
-        case 2:
-            return rightMotors.getFastVelocity(); // Returns the right motor group encoder value
-                                                  // (speed of first motor in the motor set)
-        case 3:
-            return flywheelMotors.getFastVelocity(); // Returns the flywhhel motor group encoder value
-                                                     // (speed of first motor in the motor set)
-        default:
-            return 0;
-        }
-    }
-    float getFastPosititon(int motorSet) {
-        switch(motorSet) {
-        case 1:
-            return leftMotors.getFastPosition(); // Returns the left motor group encoder value
-                                                 // (speed of first motor in the motor set)
-        case 2:
-            return rightMotors.getFastPosition(); // Returns the right motor group encoder value
-                                                  // (speed of first motor in the motor set)
-        case 3:
-            return flywheelMotors.getFastPosition(); // Returns the flywhhel motor group encoder value
-                                                     // (speed of first motor in the motor set)
-        default:
-            return 0;
-        }
     }
 };
