@@ -1,4 +1,7 @@
+#ifndef controls_cpp_
 #include "controls.cpp"
+#define controls_cpp_
+#endif
 
 class autonomous_class {
 private:

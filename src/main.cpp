@@ -1,17 +1,22 @@
+#ifndef absolute_positioning_cpp_
+#define absolute_positioning_cpp_
 #include "absolute_positioning.cpp"
-#include "autonomous.cpp"
-#include "display/lv_conf.h"
-#include "display/lv_draw/lv_draw_rect.h"
-#include "display/lv_misc/lv_color.h"
-#include "include.cpp"
-#include "pros/llemu.hpp"
-#include "pros/misc.h"
-#include "pros/motors.hpp"
-#include "pros/rtos.h"
-#include "pros/rtos.hpp"
+#endif
+
+#ifndef spinner_cpp_
+#define spinner_cpp_
 #include "spinner.cpp"
-#include <array>
-#include <vector>
+#endif
+
+#ifndef autonomous_cpp_
+#include "autonomous.cpp"
+#define autonomous_cpp_
+#endif
+
+#ifndef include_cpp_
+#include "include.cpp"
+#define include_cpp_
+#endif
 
 /**
  * Runs initialization code. This occurs as soon as the program is started.

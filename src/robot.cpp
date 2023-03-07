@@ -1,7 +1,7 @@
-// for driving motors
-#include "pros/llemu.hpp"
-#include <string>
-#include <vector>
+#ifndef include_cpp_
+#define include_cpp_
+#include "include.cpp"
+#endif
 
 /// Robot Preset System allows centralized configuration of all configurable systems.
 /// Configuration is hard coded and requires manual re-configuration to update it.

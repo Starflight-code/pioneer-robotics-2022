@@ -1,6 +1,7 @@
+#ifndef include_cpp_
 #include "include.cpp"
-#include <array>
-#include <math.h>
+#define include_cpp_
+#endif
 
 /// Includes algoritms used for control and the range definition used throughout the program
 class algorithms {

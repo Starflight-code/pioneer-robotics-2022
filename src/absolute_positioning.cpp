@@ -1,4 +1,7 @@
+#ifndef include_cpp_
 #include "include.cpp"
+#define include_cpp_
+#endif
 
 // Todo: Test functionality w/ field and tune PID constants
 class abs_pos {

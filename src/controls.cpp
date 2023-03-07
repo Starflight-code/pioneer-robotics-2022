@@ -1,5 +1,19 @@
+#ifndef pid_cpp_
+#define pid_cpp_
 #include "PID.cpp"
+#endif
+
+#ifndef algorithms_cpp_
+#define algorithms_cpp_
 #include "algorithms.cpp"
+#endif
+
+#ifndef include_cpp_
+#define include_cpp_
+#include "include.cpp"
+#endif
+
+/*
 #include "pros/adi.hpp"
 #include "pros/llemu.hpp"
 #include "pros/misc.h"
@@ -8,10 +22,7 @@
 #include "pros/rtos.hpp"
 #include "pros/screen.hpp"
 #include "pros/vision.hpp"
-#include <algorithm>
-#include <array>
-#include <cmath>
-#include <vector>
+*/
 
 class cl {
 

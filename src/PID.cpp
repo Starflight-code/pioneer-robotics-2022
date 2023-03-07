@@ -1,5 +1,12 @@
+#ifndef include_cpp_
 #include "include.cpp"
+#define include_cpp_
+#endif
+
+#ifndef motors_cpp_
+#define motors_cpp_
 #include "motors.cpp"
+#endif
 
 /// Class for PID and other control algorithms
 class Control_Algorithms {

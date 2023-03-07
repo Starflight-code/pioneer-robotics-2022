@@ -1,11 +1,12 @@
-#include "pros/motors.hpp"
-#include "include.cpp"
-#include "pros/adi.hpp"
-#include "pros/rtos.hpp"
+#ifndef main_h_
+#include "main.h"
+#define main_h_
+#endif
+
+#ifndef robot_cpp_
 #include "robot.cpp"
-#include <algorithm>
-#include <array>
-#include <vector>
+#define robot_cpp_
+#endif
 
 // CONTAINS A LOT OF DEPRECATED CODE - Will be removed once it's tested
 
@@ -87,7 +88,7 @@ public:
         }
     }
     bool checkPosition(int targetPosition) {
-        if(abs(motors[0].get_position()) >= targetPosition) {
+        if(std::abs(motors[0].get_position()) >= targetPosition) {
             return true;
         }
         return false;
