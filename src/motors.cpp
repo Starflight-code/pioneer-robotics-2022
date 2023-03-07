@@ -78,6 +78,21 @@ public:
      */
     int getSpeed() { return current_speed; } // Fetches speed from tracker
 
+    /** Tare the encoder position to the current position
+     * @return N/A
+     */
+    void tarePosition() {
+        for(int i = 0; i < motors.size(); i++) {
+            motors[i].tare_position();
+        }
+    }
+    bool checkPosition(int targetPosition) {
+        if(abs(motors[0].get_position()) >= targetPosition) {
+            return true;
+        }
+        return false;
+    }
+
     /** Gets the average position for the array, use getFastPosition for only the first motor's position
      * @return average position for motor array (double w/ range [unknown, TODO add once known])
      */
@@ -111,6 +126,9 @@ public:
      */
     double getFastPosition() {
         return motors[0].get_position(); // Returns the position of the first motor
+    }
+    pros::Motor getDirectMotor(int motorIndex) {
+        return motors[motorIndex];
     }
 };
 /// Wrapper for motor arrays, allows easy instanciation and passthrough to other classes

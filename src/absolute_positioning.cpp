@@ -23,6 +23,7 @@ private:
     float localPosition[2];          //(x,y)
     float polarChangeInPosition[2];  //(r,theta)
     float globalChangeInPosition[2]; //(x,y)
+
 public:
     pros::Rotation left = pros::Rotation(12);  // left rotation sensor on port 12, not reversed
     pros::Rotation right = pros::Rotation(13); // Right rotation sensor on port 13, not reversed

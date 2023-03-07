@@ -10,9 +10,9 @@ public:
     int RID;          // Robot Identification Number [Internally Used]
     int DID;          // Driver Identification Number
     std::string name; // Robot Name [Artie or Chance]
-    /// 0 for tank, 1 for split arcade
-    int controlScheme;
-    double limiter;
+
+    int controlScheme;                   // 0 for tank, 1 for split arcade
+    double limiter;                      // Applies and tracks current limiter (range 0 <-> 1)
     bool debug = false;                  // Enables debug functionality, DISABLE BEFORE COMPETITION
     bool training = false;               // Enables training/testing functionality that should be disabled at a competition
     bool exponential_control = true;     // Enables exponent based control system

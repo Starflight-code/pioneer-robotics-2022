@@ -1,5 +1,5 @@
 #include "absolute_positioning.cpp"
-#include "controls.cpp"
+#include "autonomous.cpp"
 #include "display/lv_conf.h"
 #include "display/lv_draw/lv_draw_rect.h"
 #include "display/lv_misc/lv_color.h"
@@ -54,9 +54,35 @@ void autonomous() {
     double Move_Dist = 1;
     double Init_Pos;
     Motor_Class Motors;
+    autonomous_class auton;
+    auton.forward(Motors, 900, 20);
+    auton.turn(Motors, 650, 20, true); // Turns 180 degrees, do not change distance value (for now)
+
+    /*
     Motors.leftMotors.set(30);
     Motors.rightMotors.set(30);
-    pros::delay(1000); // Sets motors to quarter speed to prevent slipping from the intial acceleration
+    Motors.leftMotors.tarePosition();
+    Motors.rightMotors.tarePosition();
+    while(Motors.leftMotors.checkPosition(300) || Motors.rightMotors.checkPosition(300)) {
+        pros::delay(20);
+    }
+    if(abs(Motors.leftMotors.getDirectMotor(0).get_position()) < 300) {
+        Motors.rightMotors.set(0);
+        Motors.leftMotors.set(10);
+        while(abs(Motors.leftMotors.getDirectMotor(0).get_position()) < 300) {
+            pros::delay(5);
+        }
+        Motors.leftMotors.set(0);
+    } else {
+        Motors.leftMotors.set(0);
+        Motors.rightMotors.set(10);
+        while(abs(Motors.rightMotors.getDirectMotor(0).get_position()) < 300) {
+            pros::delay(5);
+        }
+        Motors.rightMotors.set(0);
+    }*/
+    // pros::delay(1000); // Sets motors to quarter speed to prevent slipping from the intial acceleration
+    /*
     Motors.leftMotors.set(-60);
     Motors.rightMotors.set(60);
     pros::delay(4500);         // Move robot forward at ~half speed for 4.5 seconds
@@ -70,6 +96,7 @@ void autonomous() {
     Motors.leftMotors.set(0);
     Motors.rightMotors.set(0);
     Motors.spinnerMotors.set(0); // Stop motors and halts autonomous
+*/
 }
 /**
  * Runs the operator control code. This function will be started in its own task
