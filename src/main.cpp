@@ -67,46 +67,6 @@ void autonomous() {
     autonomous_class auton;
     auton.forward(Motors, 900, 20);
     auton.turn(Motors, 650, 20, true); // Turns 180 degrees, do not change distance value (for now)
-
-    /*
-    Motors.leftMotors.set(30);
-    Motors.rightMotors.set(30);
-    Motors.leftMotors.tarePosition();
-    Motors.rightMotors.tarePosition();
-    while(Motors.leftMotors.checkPosition(300) || Motors.rightMotors.checkPosition(300)) {
-        pros::delay(20);
-    }
-    if(abs(Motors.leftMotors.getDirectMotor(0).get_position()) < 300) {
-        Motors.rightMotors.set(0);
-        Motors.leftMotors.set(10);
-        while(abs(Motors.leftMotors.getDirectMotor(0).get_position()) < 300) {
-            pros::delay(5);
-        }
-        Motors.leftMotors.set(0);
-    } else {
-        Motors.leftMotors.set(0);
-        Motors.rightMotors.set(10);
-        while(abs(Motors.rightMotors.getDirectMotor(0).get_position()) < 300) {
-            pros::delay(5);
-        }
-        Motors.rightMotors.set(0);
-    }*/
-    // pros::delay(1000); // Sets motors to quarter speed to prevent slipping from the intial acceleration
-    /*
-    Motors.leftMotors.set(-60);
-    Motors.rightMotors.set(60);
-    pros::delay(4500);         // Move robot forward at ~half speed for 4.5 seconds
-    Motors.leftMotors.set(10); // Decreases the drive speed and spins the spinner wheel at ~half speed
-    Motors.rightMotors.set(10);
-    Motors.spinnerMotors.set(60);
-    // pros::delay(1000); // If we can't get encoders to work, using a delay would be inaccurate but acceptable as a last resort
-    while(abs(Motors.spinnerMotors.getFastPosition() - Init_Pos) < Move_Dist) {
-        pros::delay(50);
-    } // Holds up further execution until distance is reached/exceeded (Lower speed if it's exceeded by an unacceptable degree)
-    Motors.leftMotors.set(0);
-    Motors.rightMotors.set(0);
-    Motors.spinnerMotors.set(0); // Stop motors and halts autonomous
-*/
 }
 /**
  * Runs the operator control code. This function will be started in its own task

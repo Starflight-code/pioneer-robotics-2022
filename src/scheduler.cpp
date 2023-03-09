@@ -7,13 +7,22 @@ class scheduler {
     std::vector<uint32_t> millis_cycle; // length is equal to number of tasks
 
 public:
+    /** Initializes the scheduler system with the number of tasks to balance.
+     * @param numberOfTasks you will be scheduling with the system (integer w/ range [1 <-> inf.])
+     */
     scheduler(int numberOfTasks) {
         for(int i = 0; i < numberOfTasks; i++) {
             millis_cycle.push_back(0);
         }
     }
 
-    void cycleRun(short int taskIndex, short desiredWait) {
+    /** Runs a task delay, making the task run desiredWait milliseconds after it finished
+     * or bypassing it if the wait time is greater than the historical time taken for all
+     * other tasks on the cycle, processing is freed for other tasks.
+     * @param taskIndex task number starting at 0, counting up (integer w/ range [0 <-> inf.])
+     * @param desiredWait milliseconds for this task to run after last execution (unsigned short integer w/ range (0 <-> 65,535))
+     */
+    void cycleRun(short int taskIndex, u_short desiredWait) {
         // Integrated a historical task time skipping system, where if the wait time is greater than the historical
         // time taken for all other tasks on the cycle, processing is freed for other tasks. Leaving no impact on the task's timing.
 
