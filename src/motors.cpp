@@ -1,3 +1,4 @@
+#include "pros/adi.hpp"
 #ifndef main_h_
 #include "main.h"
 #define main_h_
@@ -8,27 +9,54 @@
 #define robot_cpp_
 #endif
 
-// CONTAINS A LOT OF DEPRECATED CODE - Will be removed once it's tested
-
-/*class Piston { // Piston class, supports ADI Pistons and includes tracking/setting
-DO NOT REMOVE, until build team has confirmed we are not using pistons on the robot (even then, build team may end up adding them later...)
+/**
+ * Tracks, stores and moves a piston after initialized
+ */
+class Piston { // Piston class, supports ADI Pistons and includes tracking/setting
 private:
     std::vector<pros::ADIDigitalOut> piston = {};
     bool piston_state; // Allows for toggle/state fetching
 public:
+    /** Initializes the class, using the piston port. Syncing the state to retracted by default.
+     * @param ADI_Port port for the piston (integer w/ range [1 <-> 8])
+     * @param initial_state initial state to sync piston to (bool, optional)
+     */
     void init(int ADI_Port) { // Initializes the piston, this needs to be completed before it can be used
         piston.push_back(pros::ADIDigitalOut(ADI_Port));
         piston[0].set_value(false); // Retracts the piston, syncing it's state
         piston_state = false;       // Sets the piston state, allowing for tracking
     }
+    /** Initializes the class, using the piston port. Syncing the state to retracted by default.
+     * @param ADI_Port port for the piston (integer w/ range [1 <-> 8])
+     * @param initial_state initial state to sync piston to (bool, optional)
+     */
+    void init(int ADI_Port, bool initial_state) { // Initializes the piston, this needs to be completed before it can be used
+        piston.push_back(pros::ADIDigitalOut(ADI_Port));
+        piston[0].set_value(initial_state); // Retracts the piston, syncing it's state
+        piston_state = initial_state;       // Sets the piston state, allowing for tracking
+    }
+    /** Sets the piston to false (retracted) or true (extended), updates tracker
+     * @param state false (retracted) or true (extended), sets piston state (bool)
+     */
     void set(bool state) {
-        piston[0].set_value(state); // Sets the piston value to whatever was supplied
+        piston[0].set_value(state); // Sets the piston value to the value supplied
         piston_state = state;       // Updates the tracker
     }
+    /**
+     * Toggles the motor based on the tracker. State swaps to the opposite for the piston.
+     */
+    void toggle() {
+        piston[0].set_value(!piston_state); // Sets the piston value to the opposite of the tracker value
+        piston_state = !piston_state;       // Updates the tracker
+    }
+    /**
+     * Gets the tracker value for the piston.
+     * @return false (retracted) or true (extended)
+     */
     bool get() {
         return piston_state; // Returns the piston_state tracker value
     }
-};*/
+};
 
 /// A motor group wrapper that allows tracking and setting of motors in the array, initialize with MotorGroup.init(std::vector<int> motor_ports, bool alternating, bool initial_reverse_state);
 class MotorGroup {
@@ -145,7 +173,7 @@ public: // Phase out old Motor_Class functions (setSpeed, getSpeed, etc), and me
     MotorGroup spinnerMotors;
     /// Array containing all motor group objects for unique scripting
     std::array<MotorGroup, 4> Motors = {leftMotors, rightMotors, flywheelMotors, spinnerMotors};
-    // Piston launcher;
+    Piston launcher;
 
 public:
     robot Robot;
@@ -157,5 +185,6 @@ public:
         rightMotors.init(Robot.rightPorts, Robot.rightAlt_Rev_States[0], Robot.rightAlt_Rev_States[1]);
         flywheelMotors.init(Robot.flywheelPorts, Robot.flywheelAlt_Rev_States[0], Robot.flywheelAlt_Rev_States[1]);
         spinnerMotors.init(Robot.spinnerPorts, Robot.spinnerAlt_Rev_States[0], Robot.spinnerAlt_Rev_States[1]);
+        launcher.init(Robot.launcher_port);
     }
 };

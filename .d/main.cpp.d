@@ -78,10 +78,8 @@ bin/main.cpp.o: src/main.cpp src/absolute_positioning.cpp src/include.cpp \
  include/pros/vision.h include/pros/link.hpp include/pros/link.h \
  include/pros/apix.h include/api.h include/pros/serial.h \
  include/pros/serial.hpp include/pros/apix.h include/pros/motors.hpp \
- src/spinner.cpp include/pros/optical.hpp src/autonomous.cpp \
- src/controls.cpp src/PID.cpp src/motors.cpp src/robot.cpp \
- include/pros/llemu.hpp src/algorithms.cpp include/pros/adi.hpp \
- include/pros/misc.hpp include/pros/screen.hpp include/pros/vision.hpp
+ src/spinner.cpp src/autonomous.cpp src/controls.cpp src/PID.cpp \
+ src/motors.cpp src/robot.cpp src/algorithms.cpp
 src/absolute_positioning.cpp:
 src/include.cpp:
 include/main.h:
@@ -244,15 +242,9 @@ include/pros/serial.hpp:
 include/pros/apix.h:
 include/pros/motors.hpp:
 src/spinner.cpp:
-include/pros/optical.hpp:
 src/autonomous.cpp:
 src/controls.cpp:
 src/PID.cpp:
 src/motors.cpp:
 src/robot.cpp:
-include/pros/llemu.hpp:
 src/algorithms.cpp:
-include/pros/adi.hpp:
-include/pros/misc.hpp:
-include/pros/screen.hpp:
-include/pros/vision.hpp:

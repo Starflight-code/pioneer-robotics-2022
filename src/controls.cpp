@@ -1,6 +1,7 @@
 #ifndef pid_cpp_
 #define pid_cpp_
 #include "PID.cpp"
+#include "pros/rtos.h"
 #endif
 
 #ifndef algorithms_cpp_
@@ -12,17 +13,6 @@
 #define include_cpp_
 #include "include.cpp"
 #endif
-
-/*
-#include "pros/adi.hpp"
-#include "pros/llemu.hpp"
-#include "pros/misc.h"
-#include "pros/misc.hpp"
-#include "pros/motors.hpp"
-#include "pros/rtos.hpp"
-#include "pros/screen.hpp"
-#include "pros/vision.hpp"
-*/
 
 class cl {
 
@@ -43,7 +33,7 @@ public:
 private:
     void training() {
         pros::Controller master(pros::E_CONTROLLER_MASTER);
-        if(master.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT)) {
+        if(master.get_digital(Motors.Robot.controlButtons[0])) {
             Motors.Robot.limiter = (double)(master.get_analog(ANALOG_LEFT_X) + algo._RANGE) / (algo._RANGE * 2);
         }
     }
@@ -54,8 +44,15 @@ public:
      * @return N/A
      */
     void event_listener() {
+        pros::Controller master(pros::E_CONTROLLER_MASTER); // Imports Controller as "master"
         if(Motors.Robot.training) {
             training();
+        }
+        if(Motors.Robot.controlButtons[1]) {
+            Motors.launcher.toggle();
+            while(Motors.Robot.controlButtons[1]) {
+                pros::c::delay(50);
+            }
         }
     }
 

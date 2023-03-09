@@ -1,6 +1,8 @@
 #ifndef include_cpp_
 #define include_cpp_
 #include "include.cpp"
+#include "pros/misc.h"
+#include <vector>
 #endif
 
 /// Robot Preset System allows centralized configuration of all configurable systems.
@@ -27,7 +29,8 @@ public:
     std::vector<bool> rightAlt_Rev_States;    // 0: Alternating (bool) 1: Initial Reverse State (bool)
     std::vector<bool> flywheelAlt_Rev_States; // 0: Alternating (bool) 1: Initial Reverse State (bool)
     std::vector<bool> spinnerAlt_Rev_States;  // 0: Alternating (bool) 1: Initial Reverse State (bool)
-    // int launcher_port;
+    int launcher_port;
+    std::vector<pros::controller_digital_e_t> controlButtons;
 
     /** Initializes the Robot Preset System, all configuration is hard coded and this class does not accept any external parameters
      * @return N/A
@@ -53,7 +56,7 @@ public:
             spinnerAlt_Rev_States = {false, false}; // Initial Reverse State True: True, True, True
             controlScheme = 0;                      // 0 for tank, 1 for split arcade
             limiter = 1;
-            // launcher_port = 1; // Removed, re-add for piston support
+            launcher_port = 1; // Port for the string launcher piston
             break;
 
         case 2: // Loads configuration for Chance
@@ -68,7 +71,7 @@ public:
             spinnerAlt_Rev_States = {false, false};
             controlScheme = 0; // 0 for tank, 1 for split arcade
             limiter = 1;
-            // launcher_port = 1; // Removed, re-add for piston support
+            launcher_port = 1; // Port for the string launcher piston
             break;
 
         case 3: // Loads debug configuration
@@ -83,26 +86,39 @@ public:
             spinnerAlt_Rev_States = {false, false};
             controlScheme = 0; // 0 for tank, 1 for split arcade
             limiter = 1;
-            // launcher_port = 1; // Removed, re-add for piston support
-            debug = true; // Enables debug mode, can be used for verbose logging (not implimented yet)
+            launcher_port = 1; // Port for the string launcher piston
+            debug = true;      // Enables debug mode, can be used for verbose logging (not implimented yet)
             break;
         }
         switch(DID) {
-        case 1:                           // Andrew - REPLACE ONCE NEW DRIVER IS DECIDED
+        case 1:                           // Andrew
             exponential_control = true;   // Enables exponent based control system
             control_exponent_value = 1.5; // Greater the value, the steeper the exponential control curve
-            training = true;
+            training = true;              // Sets the training mode, FALSE FOR COMPETITIONS
             break;
 
         case 2:                           // Malachi
             controlScheme = 0;            // 0 for tank, 1 for split arcade
             exponential_control = true;   // Enables exponent based control system
             control_exponent_value = 1.5; // Greater the value, the steeper the exponential control curve
-            training = true;
+            training = true;              // Sets the training mode, FALSE FOR COMPETITIONS
             break;
 
         case 3: // None
 
+            break;
+        }
+    }
+    void control_scheme_setup() {
+        switch(DID) {
+        case 1:
+            // [Training Local Limiter Button, Piston Button]
+            controlButtons.push_back(pros::E_CONTROLLER_DIGITAL_LEFT); // Training Local Limiter Button
+            controlButtons.push_back(pros::E_CONTROLLER_DIGITAL_A);    // Piston Keybind
+            break;
+        case 2:
+            controlButtons.push_back(pros::E_CONTROLLER_DIGITAL_LEFT); // Training Local Limiter Button
+            controlButtons.push_back(pros::E_CONTROLLER_DIGITAL_A);    // Piston Keybind
             break;
         }
     }
