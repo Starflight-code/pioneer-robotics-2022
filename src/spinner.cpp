@@ -1,10 +1,10 @@
 /// Allows interaction with color sensor and running automated spinner systems
-#include "pros/motors.hpp"
-#include "pros/optical.h"
-#include "pros/optical.hpp"
-#include "pros/rtos.hpp"
-#include <vector>
+#ifndef include_cpp_
+#include "include.cpp"
+#define include_cpp_
+#endif
 
+/// Allows control and centralized tracking of spinner system
 class spin {
 private:
     int spin_color;

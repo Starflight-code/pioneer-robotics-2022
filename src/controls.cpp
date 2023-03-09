@@ -1,17 +1,19 @@
+#ifndef pid_cpp_
+#define pid_cpp_
 #include "PID.cpp"
-#include "algorithms.cpp"
-#include "pros/adi.hpp"
-#include "pros/llemu.hpp"
 #include "pros/misc.h"
-#include "pros/misc.hpp"
-#include "pros/motors.hpp"
-#include "pros/rtos.hpp"
-#include "pros/screen.hpp"
-#include "pros/vision.hpp"
-#include <algorithm>
-#include <array>
-#include <cmath>
-#include <vector>
+#include "pros/rtos.h"
+#endif
+
+#ifndef algorithms_cpp_
+#define algorithms_cpp_
+#include "algorithms.cpp"
+#endif
+
+#ifndef include_cpp_
+#define include_cpp_
+#include "include.cpp"
+#endif
 
 class cl {
 
@@ -32,7 +34,7 @@ public:
 private:
     void training() {
         pros::Controller master(pros::E_CONTROLLER_MASTER);
-        if(master.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT)) {
+        if(master.get_digital(Motors.Robot.controlButtons[0])) {
             Motors.Robot.limiter = (double)(master.get_analog(ANALOG_LEFT_X) + algo._RANGE) / (algo._RANGE * 2);
         }
     }
@@ -43,8 +45,15 @@ public:
      * @return N/A
      */
     void event_listener() {
+        pros::Controller master(pros::E_CONTROLLER_MASTER); // Imports Controller as "master"
         if(Motors.Robot.training) {
             training();
+        }
+        if(master.get_digital(Motors.Robot.controlButtons[1])) {
+            Motors.launcher.toggle();
+            while(master.get_digital(Motors.Robot.controlButtons[1])) {
+                pros::c::delay(50);
+            }
         }
     }
 
@@ -54,7 +63,8 @@ public:
      * Sends calculated output to motors.
      * @return N/A
      */
-    void controls() {
+    void
+    controls() {
 
         pros::Controller master(pros::E_CONTROLLER_MASTER); // Imports Controller as "master"
         // Set sticks arrays to correct values for current configuration
@@ -63,7 +73,6 @@ public:
         } else {
             sticks = {ANALOG_LEFT_Y, ANALOG_RIGHT_X}; // Arcade Control
         }
-
         if(Motors.Robot.exponential_control) { // Apply exponential control altering and populate controller_values array
             for(int i = 0; i < controller_values.size(); i++) {
                 controller_values[i] = algo.exponential_control(master.get_analog(sticks[i]), Motors.Robot.control_exponent_value);
