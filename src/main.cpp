@@ -13,6 +13,11 @@
 #define autonomous_cpp_
 #endif
 
+#ifndef scheduler_cpp_
+#include "scheduler.cpp"
+#define scheduler_cpp_
+#endif
+
 #ifndef include_cpp_
 #include "include.cpp"
 #define include_cpp_
@@ -124,7 +129,7 @@ std::vector<uint32_t> cycleRun(short int taskIndex, std::vector<uint32_t> millis
     short waitTime = desiredWait - ((uint32_t)pros::millis() - millis_array[taskIndex]); // Calculates current wait time by checking desiredWaitTime(default:50) - time passed since task finished
     short historicWait = millis_array[lastTaskIndex] - millis_array[taskIndex];
     bool carryWaitTime = millis_array[taskIndex] % 100 == 0;
-    if(not carryWaitTime) {                                   // Checks for a artifact from the historical wait time system
+    if(not carryWaitTime) {                                   // Checks for a artifact added by the historical wait time system
         millis_array[lastTaskIndex] = (uint32_t)pros::millis; // Prevents the index from reaching -1, instead setting it to the max index value if it is
     }                                                         // Sets current time as the finishing time of the last task
     if(waitTime > historicWait && not carryWaitTime) {
@@ -135,16 +140,16 @@ std::vector<uint32_t> cycleRun(short int taskIndex, std::vector<uint32_t> millis
     return millis_array;                                                                                                // Sends the updated array back, allows persistance between method executions
 }
 void opcontrol() {
-    std::vector<uint32_t> milis_cycle = {0, 0}; // Increase array size when adding new tasks (only up to current amount of tasks)
-    short desiredWaitTime = 50;                 // per task wait in milliseconds
+    short desiredWaitTime = 50; // per task wait in milliseconds
     cl Control_Listener;
+    scheduler tasks(2);
     if(Control_Listener.Motors.Robot.task_scheduler) {
         while(true) {
 
-            milis_cycle = cycleRun(0, milis_cycle, desiredWaitTime); // Should be placed before the task
-            Control_Listener.controls();                             // Task 0
+            tasks.cycleRun(0, desiredWaitTime); // Should be placed before the task
+            Control_Listener.controls();        // Task 0
 
-            milis_cycle = cycleRun(1, milis_cycle, desiredWaitTime);
+            tasks.cycleRun(1, desiredWaitTime);
             Control_Listener.event_listener(); // Task 1
         }
     } else {
