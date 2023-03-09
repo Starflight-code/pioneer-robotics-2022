@@ -79,7 +79,8 @@ bin/main.cpp.o: src/main.cpp src/absolute_positioning.cpp src/include.cpp \
  include/pros/apix.h include/api.h include/pros/serial.h \
  include/pros/serial.hpp include/pros/apix.h include/pros/motors.hpp \
  src/spinner.cpp src/autonomous.cpp src/controls.cpp src/PID.cpp \
- src/motors.cpp src/robot.cpp src/algorithms.cpp
+ src/motors.cpp include/pros/adi.hpp src/robot.cpp src/algorithms.cpp \
+ src/scheduler.cpp
 src/absolute_positioning.cpp:
 src/include.cpp:
 include/main.h:
@@ -246,5 +247,7 @@ src/autonomous.cpp:
 src/controls.cpp:
 src/PID.cpp:
 src/motors.cpp:
+include/pros/adi.hpp:
 src/robot.cpp:
 src/algorithms.cpp:
+src/scheduler.cpp:

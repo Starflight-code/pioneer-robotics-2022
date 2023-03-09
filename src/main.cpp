@@ -81,7 +81,7 @@ void autonomous() {
  * operator control task will be stopped. Re-enabling the robot will restart the
  * task, not resume it from where it left off.
  */
-std::vector<uint32_t> cycleRun(short int taskIndex, std::vector<uint32_t> millis_array, short desiredWait) {
+/*std::vector<uint32_t> cycleRun(short int taskIndex, std::vector<uint32_t> millis_array, short desiredWait) {
     // Integrated a historical task time skipping system, where if the wait time is greater than the historical
     // time taken for all other tasks on the cycle, processing is freed for other tasks. Leaving no impact on the task's timing.
 
@@ -98,9 +98,9 @@ std::vector<uint32_t> cycleRun(short int taskIndex, std::vector<uint32_t> millis
     pros::c::delay(waitTime < 0 || carryWaitTime ? waitTime / 100 > historicWait : waitTime > historicWait ? 0
                                                                                                            : waitTime); // Waits for the wait time, if it is still positive (has not passed)
     return millis_array;                                                                                                // Sends the updated array back, allows persistance between method executions
-}
+}*/
 void opcontrol() {
-    short desiredWaitTime = 50; // per task wait in milliseconds
+    u_short desiredWaitTime = 50; // per task wait in milliseconds
     cl Control_Listener;
     scheduler tasks(2);
     if(Control_Listener.Motors.Robot.task_scheduler) {

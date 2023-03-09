@@ -1,6 +1,7 @@
 #ifndef pid_cpp_
 #define pid_cpp_
 #include "PID.cpp"
+#include "pros/misc.h"
 #include "pros/rtos.h"
 #endif
 
@@ -48,9 +49,9 @@ public:
         if(Motors.Robot.training) {
             training();
         }
-        if(Motors.Robot.controlButtons[1]) {
+        if(master.get_digital(Motors.Robot.controlButtons[1])) {
             Motors.launcher.toggle();
-            while(Motors.Robot.controlButtons[1]) {
+            while(master.get_digital(Motors.Robot.controlButtons[1])) {
                 pros::c::delay(50);
             }
         }
@@ -62,7 +63,8 @@ public:
      * Sends calculated output to motors.
      * @return N/A
      */
-    void controls() {
+    void
+    controls() {
 
         pros::Controller master(pros::E_CONTROLLER_MASTER); // Imports Controller as "master"
         // Set sticks arrays to correct values for current configuration
@@ -71,7 +73,6 @@ public:
         } else {
             sticks = {ANALOG_LEFT_Y, ANALOG_RIGHT_X}; // Arcade Control
         }
-
         if(Motors.Robot.exponential_control) { // Apply exponential control altering and populate controller_values array
             for(int i = 0; i < controller_values.size(); i++) {
                 controller_values[i] = algo.exponential_control(master.get_analog(sticks[i]), Motors.Robot.control_exponent_value);

@@ -10,7 +10,7 @@
 
 class autonomous_class {
 private:
-    short desiredWaitTime = 10; // per task wait in milliseconds
+    u_short desiredWaitTime = 10; // per task wait in milliseconds
     bool task_one_finished;
     bool task_two_finished;
 

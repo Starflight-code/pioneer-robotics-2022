@@ -78,7 +78,7 @@ bin/PID.cpp.o: src/PID.cpp src/include.cpp include/main.h include/api.h \
  include/pros/vision.h include/pros/link.hpp include/pros/link.h \
  include/pros/apix.h include/api.h include/pros/serial.h \
  include/pros/serial.hpp include/pros/apix.h include/pros/motors.hpp \
- src/motors.cpp src/robot.cpp
+ src/motors.cpp include/pros/adi.hpp src/robot.cpp
 src/include.cpp:
 include/main.h:
 include/api.h:
@@ -240,4 +240,5 @@ include/pros/serial.hpp:
 include/pros/apix.h:
 include/pros/motors.hpp:
 src/motors.cpp:
+include/pros/adi.hpp:
 src/robot.cpp:

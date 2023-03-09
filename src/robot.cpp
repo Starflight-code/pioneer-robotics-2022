@@ -30,7 +30,7 @@ public:
     std::vector<bool> flywheelAlt_Rev_States; // 0: Alternating (bool) 1: Initial Reverse State (bool)
     std::vector<bool> spinnerAlt_Rev_States;  // 0: Alternating (bool) 1: Initial Reverse State (bool)
     int launcher_port;
-    std::vector<pros::controller_digital_e_t> controlButtons;
+    std::vector<pros::controller_digital_e_t> controlButtons = {pros::E_CONTROLLER_DIGITAL_LEFT, pros::E_CONTROLLER_DIGITAL_A};
 
     /** Initializes the Robot Preset System, all configuration is hard coded and this class does not accept any external parameters
      * @return N/A
@@ -108,17 +108,18 @@ public:
 
             break;
         }
+        control_scheme_setup();
     }
     void control_scheme_setup() {
         switch(DID) {
         case 1:
             // [Training Local Limiter Button, Piston Button]
-            controlButtons.push_back(pros::E_CONTROLLER_DIGITAL_LEFT); // Training Local Limiter Button
-            controlButtons.push_back(pros::E_CONTROLLER_DIGITAL_A);    // Piston Keybind
+            controlButtons[0] = pros::E_CONTROLLER_DIGITAL_LEFT; // Training Local Limiter Button
+            controlButtons[1] = pros::E_CONTROLLER_DIGITAL_A;    // Piston Keybind
             break;
         case 2:
-            controlButtons.push_back(pros::E_CONTROLLER_DIGITAL_LEFT); // Training Local Limiter Button
-            controlButtons.push_back(pros::E_CONTROLLER_DIGITAL_A);    // Piston Keybind
+            controlButtons[0] = pros::E_CONTROLLER_DIGITAL_LEFT; // Training Local Limiter Button
+            controlButtons[1] = pros::E_CONTROLLER_DIGITAL_A;    // Piston Keybind
             break;
         }
     }

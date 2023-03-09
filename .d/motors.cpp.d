@@ -1,6 +1,6 @@
-bin/motors.cpp.o: src/motors.cpp include/main.h include/api.h \
- include/pros/adi.h include/pros/colors.h include/pros/distance.h \
- include/pros/error.h include/pros/ext_adi.h include/pros/adi.h \
+bin/motors.cpp.o: src/motors.cpp include/pros/adi.hpp include/pros/adi.h \
+ include/main.h include/api.h include/pros/adi.h include/pros/colors.h \
+ include/pros/distance.h include/pros/error.h include/pros/ext_adi.h \
  include/pros/adi.h include/pros/gps.h include/pros/imu.h \
  include/pros/link.h include/pros/llemu.h include/display/lvgl.h \
  include/display/lv_version.h include/display/lv_misc/lv_log.h \
@@ -79,6 +79,8 @@ bin/motors.cpp.o: src/motors.cpp include/main.h include/api.h \
  include/pros/apix.h include/api.h include/pros/serial.h \
  include/pros/serial.hpp src/robot.cpp src/include.cpp \
  include/pros/apix.h include/pros/motors.hpp
+include/pros/adi.hpp:
+include/pros/adi.h:
 include/main.h:
 include/api.h:
 include/pros/adi.h:
@@ -86,7 +88,6 @@ include/pros/colors.h:
 include/pros/distance.h:
 include/pros/error.h:
 include/pros/ext_adi.h:
-include/pros/adi.h:
 include/pros/adi.h:
 include/pros/gps.h:
 include/pros/imu.h:
