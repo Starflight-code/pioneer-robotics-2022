@@ -91,9 +91,10 @@ public:
         }
         if(master.get_digital(Motors.Robot.controlButtons[2])) { // Spinner Normal Direction
             Motors.spinnerMotors.set(Motors.Robot.spinner_speed);
-        }
-        if(master.get_digital(Motors.Robot.controlButtons[3])) { // Spinner Reversed Direction
+        } else if(master.get_digital(Motors.Robot.controlButtons[3])) { // Spinner Reversed Direction
             Motors.spinnerMotors.set(Motors.Robot.spinner_speed * -1);
+        } else {
+            Motors.spinnerMotors.set(0);
         }
     }
 
