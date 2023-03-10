@@ -96,14 +96,14 @@ public:
         case 1:                           // Andrew
             exponential_control = true;   // Enables exponent based control system
             control_exponent_value = 1.5; // Greater the value, the steeper the exponential control curve
-            training = false;             // Sets the training mode, FALSE FOR COMPETITIONS
+            training = true;              // Sets the training mode, FALSE FOR COMPETITIONS
             break;
 
         case 2:                           // Malachi
             controlScheme = 0;            // 0 for tank, 1 for split arcade
             exponential_control = true;   // Enables exponent based control system
             control_exponent_value = 1.5; // Greater the value, the steeper the exponential control curve
-            training = false;             // Sets the training mode, FALSE FOR COMPETITIONS
+            training = true;              // Sets the training mode, FALSE FOR COMPETITIONS
             break;
 
         case 3: // None
@@ -112,20 +112,23 @@ public:
         }
         control_scheme_setup();
     }
+    /**
+     * Sets up the control scheme based on driver presets
+     */
     void control_scheme_setup() {
         switch(DID) {
         case 1:
-            // [Training Local Limiter Button, Piston Button]
-            controlButtons[0] = pros::E_CONTROLLER_DIGITAL_LEFT; // Training Local Limiter Button
-            controlButtons[1] = pros::E_CONTROLLER_DIGITAL_A;    // Piston Keybind
-            controlButtons[2] = pros::E_CONTROLLER_DIGITAL_R1;   // Spinner Keybind (Normal)
-            controlButtons[3] = pros::E_CONTROLLER_DIGITAL_R2;   // Spinner Keybind (Reversed)
+            // [Training Local Limiter Button, Piston Button, Spinner Normal Button, Spinner Reversed Button]
+            controlButtons.push_back(pros::E_CONTROLLER_DIGITAL_LEFT); // Training Local Limiter Button
+            controlButtons.push_back(pros::E_CONTROLLER_DIGITAL_A);    // Piston Keybind
+            controlButtons.push_back(pros::E_CONTROLLER_DIGITAL_R1);   // Spinner Keybind (Normal)
+            controlButtons.push_back(pros::E_CONTROLLER_DIGITAL_R2);   // Spinner Keybind (Reversed)
             break;
         case 2:
-            controlButtons[0] = pros::E_CONTROLLER_DIGITAL_LEFT; // Training Local Limiter Button
-            controlButtons[1] = pros::E_CONTROLLER_DIGITAL_A;    // Piston Keybind
-            controlButtons[2] = pros::E_CONTROLLER_DIGITAL_R1;   // Spinner Keybind (Normal)
-            controlButtons[3] = pros::E_CONTROLLER_DIGITAL_R2;   // Spinner Keybind (Reversed)
+            controlButtons.push_back(pros::E_CONTROLLER_DIGITAL_LEFT); // Training Local Limiter Button
+            controlButtons.push_back(pros::E_CONTROLLER_DIGITAL_A);    // Piston Keybind
+            controlButtons.push_back(pros::E_CONTROLLER_DIGITAL_R1);   // Spinner Keybind (Normal)
+            controlButtons.push_back(pros::E_CONTROLLER_DIGITAL_R2);   // Spinner Keybind (Reversed)
             break;
         }
     }

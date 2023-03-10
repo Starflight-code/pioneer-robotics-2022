@@ -65,8 +65,8 @@ void autonomous() {
     double Init_Pos;
     Motor_Class Motors;
     autonomous_class auton;
-    auton.forward(Motors, 900, 20);
-    auton.turn(Motors, 650, 20, true); // Turns 180 degrees, do not change distance value (for now)
+    auton.forward(Motors, 1200, 30);
+    // auton.turn(Motors, 650, 20, true); // Turns 180 degrees, do not change distance value (for now)
 }
 /**
  * Runs the operator control code. This function will be started in its own task

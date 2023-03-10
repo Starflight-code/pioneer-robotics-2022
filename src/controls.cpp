@@ -123,24 +123,14 @@ public:
                 controller_values[i] = master.get_analog(sticks[i]);
             }
         }
-
-        Motors.leftMotors.set(controller_values[0] + (spinnerActive * Motors.Robot.spinner_boost));
-        Motors.rightMotors.set(controller_values[1] + (spinnerActive * Motors.Robot.spinner_boost));
-
         switch(Motors.Robot.controlScheme) {
         case 0: // Tank Control
             for(int i = 0; i < controller_values.size(); i++) {
-                Motors.Motors[i].set(algo.tank_control(controller_values[i], Motors.Robot.limiter));
+                controller_values[i] = algo.tank_control(controller_values[i], Motors.Robot.limiter);
             }
             break;
         case 1: // Split Arcade
-
-            std::array<int, 2> motorValues;
-            motorValues = algo.arcade_control(controller_values[0], controller_values[1], Motors.Robot.limiter);
-            for(int i = 0; i < motorValues.size(); i++) {
-                Motors.Motors[i].set(motorValues[i]);
-            }
-            //}
+            controller_values = algo.arcade_control(controller_values[0], controller_values[1], Motors.Robot.limiter);
             break;
         default:
             // SHOULD NEVER OCCUR, but if it does...
@@ -148,5 +138,8 @@ public:
             // the Robot.controlScheme variable preset
             break;
         }
+        // Applys motor speeds from controller_values array
+        Motors.leftMotors.set(controller_values[0] + (spinnerActive * Motors.Robot.spinner_boost));
+        Motors.rightMotors.set(controller_values[1] + (spinnerActive * Motors.Robot.spinner_boost));
     }
 };
