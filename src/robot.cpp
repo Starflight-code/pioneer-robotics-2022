@@ -32,7 +32,7 @@ public:
     std::vector<bool> flywheelAlt_Rev_States; // 0: Alternating (bool) 1: Initial Reverse State (bool)
     std::vector<bool> spinnerAlt_Rev_States;  // 0: Alternating (bool) 1: Initial Reverse State (bool)
     int launcher_port;
-    std::vector<pros::controller_digital_e_t> controlButtons = {pros::E_CONTROLLER_DIGITAL_LEFT, pros::E_CONTROLLER_DIGITAL_A};
+    std::vector<pros::controller_digital_e_t> controlButtons;
 
     /** Initializes the Robot Preset System, all configuration is hard coded and this class does not accept any external parameters
      * @return N/A
