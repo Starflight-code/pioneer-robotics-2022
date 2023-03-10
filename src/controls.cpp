@@ -52,12 +52,8 @@ public:
 class cl {
 
 private:
-    double sc = 0;                       // Scaling constant, for use with arcade control system
-    const int _SPINNER_SPEED = 60;       // Speed that spinner will spin at
-    const int _SPINNER_DRIVE_SPEED = 10; // Speed for drive motors to push robot
-                                         // forward, keeping contact with spinner
-    bool spinnerActive = false;          // Allows for control while pushing robot forward
-                                         // for spinner (Quality of Life)
+    double sc = 0;      // Scaling constant, for use with arcade control system
+    bool spinnerActive; // Tracks if the spinner is on or off
     std::array<int, 2> controller_values;
     std::array<pros::controller_analog_e_t, 2> sticks;
 
@@ -90,11 +86,14 @@ public:
             }
         }
         if(master.get_digital(Motors.Robot.controlButtons[2])) { // Spinner Normal Direction
-            Motors.spinnerMotors.set(Motors.Robot.spinner_speed);
-        } else if(master.get_digital(Motors.Robot.controlButtons[3])) { // Spinner Reversed Direction
             Motors.spinnerMotors.set(Motors.Robot.spinner_speed * -1);
+            spinnerActive = true;
+        } else if(master.get_digital(Motors.Robot.controlButtons[3])) { // Spinner Reversed Direction
+            Motors.spinnerMotors.set(Motors.Robot.spinner_speed);
+            spinnerActive = true;
         } else {
             Motors.spinnerMotors.set(0);
+            spinnerActive = false;
         }
     }
 
@@ -125,8 +124,8 @@ public:
             }
         }
 
-        Motors.leftMotors.set(controller_values[0]);
-        Motors.rightMotors.set(controller_values[1]);
+        Motors.leftMotors.set(controller_values[0] + (spinnerActive * Motors.Robot.spinner_boost));
+        Motors.rightMotors.set(controller_values[1] + (spinnerActive * Motors.Robot.spinner_boost));
 
         switch(Motors.Robot.controlScheme) {
         case 0: // Tank Control
