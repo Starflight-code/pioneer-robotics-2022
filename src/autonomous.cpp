@@ -8,6 +8,11 @@
 #include "scheduler.cpp"
 #endif
 
+#ifndef spinner_cpp_
+#include "spinner.cpp"
+#define spinner_cpp_
+#endif
+
 class autonomous_class {
 private:
     u_short desiredWaitTime = 10; // per task wait in milliseconds

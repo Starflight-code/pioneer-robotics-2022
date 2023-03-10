@@ -4,6 +4,11 @@
 #define include_cpp_
 #endif
 
+#ifndef motors_cpp_
+#include "motors.cpp"
+#define motors_cpp_
+#endif
+
 /// Allows control and centralized tracking of spinner system
 class spin {
 private:
@@ -42,13 +47,12 @@ public:
      * @param encoderUnits | encoder units to spin motor, 1.2 degrees per encoder unit (integer)
      * @return N/A
      */
-    void rotate(int motorPort, int encoderUnits) {
-        pros::Motor motor(motorPort);
-        motor.tare_position();
-        motor = 15;
-        while(motor.get_position() < 300) { // 300 encoder units in 360 degrees (1.2 degrees per encoder unit)
+    void rotate(int motorPort, int encoderUnits, MotorGroup Motor) {
+        Motor.tarePosition();
+        Motor.set(15);
+        while(Motor.getFastPosition() < encoderUnits) { // 300 encoder units in 360 degrees (1.2 degrees per encoder unit)
             pros::delay(10);
         }
-        motor = 0;
+        Motor.set(0);
     };
 };
