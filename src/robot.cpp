@@ -21,6 +21,7 @@ public:
     double control_exponent_value = 1.5; // Greater the value, the steeper the exponential control curve
     int control_switch_value;
     bool task_scheduler = true;
+    int spinner_speed = 50;
     std::vector<int> leftPorts;               // Left Motor Port Array
     std::vector<int> rightPorts;              // Right Motor Port Array
     std::vector<int> flywheelPorts;           // Flywheel Motor Port Array
@@ -49,11 +50,11 @@ public:
             leftPorts = {9, 8, 5, 3};               // Ports of left motors, from L1 to L4
             rightPorts = {20, 18, 14, 11};          // Ports of right motors, from R1 to R4
             flywheelPorts = {1, 4};                 // Ports of flywheel motors, from F1 to F2
-            spinnerPorts = {13};                    // Port for the spinner motor
+            spinnerPorts = {6, 16};                 // Port for the spinner motor
             leftAlt_Rev_States = {true, true};      // 0: Alternating (bool) 1: Initial Reverse State (bool)
             rightAlt_Rev_States = {true, false};    // Alternating: True, False, True ...
             flywheelAlt_Rev_States = {true, false}; // (Non Alternating) Initial Reverse State False: False, False, False
-            spinnerAlt_Rev_States = {false, false}; // Initial Reverse State True: True, True, True
+            spinnerAlt_Rev_States = {true, false};  // Initial Reverse State True: True, True, True
             controlScheme = 0;                      // 0 for tank, 1 for split arcade
             limiter = 1;
             launcher_port = 1; // Port for the string launcher piston
@@ -64,11 +65,11 @@ public:
             leftPorts = {16, 6, 3, 8};         // Ports of left motors, from L1 to L4
             rightPorts = {20, 19, 18, 17};     // Ports of right motors, from R1 to R4
             flywheelPorts = {1, 4};            // Ports of flywheel motors, from F1 to F2
-            spinnerPorts = {13};               // Port for the spinner motor
+            spinnerPorts = {6, 16};            // Port for the spinner motor
             leftAlt_Rev_States = {true, true}; // 0: Alternating (bool) 1: Initial Reverse State (bool)
             rightAlt_Rev_States = {true, false};
             flywheelAlt_Rev_States = {true, false};
-            spinnerAlt_Rev_States = {false, false};
+            spinnerAlt_Rev_States = {true, false};
             controlScheme = 0; // 0 for tank, 1 for split arcade
             limiter = 1;
             launcher_port = 1; // Port for the string launcher piston
@@ -79,11 +80,11 @@ public:
             leftPorts = {16, 6, 3, 8};     // Ports of left motors, from L1 to L4
             rightPorts = {20, 19, 18, 17}; // Ports of right motors, from R1 to R4
             flywheelPorts = {1, 4};        // Ports of flywheel motors, from F1 to F2
-            spinnerPorts = {13};           // Port for the spinner motor
+            spinnerPorts = {6, 16};        // Port for the spinner motor
             leftAlt_Rev_States = {true, true};
             rightAlt_Rev_States = {true, false};
             flywheelAlt_Rev_States = {true, false};
-            spinnerAlt_Rev_States = {false, false};
+            spinnerAlt_Rev_States = {true, false};
             controlScheme = 0; // 0 for tank, 1 for split arcade
             limiter = 1;
             launcher_port = 1; // Port for the string launcher piston
@@ -94,14 +95,14 @@ public:
         case 1:                           // Andrew
             exponential_control = true;   // Enables exponent based control system
             control_exponent_value = 1.5; // Greater the value, the steeper the exponential control curve
-            training = true;              // Sets the training mode, FALSE FOR COMPETITIONS
+            training = false;             // Sets the training mode, FALSE FOR COMPETITIONS
             break;
 
         case 2:                           // Malachi
             controlScheme = 0;            // 0 for tank, 1 for split arcade
             exponential_control = true;   // Enables exponent based control system
             control_exponent_value = 1.5; // Greater the value, the steeper the exponential control curve
-            training = true;              // Sets the training mode, FALSE FOR COMPETITIONS
+            training = false;             // Sets the training mode, FALSE FOR COMPETITIONS
             break;
 
         case 3: // None
@@ -116,10 +117,14 @@ public:
             // [Training Local Limiter Button, Piston Button]
             controlButtons[0] = pros::E_CONTROLLER_DIGITAL_LEFT; // Training Local Limiter Button
             controlButtons[1] = pros::E_CONTROLLER_DIGITAL_A;    // Piston Keybind
+            controlButtons[2] = pros::E_CONTROLLER_DIGITAL_R1;   // Spinner Keybind (Normal)
+            controlButtons[3] = pros::E_CONTROLLER_DIGITAL_R2;   // Spinner Keybind (Reversed)
             break;
         case 2:
             controlButtons[0] = pros::E_CONTROLLER_DIGITAL_LEFT; // Training Local Limiter Button
             controlButtons[1] = pros::E_CONTROLLER_DIGITAL_A;    // Piston Keybind
+            controlButtons[2] = pros::E_CONTROLLER_DIGITAL_R1;   // Spinner Keybind (Normal)
+            controlButtons[3] = pros::E_CONTROLLER_DIGITAL_R2;   // Spinner Keybind (Reversed)
             break;
         }
     }

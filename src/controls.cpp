@@ -15,6 +15,40 @@
 #include "include.cpp"
 #endif
 
+class toggleTracker {
+private:
+    bool held;
+    bool previousState;
+
+public:
+    bool currentState;
+    /** Initialzes the toggle tracker.
+     * @param state the initial toggle state (boolean)
+     */
+    toggleTracker() {
+        held = false;
+        currentState = false;
+        previousState = currentState;
+    }
+    /** Initialzes the toggle tracker.
+     * @param state the initial toggle state (boolean)
+     */
+    toggleTracker(bool state) {
+        held = false;
+        currentState = state;
+        previousState = currentState;
+    }
+    /** Updates the tracker with the current button value
+     *  @param held current value of the button (boolean)
+     */
+    void updateTracker(bool held) {
+        if(held && held != previousState) {
+            currentState = !currentState;
+        }
+        previousState = held;
+    }
+};
+
 class cl {
 
 private:
@@ -47,13 +81,19 @@ public:
     void event_listener() {
         pros::Controller master(pros::E_CONTROLLER_MASTER); // Imports Controller as "master"
         if(Motors.Robot.training) {
-            training();
+            training(); // Training Modules
         }
-        if(master.get_digital(Motors.Robot.controlButtons[1])) {
+        if(master.get_digital(Motors.Robot.controlButtons[1])) { // Launcher Toggle
             Motors.launcher.toggle();
             while(master.get_digital(Motors.Robot.controlButtons[1])) {
                 pros::c::delay(50);
             }
+        }
+        if(master.get_digital(Motors.Robot.controlButtons[2])) { // Spinner Normal Direction
+            Motors.spinnerMotors.set(Motors.Robot.spinner_speed);
+        }
+        if(master.get_digital(Motors.Robot.controlButtons[3])) { // Spinner Reversed Direction
+            Motors.spinnerMotors.set(Motors.Robot.spinner_speed * -1);
         }
     }
 
