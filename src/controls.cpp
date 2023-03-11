@@ -3,6 +3,7 @@
 #include "PID.cpp"
 #include "pros/misc.h"
 #include "pros/rtos.h"
+#include <cmath>
 #endif
 
 #ifndef algorithms_cpp_
@@ -60,6 +61,10 @@ private:
 public:
     Motor_Class Motors;
     algorithms algo;
+    Control_Algorithms pidOne();
+    Control_Algorithms pidTwo();
+    toggleTracker swapControls;
+    toggleTracker pistonLauncher;
 
 private:
     void training() {
@@ -79,12 +84,15 @@ public:
         if(Motors.Robot.training) {
             training(); // Training Modules
         }
-        if(master.get_digital(Motors.Robot.controlButtons[1])) { // Launcher Toggle
+        swapControls.updateTracker(master.get_digital(Motors.Robot.controlButtons[4]));
+        pistonLauncher.updateTracker(master.get_digital(Motors.Robot.controlButtons[1]));
+        Motors.launcher.set(pistonLauncher.currentState);
+        /*if(master.get_digital(Motors.Robot.controlButtons[1])) { // Launcher Toggle
             Motors.launcher.toggle();
             while(master.get_digital(Motors.Robot.controlButtons[1])) {
                 pros::c::delay(50);
             }
-        }
+        }*/
         if(master.get_digital(Motors.Robot.controlButtons[2])) { // Spinner Normal Direction
             Motors.spinnerMotors.set(Motors.Robot.spinner_speed * -1);
             spinnerActive = true;
@@ -105,6 +113,8 @@ public:
      */
     void
     controls() {
+        Control_Algorithms pidOne(0.2, 0.04, 0.01);
+        Control_Algorithms pidTwo(0.2, 0.04, 0.01);
 
         pros::Controller master(pros::E_CONTROLLER_MASTER); // Imports Controller as "master"
         // Set sticks arrays to correct values for current configuration
@@ -123,24 +133,14 @@ public:
                 controller_values[i] = master.get_analog(sticks[i]);
             }
         }
-
-        Motors.leftMotors.set(controller_values[0] + (spinnerActive * Motors.Robot.spinner_boost));
-        Motors.rightMotors.set(controller_values[1] + (spinnerActive * Motors.Robot.spinner_boost));
-
         switch(Motors.Robot.controlScheme) {
         case 0: // Tank Control
             for(int i = 0; i < controller_values.size(); i++) {
-                Motors.Motors[i].set(algo.tank_control(controller_values[i], Motors.Robot.limiter));
+                controller_values[i] = algo.tank_control(controller_values[i], Motors.Robot.limiter);
             }
             break;
         case 1: // Split Arcade
-
-            std::array<int, 2> motorValues;
-            motorValues = algo.arcade_control(controller_values[0], controller_values[1], Motors.Robot.limiter);
-            for(int i = 0; i < motorValues.size(); i++) {
-                Motors.Motors[i].set(motorValues[i]);
-            }
-            //}
+            controller_values = algo.arcade_control(controller_values[0], controller_values[1], Motors.Robot.limiter);
             break;
         default:
             // SHOULD NEVER OCCUR, but if it does...
@@ -148,5 +148,27 @@ public:
             // the Robot.controlScheme variable preset
             break;
         }
+        // Applys motor speeds from controller_values array
+        // Motors.leftMotors.set(pidOne.PD_Velocity(200, Motors.leftMotors.getFastVelocity()));
+        // Motors.rightMotors.set(pidTwo.PD_Velocity(200, Motors.rightMotors.getFastVelocity()));
+        if(not swapControls.currentState) {
+            controller_values = algo.controlSwap(controller_values[0], controller_values[1]);
+        }
+        controller_values = algo.applyOffset(controller_values[0], controller_values[1], Motors.Robot.left_right_motor_offset);
+        Motors.leftMotors.set(controller_values[0] + (spinnerActive * Motors.Robot.spinner_boost));
+        Motors.rightMotors.set(controller_values[1] + (spinnerActive * Motors.Robot.spinner_boost));
+        /*
+        if(Motors.Robot.left_right_motor_offset != 0) {
+            if(Motors.Robot.left_right_motor_offset < 0) { // Apply to left motor
+                Motors.leftMotors.set(controller_values[0] * abs(Motors.Robot.left_right_motor_offset) + (spinnerActive * Motors.Robot.spinner_boost));
+                Motors.rightMotors.set(controller_values[1] + (spinnerActive * Motors.Robot.spinner_boost));
+            } else {
+                Motors.leftMotors.set(controller_values[0] + (spinnerActive * Motors.Robot.spinner_boost));
+                Motors.rightMotors.set(controller_values[1] * abs(Motors.Robot.left_right_motor_offset) + (spinnerActive * Motors.Robot.spinner_boost));
+            }
+        } else {
+            Motors.leftMotors.set(controller_values[0] + (spinnerActive * Motors.Robot.spinner_boost));
+            Motors.rightMotors.set(controller_values[1] + (spinnerActive * Motors.Robot.spinner_boost));
+        }*/
     }
 };

@@ -1,6 +1,8 @@
 #ifndef absolute_positioning_cpp_
 #define absolute_positioning_cpp_
 #include "absolute_positioning.cpp"
+#include "pros/rotation.hpp"
+#include "pros/rtos.h"
 #endif
 
 #ifndef spinner_cpp_
@@ -65,8 +67,27 @@ void autonomous() {
     double Init_Pos;
     Motor_Class Motors;
     autonomous_class auton;
-    auton.forward(Motors, 900, 20);
-    auton.turn(Motors, 650, 20, true); // Turns 180 degrees, do not change distance value (for now)
+    pros::Rotation leftEncoders(Motors.Robot.rotationSensorPorts[0]);
+    pros::Rotation rightEncoders(Motors.Robot.rotationSensorPorts[1]);
+
+    Control_Algorithms pidOne(0.2, 0.05, 0.01);
+    Control_Algorithms pidTwo(0.2, 0.05, 0.01);
+    Motors.leftMotors.set(-1 * pidOne.PD_Velocity(225, abs(leftEncoders.get_velocity())));
+    Motors.rightMotors.set(-1 * pidTwo.PD_Velocity(225, abs(rightEncoders.get_velocity())));
+    pros::c::delay(7000);
+    Motors.leftMotors.set(0);
+    Motors.rightMotors.set(0);
+
+    auton.forward(Motors, 150, 20);
+    auton.turn(Motors, 350, 30, false);
+    Motors.leftMotors.set(pidOne.PD_Velocity(200, abs(leftEncoders.get_velocity())));
+    Motors.rightMotors.set(pidTwo.PD_Velocity(200, abs(rightEncoders.get_velocity())));
+    pros::c::delay(6000);
+    Motors.leftMotors.set(0);
+    Motors.rightMotors.set(0);
+    auton.forward(Motors, 400, -20);
+    // auton.forward(Motors, 3600, -50);
+    // auton.turn(Motors, 162, 20, true); // Turns 180 degrees (650 Units), do not change distance value (for now)
 }
 /**
  * Runs the operator control code. This function will be started in its own task

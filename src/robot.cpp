@@ -9,7 +9,7 @@
 /// Configuration is hard coded and requires manual re-configuration to update it.
 class robot {
 public:
-    int RID;          // Robot Identification Number [Internally Used]
+    int RID;          // Robot Identification Number [Used Internally]
     int DID;          // Driver Identification Number
     std::string name; // Robot Name [Artie or Chance]
 
@@ -21,8 +21,10 @@ public:
     double control_exponent_value = 1.5; // Greater the value, the steeper the exponential control curve
     int control_switch_value;
     bool task_scheduler = true;
-    int spinner_speed = 75;
+    int spinner_speed = 50;
     int spinner_boost = 15;
+    double left_right_motor_offset; // Negative values are a left offset, positive is a right
+    // Value what the motors will be multiplied by (should be range [-1 <-> 1])
     std::vector<int> leftPorts;               // Left Motor Port Array
     std::vector<int> rightPorts;              // Right Motor Port Array
     std::vector<int> flywheelPorts;           // Flywheel Motor Port Array
@@ -31,6 +33,7 @@ public:
     std::vector<bool> rightAlt_Rev_States;    // 0: Alternating (bool) 1: Initial Reverse State (bool)
     std::vector<bool> flywheelAlt_Rev_States; // 0: Alternating (bool) 1: Initial Reverse State (bool)
     std::vector<bool> spinnerAlt_Rev_States;  // 0: Alternating (bool) 1: Initial Reverse State (bool)
+    std::vector<int> rotationSensorPorts;     // Left, Right motor array encoders
     int launcher_port;
     std::vector<pros::controller_digital_e_t> controlButtons;
 
@@ -39,7 +42,7 @@ public:
      */
     void init() {
         // -- CONFIGURATIAON --
-        char robot_initial = 'a';  // 'a' for Artie, 'c' for Chance or 'd' for debug
+        char robot_initial = 'c';  // 'a' for Artie, 'c' for Chance or 'd' for debug
         char driver_initial = 'a'; // 'a' for Andrew, 'm' for Malachi, or 'd' for debug
 
         // Robot Identifier (Branchless robot initials to ID integer)
@@ -49,7 +52,7 @@ public:
         case 1: // Loads configuration for Artie
             name = "Artie";
             leftPorts = {9, 8, 5, 3};               // Ports of left motors, from L1 to L4
-            rightPorts = {20, 18, 14, 11};          // Ports of right motors, from R1 to R4
+            rightPorts = {20, 18, 14, 12};          // Ports of right motors, from R1 to R4
             flywheelPorts = {1, 4};                 // Ports of flywheel motors, from F1 to F2
             spinnerPorts = {6, 16};                 // Port for the spinner motor
             leftAlt_Rev_States = {true, true};      // 0: Alternating (bool) 1: Initial Reverse State (bool)
@@ -57,22 +60,25 @@ public:
             flywheelAlt_Rev_States = {true, false}; // (Non Alternating) Initial Reverse State False: False, False, False
             spinnerAlt_Rev_States = {true, false};  // Initial Reverse State True: True, True, True
             controlScheme = 0;                      // 0 for tank, 1 for split arcade
+            left_right_motor_offset = 0;
             limiter = 1;
             launcher_port = 1; // Port for the string launcher piston
             break;
 
         case 2: // Loads configuration for Chance
             name = "Chance";
-            leftPorts = {16, 6, 3, 8};         // Ports of left motors, from L1 to L4
-            rightPorts = {20, 19, 18, 17};     // Ports of right motors, from R1 to R4
-            flywheelPorts = {1, 4};            // Ports of flywheel motors, from F1 to F2
-            spinnerPorts = {6, 16};            // Port for the spinner motor
-            leftAlt_Rev_States = {true, true}; // 0: Alternating (bool) 1: Initial Reverse State (bool)
-            rightAlt_Rev_States = {true, false};
-            flywheelAlt_Rev_States = {true, false};
-            spinnerAlt_Rev_States = {true, false};
-            controlScheme = 0; // 0 for tank, 1 for split arcade
+            leftPorts = {9, 8, 5, 4};      // Ports of left motors, from L1 to L4
+            rightPorts = {20, 18, 14, 11}; // Ports of right motors, from R1 to R4
+            flywheelPorts = {1, 4};        // Ports of flywheel motors, from F1 to F2
+            spinnerPorts = {6, 16};        // Port for the spinner motor
+            rotationSensorPorts = {2, 17};
+            leftAlt_Rev_States = {true, true};      // 0: Alternating (bool) 1: Initial Reverse State (bool)
+            rightAlt_Rev_States = {true, false};    // Alternating: True, False, True ...
+            flywheelAlt_Rev_States = {true, false}; // (Non Alternating) Initial Reverse State False: False, False, False
+            spinnerAlt_Rev_States = {true, false};  // Initial Reverse State True: True, True, True
+            controlScheme = 0;                      // 0 for tank, 1 for split arcade
             limiter = 1;
+            left_right_motor_offset = 0;
             launcher_port = 1; // Port for the string launcher piston
             break;
 
@@ -96,14 +102,14 @@ public:
         case 1:                           // Andrew
             exponential_control = true;   // Enables exponent based control system
             control_exponent_value = 1.5; // Greater the value, the steeper the exponential control curve
-            training = false;             // Sets the training mode, FALSE FOR COMPETITIONS
+            training = true;              // Sets the training mode, FALSE FOR COMPETITIONS
             break;
 
         case 2:                           // Malachi
             controlScheme = 0;            // 0 for tank, 1 for split arcade
             exponential_control = true;   // Enables exponent based control system
             control_exponent_value = 1.5; // Greater the value, the steeper the exponential control curve
-            training = false;             // Sets the training mode, FALSE FOR COMPETITIONS
+            training = true;              // Sets the training mode, FALSE FOR COMPETITIONS
             break;
 
         case 3: // None
@@ -112,20 +118,25 @@ public:
         }
         control_scheme_setup();
     }
+    /**
+     * Sets up the control scheme based on driver presets
+     */
     void control_scheme_setup() {
         switch(DID) {
         case 1:
-            // [Training Local Limiter Button, Piston Button]
-            controlButtons[0] = pros::E_CONTROLLER_DIGITAL_LEFT; // Training Local Limiter Button
-            controlButtons[1] = pros::E_CONTROLLER_DIGITAL_A;    // Piston Keybind
-            controlButtons[2] = pros::E_CONTROLLER_DIGITAL_R1;   // Spinner Keybind (Normal)
-            controlButtons[3] = pros::E_CONTROLLER_DIGITAL_R2;   // Spinner Keybind (Reversed)
+            // [Training Local Limiter Button, Piston Button, Spinner Normal Button, Spinner Reversed Button]
+            controlButtons.push_back(pros::E_CONTROLLER_DIGITAL_LEFT); // Training Local Limiter Button
+            controlButtons.push_back(pros::E_CONTROLLER_DIGITAL_Y);    // Piston Keybind
+            controlButtons.push_back(pros::E_CONTROLLER_DIGITAL_R1);   // Spinner Keybind (Normal)
+            controlButtons.push_back(pros::E_CONTROLLER_DIGITAL_R2);   // Spinner Keybind (Reversed)
+            controlButtons.push_back(pros::E_CONTROLLER_DIGITAL_A);    // Spinner Keybind (Reversed)
             break;
         case 2:
-            controlButtons[0] = pros::E_CONTROLLER_DIGITAL_LEFT; // Training Local Limiter Button
-            controlButtons[1] = pros::E_CONTROLLER_DIGITAL_A;    // Piston Keybind
-            controlButtons[2] = pros::E_CONTROLLER_DIGITAL_R1;   // Spinner Keybind (Normal)
-            controlButtons[3] = pros::E_CONTROLLER_DIGITAL_R2;   // Spinner Keybind (Reversed)
+            controlButtons.push_back(pros::E_CONTROLLER_DIGITAL_LEFT); // Training Local Limiter Button
+            controlButtons.push_back(pros::E_CONTROLLER_DIGITAL_Y);    // Piston Keybind
+            controlButtons.push_back(pros::E_CONTROLLER_DIGITAL_R1);   // Spinner Keybind (Normal)
+            controlButtons.push_back(pros::E_CONTROLLER_DIGITAL_R2);   // Spinner Keybind (Reversed)
+            controlButtons.push_back(pros::E_CONTROLLER_DIGITAL_A);    // Spinner Keybind (Reversed)
             break;
         }
     }

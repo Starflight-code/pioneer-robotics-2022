@@ -171,8 +171,6 @@ public: // Phase out old Motor_Class functions (setSpeed, getSpeed, etc), and me
     MotorGroup flywheelMotors;
     /// Spinner Motor Group Object
     MotorGroup spinnerMotors;
-    /// Array containing all motor group objects for unique scripting
-    std::array<MotorGroup, 4> Motors = {leftMotors, rightMotors, flywheelMotors, spinnerMotors};
     Piston launcher;
 
 public:

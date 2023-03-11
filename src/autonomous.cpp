@@ -31,12 +31,12 @@ public:
 
         while(not task_one_finished || not task_two_finished) {
             tasks.cycleRun(0, desiredWaitTime);
-            if(Motors.leftMotors.checkPosition(distance)) {
+            if(Motors.leftMotors.checkPosition(abs(distance))) {
                 Motors.leftMotors.set(0);
                 task_one_finished = true;
             }
             tasks.cycleRun(1, desiredWaitTime); // Should be placed before the task
-            if(Motors.rightMotors.checkPosition(distance)) {
+            if(Motors.rightMotors.checkPosition(abs(distance))) {
                 Motors.rightMotors.set(0);
                 task_two_finished = true;
             }

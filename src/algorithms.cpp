@@ -1,3 +1,4 @@
+#include <vector>
 #ifndef include_cpp_
 #include "include.cpp"
 #define include_cpp_
@@ -70,5 +71,28 @@ public:
             motorOutput[i] = applyLimiter(motorOutput[i], limiter);
         }
         return motorOutput;
+    }
+    std::array<int, 2> controlSwap(int value1, int value2) {
+        int temp = value1;
+        std::array<int, 2> returnVal;
+        returnVal[0] = (value2 * -1);
+        returnVal[1] = (temp * -1);
+        return returnVal;
+    }
+    std::array<int, 2> applyOffset(int value1, int value2, double L_R_Offset) {
+        std::array<int, 2> returnArray;
+        if(L_R_Offset != 0) {
+            if(L_R_Offset < 0) { // Apply to left motor
+                returnArray[0] = value1 * abs(L_R_Offset);
+                returnArray[1] = value2;
+            } else {
+                returnArray[0] = value1;
+                returnArray[1] = value2 * abs(L_R_Offset);
+            }
+        } else {
+            returnArray[0] = value1;
+            returnArray[1] = value2;
+        }
+        return returnArray;
     }
 };
