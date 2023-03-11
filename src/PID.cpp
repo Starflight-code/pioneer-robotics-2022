@@ -56,7 +56,7 @@ public:
         derivative = error - prevError;
         prevError = error;
 
-        return ((kP * error) + (kD * derivative) + (kI * integral)) * 127;
+        return ((kP * error) + (kD * derivative) + (kI * integral));
     }
     int PD_Velocity(double desiredVelocity, double currentVelocity) {
 

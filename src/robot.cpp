@@ -21,7 +21,7 @@ public:
     double control_exponent_value = 1.5; // Greater the value, the steeper the exponential control curve
     int control_switch_value;
     bool task_scheduler = true;
-    int spinner_speed = 75;
+    int spinner_speed = 50;
     int spinner_boost = 15;
     double left_right_motor_offset; // Negative values are a left offset, positive is a right
     // Value what the motors will be multiplied by (should be range [-1 <-> 1])
@@ -33,6 +33,7 @@ public:
     std::vector<bool> rightAlt_Rev_States;    // 0: Alternating (bool) 1: Initial Reverse State (bool)
     std::vector<bool> flywheelAlt_Rev_States; // 0: Alternating (bool) 1: Initial Reverse State (bool)
     std::vector<bool> spinnerAlt_Rev_States;  // 0: Alternating (bool) 1: Initial Reverse State (bool)
+    std::vector<int> rotationSensorPorts;     // Left, Right motor array encoders
     int launcher_port;
     std::vector<pros::controller_digital_e_t> controlButtons;
 
@@ -66,10 +67,11 @@ public:
 
         case 2: // Loads configuration for Chance
             name = "Chance";
-            leftPorts = {9, 8, 5, 4};               // Ports of left motors, from L1 to L4
-            rightPorts = {20, 18, 14, 11};          // Ports of right motors, from R1 to R4
-            flywheelPorts = {1, 4};                 // Ports of flywheel motors, from F1 to F2
-            spinnerPorts = {6, 16};                 // Port for the spinner motor
+            leftPorts = {9, 8, 5, 4};      // Ports of left motors, from L1 to L4
+            rightPorts = {20, 18, 14, 11}; // Ports of right motors, from R1 to R4
+            flywheelPorts = {1, 4};        // Ports of flywheel motors, from F1 to F2
+            spinnerPorts = {6, 16};        // Port for the spinner motor
+            rotationSensorPorts = {2, 17};
             leftAlt_Rev_States = {true, true};      // 0: Alternating (bool) 1: Initial Reverse State (bool)
             rightAlt_Rev_States = {true, false};    // Alternating: True, False, True ...
             flywheelAlt_Rev_States = {true, false}; // (Non Alternating) Initial Reverse State False: False, False, False
