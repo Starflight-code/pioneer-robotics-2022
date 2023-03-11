@@ -63,6 +63,8 @@ public:
     algorithms algo;
     Control_Algorithms pidOne();
     Control_Algorithms pidTwo();
+    toggleTracker swapControls;
+    toggleTracker pistonLauncher;
 
 private:
     void training() {
@@ -82,12 +84,15 @@ public:
         if(Motors.Robot.training) {
             training(); // Training Modules
         }
-        if(master.get_digital(Motors.Robot.controlButtons[1])) { // Launcher Toggle
+        swapControls.updateTracker(master.get_digital(Motors.Robot.controlButtons[4]));
+        pistonLauncher.updateTracker(master.get_digital(Motors.Robot.controlButtons[1]));
+        Motors.launcher.set(pistonLauncher.currentState);
+        /*if(master.get_digital(Motors.Robot.controlButtons[1])) { // Launcher Toggle
             Motors.launcher.toggle();
             while(master.get_digital(Motors.Robot.controlButtons[1])) {
                 pros::c::delay(50);
             }
-        }
+        }*/
         if(master.get_digital(Motors.Robot.controlButtons[2])) { // Spinner Normal Direction
             Motors.spinnerMotors.set(Motors.Robot.spinner_speed * -1);
             spinnerActive = true;
@@ -146,6 +151,13 @@ public:
         // Applys motor speeds from controller_values array
         // Motors.leftMotors.set(pidOne.PD_Velocity(200, Motors.leftMotors.getFastVelocity()));
         // Motors.rightMotors.set(pidTwo.PD_Velocity(200, Motors.rightMotors.getFastVelocity()));
+        if(not swapControls.currentState) {
+            controller_values = algo.controlSwap(controller_values[0], controller_values[1]);
+        }
+        controller_values = algo.applyOffset(controller_values[0], controller_values[1], Motors.Robot.left_right_motor_offset);
+        Motors.leftMotors.set(controller_values[0] + (spinnerActive * Motors.Robot.spinner_boost));
+        Motors.rightMotors.set(controller_values[1] + (spinnerActive * Motors.Robot.spinner_boost));
+        /*
         if(Motors.Robot.left_right_motor_offset != 0) {
             if(Motors.Robot.left_right_motor_offset < 0) { // Apply to left motor
                 Motors.leftMotors.set(controller_values[0] * abs(Motors.Robot.left_right_motor_offset) + (spinnerActive * Motors.Robot.spinner_boost));
@@ -157,6 +169,6 @@ public:
         } else {
             Motors.leftMotors.set(controller_values[0] + (spinnerActive * Motors.Robot.spinner_boost));
             Motors.rightMotors.set(controller_values[1] + (spinnerActive * Motors.Robot.spinner_boost));
-        }
+        }*/
     }
 };

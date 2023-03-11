@@ -41,7 +41,7 @@ public:
      */
     void init() {
         // -- CONFIGURATIAON --
-        char robot_initial = 'a';  // 'a' for Artie, 'c' for Chance or 'd' for debug
+        char robot_initial = 'c';  // 'a' for Artie, 'c' for Chance or 'd' for debug
         char driver_initial = 'a'; // 'a' for Andrew, 'm' for Malachi, or 'd' for debug
 
         // Robot Identifier (Branchless robot initials to ID integer)
@@ -76,7 +76,7 @@ public:
             spinnerAlt_Rev_States = {true, false};  // Initial Reverse State True: True, True, True
             controlScheme = 0;                      // 0 for tank, 1 for split arcade
             limiter = 1;
-            left_right_motor_offset = 0.87;
+            left_right_motor_offset = 0;
             launcher_port = 1; // Port for the string launcher piston
             break;
 
@@ -127,12 +127,14 @@ public:
             controlButtons.push_back(pros::E_CONTROLLER_DIGITAL_Y);    // Piston Keybind
             controlButtons.push_back(pros::E_CONTROLLER_DIGITAL_R1);   // Spinner Keybind (Normal)
             controlButtons.push_back(pros::E_CONTROLLER_DIGITAL_R2);   // Spinner Keybind (Reversed)
+            controlButtons.push_back(pros::E_CONTROLLER_DIGITAL_A);    // Spinner Keybind (Reversed)
             break;
         case 2:
             controlButtons.push_back(pros::E_CONTROLLER_DIGITAL_LEFT); // Training Local Limiter Button
             controlButtons.push_back(pros::E_CONTROLLER_DIGITAL_Y);    // Piston Keybind
             controlButtons.push_back(pros::E_CONTROLLER_DIGITAL_R1);   // Spinner Keybind (Normal)
             controlButtons.push_back(pros::E_CONTROLLER_DIGITAL_R2);   // Spinner Keybind (Reversed)
+            controlButtons.push_back(pros::E_CONTROLLER_DIGITAL_A);    // Spinner Keybind (Reversed)
             break;
         }
     }
