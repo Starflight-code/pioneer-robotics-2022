@@ -9,7 +9,7 @@
 /// Configuration is hard coded and requires manual re-configuration to update it.
 class robot {
 public:
-    int RID;          // Robot Identification Number [Internally Used]
+    int RID;          // Robot Identification Number [Used Internally]
     int DID;          // Driver Identification Number
     std::string name; // Robot Name [Artie or Chance]
 
@@ -23,6 +23,8 @@ public:
     bool task_scheduler = true;
     int spinner_speed = 75;
     int spinner_boost = 15;
+    double left_right_motor_offset; // Negative values are a left offset, positive is a right
+    // Value what the motors will be multiplied by (should be range [-1 <-> 1])
     std::vector<int> leftPorts;               // Left Motor Port Array
     std::vector<int> rightPorts;              // Right Motor Port Array
     std::vector<int> flywheelPorts;           // Flywheel Motor Port Array
@@ -49,6 +51,22 @@ public:
         case 1: // Loads configuration for Artie
             name = "Artie";
             leftPorts = {9, 8, 5, 3};               // Ports of left motors, from L1 to L4
+            rightPorts = {20, 18, 14, 12};          // Ports of right motors, from R1 to R4
+            flywheelPorts = {1, 4};                 // Ports of flywheel motors, from F1 to F2
+            spinnerPorts = {6, 16};                 // Port for the spinner motor
+            leftAlt_Rev_States = {true, true};      // 0: Alternating (bool) 1: Initial Reverse State (bool)
+            rightAlt_Rev_States = {true, false};    // Alternating: True, False, True ...
+            flywheelAlt_Rev_States = {true, false}; // (Non Alternating) Initial Reverse State False: False, False, False
+            spinnerAlt_Rev_States = {true, false};  // Initial Reverse State True: True, True, True
+            controlScheme = 0;                      // 0 for tank, 1 for split arcade
+            left_right_motor_offset = 0;
+            limiter = 1;
+            launcher_port = 1; // Port for the string launcher piston
+            break;
+
+        case 2: // Loads configuration for Chance
+            name = "Chance";
+            leftPorts = {9, 8, 5, 4};               // Ports of left motors, from L1 to L4
             rightPorts = {20, 18, 14, 11};          // Ports of right motors, from R1 to R4
             flywheelPorts = {1, 4};                 // Ports of flywheel motors, from F1 to F2
             spinnerPorts = {6, 16};                 // Port for the spinner motor
@@ -58,21 +76,7 @@ public:
             spinnerAlt_Rev_States = {true, false};  // Initial Reverse State True: True, True, True
             controlScheme = 0;                      // 0 for tank, 1 for split arcade
             limiter = 1;
-            launcher_port = 1; // Port for the string launcher piston
-            break;
-
-        case 2: // Loads configuration for Chance
-            name = "Chance";
-            leftPorts = {16, 6, 3, 8};         // Ports of left motors, from L1 to L4
-            rightPorts = {20, 19, 18, 17};     // Ports of right motors, from R1 to R4
-            flywheelPorts = {1, 4};            // Ports of flywheel motors, from F1 to F2
-            spinnerPorts = {6, 16};            // Port for the spinner motor
-            leftAlt_Rev_States = {true, true}; // 0: Alternating (bool) 1: Initial Reverse State (bool)
-            rightAlt_Rev_States = {true, false};
-            flywheelAlt_Rev_States = {true, false};
-            spinnerAlt_Rev_States = {true, false};
-            controlScheme = 0; // 0 for tank, 1 for split arcade
-            limiter = 1;
+            left_right_motor_offset = 0.87;
             launcher_port = 1; // Port for the string launcher piston
             break;
 
@@ -120,13 +124,13 @@ public:
         case 1:
             // [Training Local Limiter Button, Piston Button, Spinner Normal Button, Spinner Reversed Button]
             controlButtons.push_back(pros::E_CONTROLLER_DIGITAL_LEFT); // Training Local Limiter Button
-            controlButtons.push_back(pros::E_CONTROLLER_DIGITAL_A);    // Piston Keybind
+            controlButtons.push_back(pros::E_CONTROLLER_DIGITAL_Y);    // Piston Keybind
             controlButtons.push_back(pros::E_CONTROLLER_DIGITAL_R1);   // Spinner Keybind (Normal)
             controlButtons.push_back(pros::E_CONTROLLER_DIGITAL_R2);   // Spinner Keybind (Reversed)
             break;
         case 2:
             controlButtons.push_back(pros::E_CONTROLLER_DIGITAL_LEFT); // Training Local Limiter Button
-            controlButtons.push_back(pros::E_CONTROLLER_DIGITAL_A);    // Piston Keybind
+            controlButtons.push_back(pros::E_CONTROLLER_DIGITAL_Y);    // Piston Keybind
             controlButtons.push_back(pros::E_CONTROLLER_DIGITAL_R1);   // Spinner Keybind (Normal)
             controlButtons.push_back(pros::E_CONTROLLER_DIGITAL_R2);   // Spinner Keybind (Reversed)
             break;

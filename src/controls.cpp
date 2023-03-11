@@ -3,6 +3,7 @@
 #include "PID.cpp"
 #include "pros/misc.h"
 #include "pros/rtos.h"
+#include <cmath>
 #endif
 
 #ifndef algorithms_cpp_
@@ -60,6 +61,8 @@ private:
 public:
     Motor_Class Motors;
     algorithms algo;
+    Control_Algorithms pidOne();
+    Control_Algorithms pidTwo();
 
 private:
     void training() {
@@ -105,6 +108,8 @@ public:
      */
     void
     controls() {
+        Control_Algorithms pidOne(0.2, 0.04, 0.01);
+        Control_Algorithms pidTwo(0.2, 0.04, 0.01);
 
         pros::Controller master(pros::E_CONTROLLER_MASTER); // Imports Controller as "master"
         // Set sticks arrays to correct values for current configuration
@@ -139,7 +144,19 @@ public:
             break;
         }
         // Applys motor speeds from controller_values array
-        Motors.leftMotors.set(controller_values[0] + (spinnerActive * Motors.Robot.spinner_boost));
-        Motors.rightMotors.set(controller_values[1] + (spinnerActive * Motors.Robot.spinner_boost));
+        // Motors.leftMotors.set(pidOne.PD_Velocity(200, Motors.leftMotors.getFastVelocity()));
+        // Motors.rightMotors.set(pidTwo.PD_Velocity(200, Motors.rightMotors.getFastVelocity()));
+        if(Motors.Robot.left_right_motor_offset != 0) {
+            if(Motors.Robot.left_right_motor_offset < 0) { // Apply to left motor
+                Motors.leftMotors.set(controller_values[0] * abs(Motors.Robot.left_right_motor_offset) + (spinnerActive * Motors.Robot.spinner_boost));
+                Motors.rightMotors.set(controller_values[1] + (spinnerActive * Motors.Robot.spinner_boost));
+            } else {
+                Motors.leftMotors.set(controller_values[0] + (spinnerActive * Motors.Robot.spinner_boost));
+                Motors.rightMotors.set(controller_values[1] * abs(Motors.Robot.left_right_motor_offset) + (spinnerActive * Motors.Robot.spinner_boost));
+            }
+        } else {
+            Motors.leftMotors.set(controller_values[0] + (spinnerActive * Motors.Robot.spinner_boost));
+            Motors.rightMotors.set(controller_values[1] + (spinnerActive * Motors.Robot.spinner_boost));
+        }
     }
 };
