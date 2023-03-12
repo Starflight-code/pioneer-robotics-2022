@@ -16,13 +16,14 @@
 class autonomous_class {
 private:
     u_short desiredWaitTime = 10; // per task wait in milliseconds
-    bool task_one_finished;
-    bool task_two_finished;
+    // bool task_one_finished;
+    // bool task_two_finished;
+    // bool task_finished;
 
 public:
     void forward(Motor_Class Motors, int distance, int speed) {
-        task_one_finished = false;
-        task_two_finished = false;
+        bool task_one_finished = false;
+        bool task_two_finished = false;
         Motors.leftMotors.tarePosition();
         Motors.rightMotors.tarePosition();
         Motors.leftMotors.set(speed);
@@ -42,9 +43,25 @@ public:
             }
         }
     }
+    void spinner(Motor_Class Motors, int distance, int speed) {
+        bool task_finished = false;
+        Motors.spinnerMotors.tarePosition();
+        Motors.spinnerMotors.set(speed);
+        Motors.leftMotors.set(20);
+        Motors.rightMotors.set(20);
+
+        while(not task_finished) {
+            if(Motors.spinnerMotors.checkPosition(abs(distance))) {
+                Motors.spinnerMotors.set(0);
+                task_finished = true;
+            }
+        }
+        Motors.leftMotors.set(0);
+        Motors.rightMotors.set(0);
+    }
     void turn(Motor_Class Motors, int distance, int speed, bool right) {
-        task_one_finished = false;
-        task_two_finished = false;
+        bool task_one_finished = false;
+        bool task_two_finished = false;
         Motors.leftMotors.tarePosition();
         Motors.rightMotors.tarePosition();
         scheduler tasks(2);

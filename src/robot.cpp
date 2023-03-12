@@ -22,7 +22,7 @@ public:
     int control_switch_value;
     bool task_scheduler = true;
     int spinner_speed = 50;
-    int spinner_boost = 15;
+    int spinner_boost = 20;
     double left_right_motor_offset; // Negative values are a left offset, positive is a right
     // Value what the motors will be multiplied by (should be range [-1 <-> 1])
     std::vector<int> leftPorts;               // Left Motor Port Array
@@ -42,7 +42,7 @@ public:
      */
     void init() {
         // -- CONFIGURATIAON --
-        char robot_initial = 'c';  // 'a' for Artie, 'c' for Chance or 'd' for debug
+        char robot_initial = 'a';  // 'a' for Artie, 'c' for Chance or 'd' for debug
         char driver_initial = 'a'; // 'a' for Andrew, 'm' for Malachi, or 'd' for debug
 
         // Robot Identifier (Branchless robot initials to ID integer)
