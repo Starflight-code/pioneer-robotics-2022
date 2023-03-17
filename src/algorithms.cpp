@@ -33,7 +33,7 @@ public:
      */
     int exponential_control(int controlInput, double exponent) {
         int negativeCarry = controlInput < 0 ? -1 : 1; // Carrys the negative, would otherwise be lost during exponent calcualtion
-        return (int)negativeCarry * abs((_RANGE * pow(((double)abs(controlInput) / _RANGE), exponent)));
+        return castToInt(negativeCarry * abs((_RANGE * pow(((double)abs(controlInput) / _RANGE), exponent))));
     }
     /** Impliments a two stick tank style control system, outputs motor array values
      * @param control_input | a controller output value (integer w/ range [-170 <-> 170])

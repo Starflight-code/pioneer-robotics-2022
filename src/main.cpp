@@ -1,8 +1,9 @@
 #ifndef absolute_positioning_cpp_
 #define absolute_positioning_cpp_
 #include "absolute_positioning.cpp"
-#include "pros/rotation.hpp"
-#include "pros/rtos.h"
+// #include "pros/rotation.hpp"
+// #include "pros/rtos.h"
+// #include <string>
 #endif
 
 #ifndef spinner_cpp_

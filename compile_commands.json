@@ -353,11 +353,11 @@
             "-funwind-tables",
             "--std=gnu++17",
             "-o",
-            "bin/main.cpp.o",
-            "src\\main.cpp"
+            "bin/PID.cpp.o",
+            "src\\PID.cpp"
         ],
         "directory": "C:\\Users\\benko\\Documents\\Robot Code\\pioneer-robotics-2022",
-        "file": "src\\main.cpp"
+        "file": "src\\PID.cpp"
     },
     {
         "arguments": [
@@ -393,10 +393,10 @@
             "-funwind-tables",
             "--std=gnu++17",
             "-o",
-            "bin/PID.cpp.o",
-            "src\\PID.cpp"
+            "bin/main.cpp.o",
+            "src\\main.cpp"
         ],
         "directory": "C:\\Users\\benko\\Documents\\Robot Code\\pioneer-robotics-2022",
-        "file": "src\\PID.cpp"
+        "file": "src\\main.cpp"
     }
 ]
