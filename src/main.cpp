@@ -159,11 +159,6 @@ void opcontrol() {
     u_short desiredWaitTime = 50; // per task wait in milliseconds
     cl Control_Listener;
     scheduler tasks(2);
-    if(Control_Listener.Motors.Robot.DID == 3) {
-        while(true) {
-            // Here
-        }
-    }
     if(Control_Listener.Motors.Robot.task_scheduler) {
         while(true) {
 

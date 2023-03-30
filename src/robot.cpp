@@ -42,12 +42,12 @@ public:
      */
     void init() {
         // -- CONFIGURATIAON --
-        char robot_initial = 'a';  // 'a' for Artie, 'c' for Chance or 'd' for debug
+        char robot_initial = 'a';  // 't' for Teagen, 'c' for Chance or 'd' for debug
         char driver_initial = 'a'; // 'a' for Andrew, 'm' for Malachi, or 'd' for debug
 
         // Robot Identifier (Branchless robot initials to ID integer)
         RID = ((robot_initial == 'a') * 1) + ((robot_initial == 'c') * 2) + ((robot_initial == 'd') * 3);    // Branchless method to generate robot identification numbers w/ characters
-        DID = ((driver_initial == 'a') * 1) + ((driver_initial == 'm') * 2 + ((driver_initial == 'd') * 3)); // Branchless method to generate driver identification numbers w/ characters
+        DID = ((driver_initial == 't') * 1) + ((driver_initial == 'm') * 2 + ((driver_initial == 'd') * 3)); // Branchless method to generate driver identification numbers w/ characters
         switch(RID) {
         case 1: // Loads configuration for Artie
             name = "Artie";
@@ -99,7 +99,7 @@ public:
             break;
         }
         switch(DID) {
-        case 1:                           // Andrew
+        case 1:                           // Teagen
             exponential_control = true;   // Enables exponent based control system
             control_exponent_value = 1.5; // Greater the value, the steeper the exponential control curve
             training = true;              // Sets the training mode, FALSE FOR COMPETITIONS
