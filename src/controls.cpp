@@ -157,18 +157,5 @@ public:
         controller_values = algo.applyOffset(controller_values[0], controller_values[1], Motors.Robot.left_right_motor_offset);
         Motors.leftMotors.set(controller_values[0] + (spinnerActive * Motors.Robot.spinner_boost));
         Motors.rightMotors.set(controller_values[1] + (spinnerActive * Motors.Robot.spinner_boost));
-        /*
-        if(Motors.Robot.left_right_motor_offset != 0) {
-            if(Motors.Robot.left_right_motor_offset < 0) { // Apply to left motor
-                Motors.leftMotors.set(controller_values[0] * abs(Motors.Robot.left_right_motor_offset) + (spinnerActive * Motors.Robot.spinner_boost));
-                Motors.rightMotors.set(controller_values[1] + (spinnerActive * Motors.Robot.spinner_boost));
-            } else {
-                Motors.leftMotors.set(controller_values[0] + (spinnerActive * Motors.Robot.spinner_boost));
-                Motors.rightMotors.set(controller_values[1] * abs(Motors.Robot.left_right_motor_offset) + (spinnerActive * Motors.Robot.spinner_boost));
-            }
-        } else {
-            Motors.leftMotors.set(controller_values[0] + (spinnerActive * Motors.Robot.spinner_boost));
-            Motors.rightMotors.set(controller_values[1] + (spinnerActive * Motors.Robot.spinner_boost));
-        }*/
     }
 };
