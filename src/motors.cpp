@@ -171,7 +171,10 @@ public: // Phase out old Motor_Class functions (setSpeed, getSpeed, etc), and me
     MotorGroup flywheelMotors;
     /// Spinner Motor Group Object
     MotorGroup spinnerMotors;
-    Piston launcher;
+    /// Launcher Motor Group Object
+    MotorGroup launcher;
+    /// Piston string launcher Object
+    Piston stringLauncher;
 
 public:
     robot Robot;
@@ -179,10 +182,11 @@ public:
     /// Initializes the Motor Class wrapper with robot.cpp configuration, no external parameters required
     Motor_Class() {
         Robot.init();
-        leftMotors.init(Robot.leftPorts, Robot.leftAlt_Rev_States[0], Robot.leftAlt_Rev_States[1]);
-        rightMotors.init(Robot.rightPorts, Robot.rightAlt_Rev_States[0], Robot.rightAlt_Rev_States[1]);
-        flywheelMotors.init(Robot.flywheelPorts, Robot.flywheelAlt_Rev_States[0], Robot.flywheelAlt_Rev_States[1]);
-        spinnerMotors.init(Robot.spinnerPorts, Robot.spinnerAlt_Rev_States[0], Robot.spinnerAlt_Rev_States[1]);
-        launcher.init(Robot.launcher_port);
+        leftMotors.init(Robot.leftPorts, Robot.leftAltRevStates[0], Robot.leftAltRevStates[1]);
+        rightMotors.init(Robot.rightPorts, Robot.rightAltRevStates[0], Robot.rightAltRevStates[1]);
+        flywheelMotors.init(Robot.flywheelPorts, Robot.flywheelAltRevStates[0], Robot.flywheelAltRevStates[1]);
+        spinnerMotors.init(Robot.spinnerPorts, Robot.spinnerAltRevStates[0], Robot.spinnerAltRevStates[1]);
+        launcher.init(Robot.launcherPorts, Robot.launcherAltRevStates[0], Robot.launcherAltRevStates[1]);
+        stringLauncher.init(Robot.stringLauncherPort);
     }
 };

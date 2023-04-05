@@ -24,18 +24,20 @@ public:
     int spinner_speed = 50;
     int spinner_boost = 20;
     double left_right_motor_offset; // Negative values are a left offset, positive is a right
-    // Value what the motors will be multiplied by (should be range [-1 <-> 1])
-    std::vector<int> leftPorts;               // Left Motor Port Array
-    std::vector<int> rightPorts;              // Right Motor Port Array
-    std::vector<int> flywheelPorts;           // Flywheel Motor Port Array
-    std::vector<int> spinnerPorts;            // Spinner Motor Port Array
-    std::vector<bool> leftAlt_Rev_States;     // 0: Alternating (bool) 1: Initial Reverse State (bool)
-    std::vector<bool> rightAlt_Rev_States;    // 0: Alternating (bool) 1: Initial Reverse State (bool)
-    std::vector<bool> flywheelAlt_Rev_States; // 0: Alternating (bool) 1: Initial Reverse State (bool)
-    std::vector<bool> spinnerAlt_Rev_States;  // 0: Alternating (bool) 1: Initial Reverse State (bool)
-    std::vector<int> rotationSensorPorts;     // Left, Right motor array encoders
-    int launcher_port;
-    std::vector<pros::controller_digital_e_t> controlButtons;
+    // Value what the motors will be multiplied by (should be range [-1 <-> 1]), non-dynamic drive adjustment
+    std::vector<int> leftPorts;                               // Left Motor Port Array
+    std::vector<int> rightPorts;                              // Right Motor Port Array
+    std::vector<int> flywheelPorts;                           // Flywheel Motor Port Array
+    std::vector<int> spinnerPorts;                            // Spinner Motor Port Array
+    std::vector<bool> leftAltRevStates;                       // 0: Alternating (bool) 1: Initial Reverse State (bool)
+    std::vector<bool> rightAltRevStates;                      // 0: Alternating (bool) 1: Initial Reverse State (bool)
+    std::vector<bool> flywheelAltRevStates;                   // 0: Alternating (bool) 1: Initial Reverse State (bool)
+    std::vector<bool> spinnerAltRevStates;                    // 0: Alternating (bool) 1: Initial Reverse State (bool)
+    std::vector<int> rotationSensorPorts;                     // Left, Right motor array encoders
+    std::vector<int> launcherPorts;                           // Left, Right launcher pullback array
+    std::vector<bool> launcherAltRevStates;                   // 0: Alternating (bool) 1: Initial Reverse State (bool)
+    int stringLauncherPort;                                   // Port for endgame string launcher (ADI, piston)
+    std::vector<pros::controller_digital_e_t> controlButtons; // Array containing customizable control buttons
 
     /** Initializes the Robot Preset System, all configuration is hard coded and this class does not accept any external parameters
      * @return N/A
@@ -51,18 +53,20 @@ public:
         switch(RID) {
         case 1: // Loads configuration for Artie
             name = "Artie";
-            leftPorts = {9, 8, 5, 3};               // Ports of left motors, from L1 to L4
-            rightPorts = {20, 18, 14, 12};          // Ports of right motors, from R1 to R4
-            flywheelPorts = {1, 4};                 // Ports of flywheel motors, from F1 to F2
-            spinnerPorts = {6, 16};                 // Port for the spinner motor
-            leftAlt_Rev_States = {true, true};      // 0: Alternating (bool) 1: Initial Reverse State (bool)
-            rightAlt_Rev_States = {true, false};    // Alternating: True, False, True ...
-            flywheelAlt_Rev_States = {true, false}; // (Non Alternating) Initial Reverse State False: False, False, False
-            spinnerAlt_Rev_States = {true, false};  // Initial Reverse State True: True, True, True
-            controlScheme = 0;                      // 0 for tank, 1 for split arcade
+            leftPorts = {9, 8, 5, 3};             // Ports of left motors, from L1 to L4
+            rightPorts = {20, 18, 14, 12};        // Ports of right motors, from R1 to R4
+            flywheelPorts = {1, 4};               // Ports of flywheel motors, from F1 to F2
+            spinnerPorts = {6, 16};               // Port for the spinner motor
+            leftAltRevStates = {true, true};      // 0: Alternating (bool) 1: Initial Reverse State (bool)
+            rightAltRevStates = {true, false};    // Alternating: True, False, True ...
+            flywheelAltRevStates = {true, false}; // (Non Alternating) Initial Reverse State False: False, False, False
+            spinnerAltRevStates = {true, false};  // Initial Reverse State True: True, True, True
+            controlScheme = 0;                    // 0 for tank, 1 for split arcade
             left_right_motor_offset = 0;
             limiter = 1;
-            launcher_port = 1; // Port for the string launcher piston
+            launcherPorts = {1, 2};
+            launcherAltRevStates = {true, false};
+            stringLauncherPort = 1; // Port for the string launcher piston
             break;
 
         case 2: // Loads configuration for Chance
@@ -72,14 +76,16 @@ public:
             flywheelPorts = {1, 4};        // Ports of flywheel motors, from F1 to F2
             spinnerPorts = {6, 16};        // Port for the spinner motor
             rotationSensorPorts = {2, 17};
-            leftAlt_Rev_States = {true, true};      // 0: Alternating (bool) 1: Initial Reverse State (bool)
-            rightAlt_Rev_States = {true, false};    // Alternating: True, False, True ...
-            flywheelAlt_Rev_States = {true, false}; // (Non Alternating) Initial Reverse State False: False, False, False
-            spinnerAlt_Rev_States = {true, false};  // Initial Reverse State True: True, True, True
-            controlScheme = 0;                      // 0 for tank, 1 for split arcade
+            leftAltRevStates = {true, true};      // 0: Alternating (bool) 1: Initial Reverse State (bool)
+            rightAltRevStates = {true, false};    // Alternating: True, False, True ...
+            flywheelAltRevStates = {true, false}; // (Non Alternating) Initial Reverse State False: False, False, False
+            spinnerAltRevStates = {true, false};  // Initial Reverse State True: True, True, True
+            controlScheme = 0;                    // 0 for tank, 1 for split arcade
             limiter = 1;
+            launcherPorts = {1, 2};
+            launcherAltRevStates = {true, false};
             left_right_motor_offset = 0;
-            launcher_port = 1; // Port for the string launcher piston
+            stringLauncherPort = 1; // Port for the string launcher piston
             break;
 
         case 3: // Loads debug configuration
@@ -88,14 +94,16 @@ public:
             rightPorts = {20, 19, 18, 17}; // Ports of right motors, from R1 to R4
             flywheelPorts = {1, 4};        // Ports of flywheel motors, from F1 to F2
             spinnerPorts = {6, 16};        // Port for the spinner motor
-            leftAlt_Rev_States = {true, true};
-            rightAlt_Rev_States = {true, false};
-            flywheelAlt_Rev_States = {true, false};
-            spinnerAlt_Rev_States = {true, false};
+            leftAltRevStates = {true, true};
+            rightAltRevStates = {true, false};
+            flywheelAltRevStates = {true, false};
+            spinnerAltRevStates = {true, false};
             controlScheme = 0; // 0 for tank, 1 for split arcade
             limiter = 1;
-            launcher_port = 1; // Port for the string launcher piston
-            debug = true;      // Enables debug mode, can be used for verbose logging (not implimented yet)
+            launcherPorts = {1, 2};
+            launcherAltRevStates = {true, false};
+            stringLauncherPort = 1; // Port for the string launcher piston
+            debug = true;           // Enables debug mode, can be used for verbose logging (not implimented yet)
             break;
         }
         switch(DID) {

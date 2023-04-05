@@ -98,7 +98,7 @@ void autonomous() {
         auton.turn(Motors, 163, 30, false);
         Motors.leftMotors.set(-40);
         Motors.rightMotors.set(-40);
-        Motors.launcher.toggle();
+        Motors.stringLauncher.toggle();
         pros::c::delay(6000);
         Motors.leftMotors.set(0);
         Motors.rightMotors.set(0);
@@ -131,7 +131,7 @@ void autonomous() {
         auton.turn(Motors, 163, 30, true);
         Motors.leftMotors.set(-40);
         Motors.rightMotors.set(-35);
-        Motors.launcher.toggle();
+        Motors.stringLauncher.toggle();
         pros::c::delay(6000);
         Motors.leftMotors.set(0);
         Motors.rightMotors.set(0);
