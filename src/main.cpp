@@ -73,8 +73,8 @@ void autonomous() {
     // Control_Algorithms pidTwo(0.2, 0.05, 0.01);
     // Motors.leftMotors.set(-1 * pidOne.PD_Velocity(200, abs(leftEncoders.get_velocity())));
     // Motors.rightMotors.set(-1 * pidTwo.PD_Velocity(200, abs(rightEncoders.get_velocity())));
-    switch(Motors.Robot.RID) {
-    case 1: // Artie
+    switch(Motors.Robot.robotName) {
+    case robot::Artie: // Artie
         Motors.leftMotors.set(25);
         Motors.rightMotors.set(25);
         pros::c::delay(1000);
@@ -103,7 +103,7 @@ void autonomous() {
         Motors.leftMotors.set(0);
         Motors.rightMotors.set(0);
         break;
-    case 2: // Chance
+    case robot::Chance: // Chance
         Motors.leftMotors.set(40);
         Motors.rightMotors.set(40);
         pros::c::delay(500);
@@ -136,6 +136,8 @@ void autonomous() {
         Motors.leftMotors.set(0);
         Motors.rightMotors.set(0);
         //  auton.turn(Motors, 162, 20, true); // Turns 180 degrees (650 Units), do not change distance value (for now)
+        break;
+    default:
         break;
     }
 }

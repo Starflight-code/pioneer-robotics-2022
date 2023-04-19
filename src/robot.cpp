@@ -9,11 +9,27 @@
 /// Configuration is hard coded and requires manual re-configuration to update it.
 class robot {
 public:
-    int RID;          // Robot Identification Number [Used Internally]
-    int DID;          // Driver Identification Number
-    std::string name; // Robot Name [Artie or Chance]
+    // int RID; // Robot Identification Number [Used Internally]
+    // int DID; // Driver Identification Number
 
-    int controlScheme;                   // 0 for tank, 1 for split arcade
+    // Enumerations, used interally and for configuration
+    enum robotNames { Artie,
+                      Chance,
+                      Debug };
+    enum driverNames { Teagen,
+                       Malachi,
+                       None };
+    enum controlSchemes { Tank,
+                          Arcade };
+    robotNames robotName;
+    driverNames driverName;
+    controlSchemes controlScheme;
+
+    // Variable - Globally Configurable
+    int spinner_speed = 50;
+    int spinner_boost = 20;
+
+    // Variables - Not Globally Configurable
     double limiter;                      // Applies and tracks current limiter (range 0 <-> 1)
     bool debug = false;                  // Enables debug functionality, DISABLE BEFORE COMPETITION
     bool training = false;               // Enables training/testing functionality that should be disabled at a competition
@@ -21,8 +37,6 @@ public:
     double control_exponent_value = 1.5; // Greater the value, the steeper the exponential control curve
     int control_switch_value;
     bool task_scheduler = true;
-    int spinner_speed = 50;
-    int spinner_boost = 20;
     double left_right_motor_offset; // Negative values are a left offset, positive is a right
     // Value what the motors will be multiplied by (should be range [-1 <-> 1]), non-dynamic drive adjustment
     std::vector<int> leftPorts;                               // Left Motor Port Array
@@ -44,84 +58,110 @@ public:
      */
     void init() {
         // -- CONFIGURATIAON --
-        char robot_initial = 'a';  // 'a' for Artie, 'c' for Chance or 'd' for debug
-        char driver_initial = 'a'; // 't' for Teagan, 'm' for Malachi, or 'd' for debug
-
+        // char robot_initial = 'a';  // 'a' for Artie, 'c' for Chance or 'd' for debug
+        // char driver_initial = 'a'; // 't' for Teagan, 'm' for Malachi, or 'd' for debug
+        robotName = Artie;
+        driverName = Malachi;
         // Robot Identifier (Branchless robot initials to ID integer)
-        RID = ((robot_initial == 'a') * 1) + ((robot_initial == 'c') * 2) + ((robot_initial == 'd') * 3);    // Branchless method to generate robot identification numbers w/ characters
-        DID = ((driver_initial == 't') * 1) + ((driver_initial == 'm') * 2 + ((driver_initial == 'd') * 3)); // Branchless method to generate driver identification numbers w/ characters
-        switch(RID) {
-        case 1: // Loads configuration for Artie
-            name = "Artie";
-            leftPorts = {9, 8, 5, 3};             // Ports of left motors, from L1 to L4
-            rightPorts = {20, 18, 14, 12};        // Ports of right motors, from R1 to R4
-            flywheelPorts = {1, 4};               // Ports of flywheel motors, from F1 to F2
-            spinnerPorts = {6, 16};               // Port for the spinner motor
+        // RID = ((name == Artie) * 1) + ((name == Chance) * 2) + ((name == Debug) * 3);     // Branchless method to generate robot identification numbers w/ characters
+        // DID = ((dName == Teagen) * 1) + ((dName == Malachi) * 2 + ((dName == None) * 3)); // Branchless method to generate driver identification numbers w/ characters
+        switch(robotName) {
+        case Artie: // Loads configuration for Artie
+
+            // Motor Ports
+            leftPorts = {9, 8, 5, 3};      // Ports of left motors, from L1 to L4
+            rightPorts = {20, 18, 14, 12}; // Ports of right motors, from R1 to R4
+            flywheelPorts = {1, 4};        // Ports of flywheel motors, from F1 to F2
+            spinnerPorts = {6, 16};        // Port for the spinner motor
+            launcherPorts = {1, 2};        // Ports for the disk launcher
+            rotationSensorPorts = {2, 17}; // Ports for the rotation sensors/encoders
+            stringLauncherPort = 1;        // Port for the string launcher piston
+
+            // Motor Tuning
             leftAltRevStates = {true, true};      // 0: Alternating (bool) 1: Initial Reverse State (bool)
             rightAltRevStates = {true, false};    // Alternating: True, False, True ...
             flywheelAltRevStates = {true, false}; // (Non Alternating) Initial Reverse State False: False, False, False
             spinnerAltRevStates = {true, false};  // Initial Reverse State True: True, True, True
-            controlScheme = 0;                    // 0 for tank, 1 for split arcade
+            launcherAltRevStates = {true, false};
+
+            // Control Tuning
+            controlScheme = Tank; // 0 for tank, 1 for split arcade
             left_right_motor_offset = 0;
             limiter = 1;
-            launcherPorts = {1, 2};
-            launcherAltRevStates = {true, false};
-            stringLauncherPort = 1; // Port for the string launcher piston
+
             break;
 
-        case 2: // Loads configuration for Chance
-            name = "Chance";
-            leftPorts = {9, 8, 5, 4};      // Ports of left motors, from L1 to L4
-            rightPorts = {20, 18, 14, 11}; // Ports of right motors, from R1 to R4
+        case Chance: // Loads configuration for Chance
+
+            // Motor Ports
+            leftPorts = {9, 8, 5, 3};      // Ports of left motors, from L1 to L4
+            rightPorts = {20, 18, 14, 12}; // Ports of right motors, from R1 to R4
             flywheelPorts = {1, 4};        // Ports of flywheel motors, from F1 to F2
             spinnerPorts = {6, 16};        // Port for the spinner motor
-            rotationSensorPorts = {2, 17};
+            launcherPorts = {1, 2};        // Ports for the disk launcher
+            rotationSensorPorts = {2, 17}; // Ports for the rotation sensors/encoders
+            stringLauncherPort = 1;        // Port for the string launcher piston
+
+            // Motor Tuning
             leftAltRevStates = {true, true};      // 0: Alternating (bool) 1: Initial Reverse State (bool)
             rightAltRevStates = {true, false};    // Alternating: True, False, True ...
             flywheelAltRevStates = {true, false}; // (Non Alternating) Initial Reverse State False: False, False, False
             spinnerAltRevStates = {true, false};  // Initial Reverse State True: True, True, True
-            controlScheme = 0;                    // 0 for tank, 1 for split arcade
-            limiter = 1;
-            launcherPorts = {1, 2};
             launcherAltRevStates = {true, false};
+
+            // Control Tuning
+            controlScheme = Tank; // 0 for tank, 1 for split arcade
             left_right_motor_offset = 0;
-            stringLauncherPort = 1; // Port for the string launcher piston
+            limiter = 1;
+
             break;
 
-        case 3: // Loads debug configuration
-            name = "Custom/Debug";
-            leftPorts = {16, 6, 3, 8};     // Ports of left motors, from L1 to L4
-            rightPorts = {20, 19, 18, 17}; // Ports of right motors, from R1 to R4
+        case Debug: // Loads debug configuration
+
+            // Motor Ports
+            leftPorts = {9, 8, 5, 3};      // Ports of left motors, from L1 to L4
+            rightPorts = {20, 18, 14, 12}; // Ports of right motors, from R1 to R4
             flywheelPorts = {1, 4};        // Ports of flywheel motors, from F1 to F2
             spinnerPorts = {6, 16};        // Port for the spinner motor
-            leftAltRevStates = {true, true};
-            rightAltRevStates = {true, false};
-            flywheelAltRevStates = {true, false};
-            spinnerAltRevStates = {true, false};
-            controlScheme = 0; // 0 for tank, 1 for split arcade
-            limiter = 1;
-            launcherPorts = {1, 2};
+            launcherPorts = {1, 2};        // Ports for the disk launcher
+            rotationSensorPorts = {2, 17}; // Ports for the rotation sensors/encoders
+            stringLauncherPort = 1;        // Port for the string launcher piston
+
+            // Motor Tuning
+            leftAltRevStates = {true, true};      // 0: Alternating (bool) 1: Initial Reverse State (bool)
+            rightAltRevStates = {true, false};    // Alternating: True, False, True ...
+            flywheelAltRevStates = {true, false}; // (Non Alternating) Initial Reverse State False: False, False, False
+            spinnerAltRevStates = {true, false};  // Initial Reverse State True: True, True, True
             launcherAltRevStates = {true, false};
-            stringLauncherPort = 1; // Port for the string launcher piston
-            debug = true;           // Enables debug mode, can be used for verbose logging (not implimented yet)
+
+            // Control Tuning
+            controlScheme = Tank; // 0 for tank, 1 for split arcade
+            left_right_motor_offset = 0;
+            limiter = 1;
+
             break;
         }
-        switch(DID) {
-        case 1:                           // Teagen
+        switch(driverName) {
+        case Teagen:
+
             exponential_control = true;   // Enables exponent based control system
             control_exponent_value = 1.5; // Greater the value, the steeper the exponential control curve
             training = true;              // Sets the training mode, FALSE FOR COMPETITIONS
+
             break;
 
-        case 2:                           // Malachi
-            controlScheme = 0;            // 0 for tank, 1 for split arcade
+        case Malachi:
+
+            controlScheme = Tank;         // 0 for tank, 1 for split arcade
             exponential_control = true;   // Enables exponent based control system
             control_exponent_value = 1.5; // Greater the value, the steeper the exponential control curve
             training = true;              // Sets the training mode, FALSE FOR COMPETITIONS
+
             break;
 
-        case 3:                           // None
-            controlScheme = 0;            // 0 for tank, 1 for split arcade
+        case None:
+
+            controlScheme = Tank;         // 0 for tank, 1 for split arcade
             exponential_control = true;   // Enables exponent based control system
             control_exponent_value = 1.5; // Greater the value, the steeper the exponential control curve
             training = true;              // Sets the training mode, FALSE FOR COMPETITIONS
@@ -134,21 +174,27 @@ public:
      * Sets up the control scheme based on driver presets
      */
     void control_scheme_setup() {
-        switch(DID) {
-        case 1:
-            // [Training Local Limiter Button, Piston Button, Spinner Normal Button, Spinner Reversed Button]
+        switch(driverName) {
+        case Teagen:
+            // [Training Local Limiter Button, Piston Button, Spinner Normal Button, Spinner Reversed Button, Control Reverse Toggle]
+
             controlButtons.push_back(pros::E_CONTROLLER_DIGITAL_LEFT); // Training Local Limiter Button
             controlButtons.push_back(pros::E_CONTROLLER_DIGITAL_Y);    // Piston Keybind
             controlButtons.push_back(pros::E_CONTROLLER_DIGITAL_R1);   // Spinner Keybind (Normal)
             controlButtons.push_back(pros::E_CONTROLLER_DIGITAL_R2);   // Spinner Keybind (Reversed)
-            controlButtons.push_back(pros::E_CONTROLLER_DIGITAL_A);    // Spinner Keybind (Reversed)
+            controlButtons.push_back(pros::E_CONTROLLER_DIGITAL_A);    // Control Reverse Toggle
+
             break;
-        case 2:
+        case Malachi:
+
             controlButtons.push_back(pros::E_CONTROLLER_DIGITAL_LEFT); // Training Local Limiter Button
             controlButtons.push_back(pros::E_CONTROLLER_DIGITAL_Y);    // Piston Keybind
             controlButtons.push_back(pros::E_CONTROLLER_DIGITAL_R1);   // Spinner Keybind (Normal)
             controlButtons.push_back(pros::E_CONTROLLER_DIGITAL_R2);   // Spinner Keybind (Reversed)
-            controlButtons.push_back(pros::E_CONTROLLER_DIGITAL_A);    // Spinner Keybind (Reversed)
+            controlButtons.push_back(pros::E_CONTROLLER_DIGITAL_A);    // Control Reverse Toggle
+
+            break;
+        default:
             break;
         }
     }

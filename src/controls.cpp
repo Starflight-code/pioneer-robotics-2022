@@ -118,7 +118,7 @@ public:
 
         pros::Controller master(pros::E_CONTROLLER_MASTER); // Imports Controller as "master"
         // Set sticks arrays to correct values for current configuration
-        if(Motors.Robot.controlScheme == 0) {
+        if(Motors.Robot.controlScheme == robot::Tank) {
             sticks = {ANALOG_LEFT_Y, ANALOG_RIGHT_Y}; // Tank control
         } else {
             sticks = {ANALOG_LEFT_Y, ANALOG_RIGHT_X}; // Arcade Control
@@ -134,12 +134,12 @@ public:
             }
         }
         switch(Motors.Robot.controlScheme) {
-        case 0: // Tank Control
+        case robot::Tank:
             for(int i = 0; i < controller_values.size(); i++) {
                 controller_values[i] = algo.tank_control(controller_values[i], Motors.Robot.limiter);
             }
             break;
-        case 1: // Split Arcade
+        case robot::Arcade:
             controller_values = algo.arcade_control(controller_values[0], controller_values[1], Motors.Robot.limiter);
             break;
         default:
