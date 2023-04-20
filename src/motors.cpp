@@ -10,6 +10,11 @@
 #define robot_cpp_
 #endif
 
+#ifndef encoder_interface_cpp_
+// #include "encoder_interface.cpp"
+#define encoder_interface_cpp_
+#endif
+
 /**
  * Tracks, stores and moves a piston after initialized
  */
@@ -65,6 +70,9 @@ private:
     // int current_limiter;
     double current_speed;
     std::vector<pros::Motor> motors = {};
+    int targetPosition; // For cross method execution tracking of target position
+    robot::gearBox gear;
+    bool movingToPosition;
 
 public:
     /** Initializes the motor group, defining all motors, configuring reverse states and hooking them up to an internal array
@@ -74,7 +82,7 @@ public:
      * @return N/A
      */
     void init(std::vector<int> motor_ports, bool alternating,
-              bool initial_reverse_state) {
+              bool initial_reverse_state, robot::gearBox gearBox) {
         if(alternating) {
             bool t =
                 initial_reverse_state;                            // Reverse state is used, as the contructor
@@ -90,6 +98,8 @@ public:
                                                                                       // the motor reverse state to
                                                                                       // initial_reverse_state
             }
+            gear = gearBox;
+            movingToPosition = false;
         }
     }
     /** Sets the motor array to a specified speed
@@ -101,6 +111,26 @@ public:
         for(int i = 0; i < motors.size(); i++) {
             motors[i] = speed;
         }
+    }
+    void setPosition(int speed, int byDegrees) {
+        tarePosition();
+        targetPosition = byDegrees * ((double)gear / 100);
+        set(speed);
+        movingToPosition = true;
+    }
+    void checkPosition() {
+        if(movingToPosition) {
+            if(std::abs(getFastPosition()) > targetPosition) {
+                set(0);
+                targetPosition = NULL;
+                movingToPosition = false;
+            }
+        }
+    }
+
+    /// Returns true if moving to position, otherwise false
+    bool positionCheckStatus() {
+        return movingToPosition;
     }
 
     /** Gets the current speed setting for the motor array
@@ -116,12 +146,12 @@ public:
             motors[i].tare_position();
         }
     }
-    bool checkPosition(int targetPosition) {
+    /*bool checkPosition(int targetPosition) {
         if(std::abs(motors[0].get_position()) >= targetPosition) {
             return true;
         }
         return false;
-    }
+    }*/
 
     /** Gets the average position for the array, use getFastPosition for only the first motor's position
      * @return average position for motor array (double w/ range [unknown, TODO add once known])
@@ -183,11 +213,17 @@ public:
     /// Initializes the Motor Class wrapper with robot.cpp configuration, no external parameters required
     Motor_Class() {
         Robot.init();
-        leftMotors.init(Robot.leftPorts, Robot.leftAltRevStates[0], Robot.leftAltRevStates[1]);
-        rightMotors.init(Robot.rightPorts, Robot.rightAltRevStates[0], Robot.rightAltRevStates[1]);
-        spinnerMotors.init(Robot.spinnerPorts, Robot.spinnerAltRevStates[0], Robot.spinnerAltRevStates[1]);
-        launcherMotors.init(Robot.launcherPorts, Robot.launcherAltRevStates[0], Robot.launcherAltRevStates[1]);
+        leftMotors.init(Robot.leftPorts, Robot.leftAltRevStates[0], Robot.leftAltRevStates[1], Robot.leftGearbox);
+        rightMotors.init(Robot.rightPorts, Robot.rightAltRevStates[0], Robot.rightAltRevStates[1], Robot.rightGearbox);
+        spinnerMotors.init(Robot.spinnerPorts, Robot.spinnerAltRevStates[0], Robot.spinnerAltRevStates[1], Robot.spinnerGearbox);
+        launcherMotors.init(Robot.launcherPorts, Robot.launcherAltRevStates[0], Robot.launcherAltRevStates[1], Robot.launcherGearbox);
         stringLauncher.init(Robot.stringLauncherPort);
+    }
+    void runPositionChecks() {
+        leftMotors.checkPosition();
+        rightMotors.checkPosition();
+        spinnerMotors.checkPosition();
+        launcherMotors.checkPosition();
     }
     bool self_test() {
         leftMotors.set(30);

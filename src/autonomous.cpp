@@ -1,3 +1,4 @@
+#include "pros/rtos.h"
 #ifndef controls_cpp_
 #include "controls.cpp"
 #define controls_cpp_
@@ -22,68 +23,37 @@ private:
 
 public:
     void forward(Motor_Class Motors, int distance, int speed) {
-        bool task_one_finished = false;
-        bool task_two_finished = false;
-        Motors.leftMotors.tarePosition();
-        Motors.rightMotors.tarePosition();
-        Motors.leftMotors.set(speed);
-        Motors.rightMotors.set(speed);
-        scheduler tasks(2);
+        Motors.leftMotors.setPosition(speed, distance);
+        Motors.rightMotors.setPosition(speed, distance);
 
-        while(not task_one_finished || not task_two_finished) {
-            tasks.cycleRun(0, desiredWaitTime);
-            if(Motors.leftMotors.checkPosition(abs(distance))) {
-                Motors.leftMotors.set(0);
-                task_one_finished = true;
-            }
-            tasks.cycleRun(1, desiredWaitTime); // Should be placed before the task
-            if(Motors.rightMotors.checkPosition(abs(distance))) {
-                Motors.rightMotors.set(0);
-                task_two_finished = true;
-            }
+        while(Motors.leftMotors.positionCheckStatus() || Motors.rightMotors.positionCheckStatus()) {
+            Motors.leftMotors.checkPosition();
+            Motors.rightMotors.checkPosition();
+            pros::c::delay(20);
         }
     }
     void spinner(Motor_Class Motors, int distance, int speed) {
-        bool task_finished = false;
-        Motors.spinnerMotors.tarePosition();
-        Motors.spinnerMotors.set(speed);
+        Motors.spinnerMotors.setPosition(speed, distance);
         Motors.leftMotors.set(20);
         Motors.rightMotors.set(20);
 
-        while(not task_finished) {
-            if(Motors.spinnerMotors.checkPosition(abs(distance))) {
-                Motors.spinnerMotors.set(0);
-                task_finished = true;
-            }
+        while(Motors.spinnerMotors.positionCheckStatus()) {
+            Motors.spinnerMotors.checkPosition();
+            pros::c::delay(50);
         }
         Motors.leftMotors.set(0);
         Motors.rightMotors.set(0);
     }
     void turn(Motor_Class Motors, int distance, int speed, bool right) {
-        bool task_one_finished = false;
-        bool task_two_finished = false;
-        Motors.leftMotors.tarePosition();
-        Motors.rightMotors.tarePosition();
-        scheduler tasks(2);
         if(!right) { // Turn Left
-            Motors.leftMotors.set(-speed);
-            Motors.rightMotors.set(speed);
+            Motors.leftMotors.setPosition(-speed, 90);
+            Motors.rightMotors.setPosition(speed, 90);
         } else { // Turn Right
-            Motors.leftMotors.set(speed);
-            Motors.rightMotors.set(-speed);
+            Motors.leftMotors.setPosition(speed, 90);
+            Motors.rightMotors.setPosition(-speed, 90);
         }
 
-        while(not task_one_finished || not task_two_finished) {
-            tasks.cycleRun(0, desiredWaitTime); // Should be placed before the task
-            if(Motors.leftMotors.checkPosition(distance)) {
-                Motors.leftMotors.set(0);
-                task_one_finished = true;
-            }
-            tasks.cycleRun(1, desiredWaitTime); // Should be placed before the task
-            if(Motors.rightMotors.checkPosition(distance)) {
-                Motors.rightMotors.set(0);
-                task_two_finished = true;
-            }
+        while(Motors.leftMotors.positionCheckStatus() || Motors.rightMotors.positionCheckStatus()) {
         }
     }
 };

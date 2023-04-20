@@ -1,6 +1,8 @@
 #ifndef absolute_positioning_cpp_
 #define absolute_positioning_cpp_
 #include "absolute_positioning.cpp"
+#include "pros/motors.hpp"
+#include "pros/rtos.h"
 #endif
 
 #ifndef spinner_cpp_
@@ -31,9 +33,16 @@ void isolation() {
     // -- END OF IMPORTS --
 
     while(true) {
-        if(control.Motors.self_test()) {
-            control.Motors.spinnerMotors.set(30);
+        pros::Motor motor(20);
+        motor = 15;
+        while(motor.get_position() < 900) {
+
+            // if(motor.get_position() > 270) {
+            motor = 10;
+            //}
+            pros::c::delay(50);
         }
+        motor = 0;
         pros::c::delay(50);
     }
 }
