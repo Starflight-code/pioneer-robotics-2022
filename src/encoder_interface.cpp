@@ -14,7 +14,7 @@ class encoderModule {
 private:
     // Encoder modifiers that will be applied, gearboxes change the distance (rotationary) that the motor travels for a given encoder increase.
     // This change must of course be accounted for, which is the purpouse for these modifers.
-    enum gearBox {
+    enum gearBox { // Modifers should be in (what target-in-degrees should be multiplied by) * 100 <- to make sure they are ints
         blue = (2),
         green = (4),
         red = (5)
@@ -31,7 +31,7 @@ private:
      * @return N/A
      */
     void rotate(int totalRotation, int atSpeed) {
-        double compareValue = totalRotation * currentGearBox;
+        double compareValue = totalRotation * ((double)currentGearBox / 100);
         interface.tarePosition();
         interface.set(atSpeed);
         while(interface.getFastPosition() < compareValue) { // 300 encoder units in 360 degrees (1.2 degrees per encoder unit)

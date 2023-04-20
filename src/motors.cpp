@@ -1,4 +1,5 @@
 #include "pros/adi.hpp"
+#include "pros/rtos.h"
 #ifndef main_h_
 #include "main.h"
 #define main_h_
@@ -168,11 +169,11 @@ public: // Phase out old Motor_Class functions (setSpeed, getSpeed, etc), and me
     /// Right Motor Group Object
     MotorGroup rightMotors;
     /// Flywheel Motor Group Object
-    MotorGroup flywheelMotors;
+    // MotorGroup flywheelMotors;
     /// Spinner Motor Group Object
     MotorGroup spinnerMotors;
     /// Launcher Motor Group Object
-    MotorGroup launcher;
+    MotorGroup launcherMotors;
     /// Piston string launcher Object
     Piston stringLauncher;
 
@@ -184,9 +185,42 @@ public:
         Robot.init();
         leftMotors.init(Robot.leftPorts, Robot.leftAltRevStates[0], Robot.leftAltRevStates[1]);
         rightMotors.init(Robot.rightPorts, Robot.rightAltRevStates[0], Robot.rightAltRevStates[1]);
-        flywheelMotors.init(Robot.flywheelPorts, Robot.flywheelAltRevStates[0], Robot.flywheelAltRevStates[1]);
+        // flywheelMotors.init(Robot.flywheelPorts, Robot.flywheelAltRevStates[0], Robot.flywheelAltRevStates[1]);
         spinnerMotors.init(Robot.spinnerPorts, Robot.spinnerAltRevStates[0], Robot.spinnerAltRevStates[1]);
-        launcher.init(Robot.launcherPorts, Robot.launcherAltRevStates[0], Robot.launcherAltRevStates[1]);
+        launcherMotors.init(Robot.launcherPorts, Robot.launcherAltRevStates[0], Robot.launcherAltRevStates[1]);
         stringLauncher.init(Robot.stringLauncherPort);
+    }
+    bool self_test() {
+        leftMotors.set(30);
+        rightMotors.set(30);
+        // flywheelMotors.set(30);
+        spinnerMotors.set(30);
+        launcherMotors.set(30);
+        pros::c::delay(300);
+        bool result;
+        for(int i = 0; i < 4; i++) {
+            switch(i) {
+            case 0:
+                result = leftMotors.getFastVelocity() > 1 && leftMotors.getFastVelocity() < -1;
+                break;
+
+            case 1:
+                result = rightMotors.getFastVelocity() > 1 && rightMotors.getFastVelocity() < -1 && result;
+                break;
+
+            case 2:
+                result = spinnerMotors.getFastVelocity() > 1 && spinnerMotors.getFastVelocity() < -1 && result;
+                break;
+
+            case 3:
+                result = launcherMotors.getFastVelocity() > 1 && launcherMotors.getFastVelocity() < -1 && result;
+                break;
+            }
+        }
+        leftMotors.set(0);
+        rightMotors.set(0);
+        spinnerMotors.set(0);
+        launcherMotors.set(0);
+        return result;
     }
 };

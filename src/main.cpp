@@ -23,6 +23,21 @@
 #define include_cpp_
 #endif
 
+void isolation() {
+    // Isolation Mode Restricted Execution Debug Enviroment
+
+    // -- IMPORTS --
+    cl control;
+    // -- END OF IMPORTS --
+
+    while(true) {
+        if(control.Motors.self_test()) {
+            control.Motors.spinnerMotors.set(30);
+        }
+        pros::c::delay(50);
+    }
+}
+
 /**
  * Runs initialization code. This occurs as soon as the program is started.
  *
@@ -66,6 +81,9 @@ void autonomous() {
     Motor_Class Motors;
     autonomous_class auton;
     spin spinner;
+    if(Motors.Robot.isolation_mode) {
+        isolation();
+    }
     // pros::Rotation leftEncoders(Motors.Robot.rotationSensorPorts[0]);
     // pros::Rotation rightEncoders(Motors.Robot.rotationSensorPorts[1]);
 
@@ -158,6 +176,9 @@ void opcontrol() {
     u_short desiredWaitTime = 50; // per task wait in milliseconds
     cl Control_Listener;
     scheduler tasks(2);
+    if(Control_Listener.Motors.Robot.isolation_mode) {
+        isolation();
+    }
     if(Control_Listener.Motors.Robot.task_scheduler) {
         while(true) {
 

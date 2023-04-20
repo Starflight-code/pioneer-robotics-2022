@@ -33,6 +33,7 @@ public:
     double limiter;                      // Applies and tracks current limiter (range 0 <-> 1)
     bool debug = false;                  // Enables debug functionality, DISABLE BEFORE COMPETITION
     bool training = false;               // Enables training/testing functionality that should be disabled at a competition
+    bool isolation_mode = false;         // Very restrictive debug mode for highly experimental systems, DO NOT TURN THIS ON UNLESS YOU KNOW WHAT YOU'RE DOING
     bool exponential_control = true;     // Enables exponent based control system
     double control_exponent_value = 1.5; // Greater the value, the steeper the exponential control curve
     int control_switch_value;
@@ -58,14 +59,10 @@ public:
      */
     void init() {
         // -- CONFIGURATIAON --
-        // char robot_initial = 'a';  // 'a' for Artie, 'c' for Chance or 'd' for debug
-        // char driver_initial = 'a'; // 't' for Teagan, 'm' for Malachi, or 'd' for debug
         robotName = Artie;
         driverName = Malachi;
-        // Robot Identifier (Branchless robot initials to ID integer)
-        // RID = ((name == Artie) * 1) + ((name == Chance) * 2) + ((name == Debug) * 3);     // Branchless method to generate robot identification numbers w/ characters
-        // DID = ((dName == Teagen) * 1) + ((dName == Malachi) * 2 + ((dName == None) * 3)); // Branchless method to generate driver identification numbers w/ characters
         switch(robotName) {
+
         case Artie: // Loads configuration for Artie
 
             // Motor Ports
@@ -175,6 +172,7 @@ public:
      */
     void control_scheme_setup() {
         switch(driverName) {
+
         case Teagen:
             // [Training Local Limiter Button, Piston Button, Spinner Normal Button, Spinner Reversed Button, Control Reverse Toggle]
 
