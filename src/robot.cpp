@@ -29,7 +29,7 @@ public:
     int spinner_boost = 20;
     bool debug = false;          // Enables debug functionality, DISABLE BEFORE COMPETITION
     bool training = false;       // Enables training/testing functionality that should be disabled at a competition
-    bool isolation_mode = false; // Very restrictive debug mode for highly experimental systems, DO NOT TURN THIS ON UNLESS YOU KNOW WHAT YOU'RE DOING
+    bool isolation_mode = false; // Isolated debug mode for highly experimental systems, DO NOT TURN THIS ON UNLESS YOU KNOW WHAT YOU'RE DOING
 
     // Variables - Not Globally Configurable (S)
     double limiter;                      // Applies and tracks current limiter (range 0 <-> 1)
@@ -171,20 +171,24 @@ public:
         case Teagen: // (C)
 
             // [Training Local Limiter Button, Piston Button, Spinner Normal Button, Spinner Reversed Button, Control Reverse Toggle]
-            controlButtons.push_back(pros::E_CONTROLLER_DIGITAL_LEFT); // Training Local Limiter Button
-            controlButtons.push_back(pros::E_CONTROLLER_DIGITAL_Y);    // Piston Keybind
-            controlButtons.push_back(pros::E_CONTROLLER_DIGITAL_R1);   // Spinner Keybind (Normal)
-            controlButtons.push_back(pros::E_CONTROLLER_DIGITAL_R2);   // Spinner Keybind (Reversed)
-            controlButtons.push_back(pros::E_CONTROLLER_DIGITAL_A);    // Control Reverse Toggle
+            controlButtons = {
+                pros::E_CONTROLLER_DIGITAL_LEFT, // Training Local Limiter Button
+                pros::E_CONTROLLER_DIGITAL_Y,    // Piston Keybind
+                pros::E_CONTROLLER_DIGITAL_R1,   // Spinner Keybind (Normal)
+                pros::E_CONTROLLER_DIGITAL_R2,   // Spinner Keybind (Reversed)
+                pros::E_CONTROLLER_DIGITAL_A     // Control Reverse Toggle
+            };
 
             break;
         case Malachi: // (C)
 
-            controlButtons.push_back(pros::E_CONTROLLER_DIGITAL_LEFT); // Training Local Limiter Button
-            controlButtons.push_back(pros::E_CONTROLLER_DIGITAL_Y);    // Piston Keybind
-            controlButtons.push_back(pros::E_CONTROLLER_DIGITAL_R1);   // Spinner Keybind (Normal)
-            controlButtons.push_back(pros::E_CONTROLLER_DIGITAL_R2);   // Spinner Keybind (Reversed)
-            controlButtons.push_back(pros::E_CONTROLLER_DIGITAL_A);    // Control Reverse Toggle
+            controlButtons = {
+                pros::E_CONTROLLER_DIGITAL_LEFT, // Training Local Limiter Button
+                pros::E_CONTROLLER_DIGITAL_Y,    // Piston Keybind
+                pros::E_CONTROLLER_DIGITAL_R1,   // Spinner Keybind (Normal)
+                pros::E_CONTROLLER_DIGITAL_R2,   // Spinner Keybind (Reversed)
+                pros::E_CONTROLLER_DIGITAL_A     // Control Reverse Toggle
+            };
 
             break;
         default:

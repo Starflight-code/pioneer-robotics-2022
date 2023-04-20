@@ -20,11 +20,11 @@ private:
         red = (5)
     };
     gearBox currentGearBox;
-    MotorGroup interface;
+    // MotorGroup interface;
 
-    encoderModule(gearBox value, MotorGroup interface) {
+    encoderModule(gearBox value /*, MotorGroup interface*/) {
         currentGearBox = value;
-        this->interface = interface;
+        // this->interface = interface;
     }
     /**
      * @param totalRotation | degrees of total rotation desired
@@ -32,11 +32,11 @@ private:
      */
     void rotate(int totalRotation, int atSpeed) {
         double compareValue = totalRotation * ((double)currentGearBox / 100);
-        interface.tarePosition();
-        interface.set(atSpeed);
-        while(interface.getFastPosition() < compareValue) { // 300 encoder units in 360 degrees (1.2 degrees per encoder unit)
-            pros::delay(10);
-        }
-        interface.set(0); // Stops the motor after execution
+        // interface.tarePosition();
+        // interface.set(atSpeed);
+        // while(interface.getFastPosition() < compareValue) { // 300 encoder units in 360 degrees (1.2 degrees per encoder unit)
+        pros::delay(10);
+        //}
+        // interface.set(0); // Stops the motor after execution
     };
 };
