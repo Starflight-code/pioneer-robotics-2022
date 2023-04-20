@@ -185,7 +185,6 @@ public:
         Robot.init();
         leftMotors.init(Robot.leftPorts, Robot.leftAltRevStates[0], Robot.leftAltRevStates[1]);
         rightMotors.init(Robot.rightPorts, Robot.rightAltRevStates[0], Robot.rightAltRevStates[1]);
-        // flywheelMotors.init(Robot.flywheelPorts, Robot.flywheelAltRevStates[0], Robot.flywheelAltRevStates[1]);
         spinnerMotors.init(Robot.spinnerPorts, Robot.spinnerAltRevStates[0], Robot.spinnerAltRevStates[1]);
         launcherMotors.init(Robot.launcherPorts, Robot.launcherAltRevStates[0], Robot.launcherAltRevStates[1]);
         stringLauncher.init(Robot.stringLauncherPort);
@@ -193,7 +192,6 @@ public:
     bool self_test() {
         leftMotors.set(30);
         rightMotors.set(30);
-        // flywheelMotors.set(30);
         spinnerMotors.set(30);
         launcherMotors.set(30);
         pros::c::delay(300);

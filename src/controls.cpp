@@ -86,7 +86,7 @@ public:
         }
         swapControls.updateTracker(master.get_digital(Motors.Robot.controlButtons[4]));
         pistonLauncher.updateTracker(master.get_digital(Motors.Robot.controlButtons[1]));
-        Motors.launcher.set(pistonLauncher.currentState);
+        Motors.stringLauncher.set(pistonLauncher.currentState);
         /*if(master.get_digital(Motors.Robot.controlButtons[1])) { // Launcher Toggle
             Motors.launcher.toggle();
             while(master.get_digital(Motors.Robot.controlButtons[1])) {
@@ -113,8 +113,8 @@ public:
      */
     void
     controls() {
-        Control_Algorithms pidOne(0.2, 0.04, 0.01);
-        Control_Algorithms pidTwo(0.2, 0.04, 0.01);
+        // Control_Algorithms pidOne(0.2, 0.04, 0.01);
+        // Control_Algorithms pidTwo(0.2, 0.04, 0.01);
 
         pros::Controller master(pros::E_CONTROLLER_MASTER); // Imports Controller as "master"
         // Set sticks arrays to correct values for current configuration
@@ -149,8 +149,6 @@ public:
             break;
         }
         // Applys motor speeds from controller_values array
-        // Motors.leftMotors.set(pidOne.PD_Velocity(200, Motors.leftMotors.getFastVelocity()));
-        // Motors.rightMotors.set(pidTwo.PD_Velocity(200, Motors.rightMotors.getFastVelocity()));
         if(not swapControls.currentState) {
             controller_values = algo.controlSwap(controller_values[0], controller_values[1]);
         }
