@@ -1,5 +1,6 @@
 #include "pros/adi.hpp"
 #include "pros/rtos.h"
+#include <cmath>
 #ifndef main_h_
 #include "main.h"
 #define main_h_
@@ -73,6 +74,8 @@ private:
     int targetPosition; // For cross method execution tracking of target position
     robot::gearBox gear;
     bool movingToPosition;
+    short reducedSpeed;
+    int lastPosition;
 
 public:
     /** Initializes the motor group, defining all motors, configuring reverse states and hooking them up to an internal array
@@ -117,14 +120,23 @@ public:
         targetPosition = byDegrees * ((double)gear / 100);
         set(speed);
         movingToPosition = true;
+        reducedSpeed = std::round(speed * .75);
+        if(reducedSpeed < 15) {
+            reducedSpeed = 15;
+        }
     }
     void checkPosition() {
         if(movingToPosition) {
             if(std::abs(getFastPosition()) > targetPosition) {
                 set(0);
                 targetPosition = NULL;
+                reducedSpeed = 0;
                 movingToPosition = false;
+                lastPosition = 0;
+            } else if(std::abs(getFastPosition()) > targetPosition - 5 * (std::abs(getFastPosition()) - lastPosition)) {
+                set(reducedSpeed);
             }
+            lastPosition = std::abs(getFastPosition());
         }
     }
 
