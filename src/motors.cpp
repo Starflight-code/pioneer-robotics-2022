@@ -1,6 +1,9 @@
 #include "pros/adi.hpp"
+#include "pros/misc.h"
 #include "pros/rtos.h"
+#include "pros/rtos.hpp"
 #include <cmath>
+#include <sys/types.h>
 #ifndef main_h_
 #include "main.h"
 #define main_h_
@@ -76,6 +79,7 @@ private:
     bool movingToPosition;
     short reducedSpeed;
     int lastPosition;
+    uint32_t lastTime;
 
 public:
     /** Initializes the motor group, defining all motors, configuring reverse states and hooking them up to an internal array
@@ -133,10 +137,11 @@ public:
                 reducedSpeed = 0;
                 movingToPosition = false;
                 lastPosition = 0;
-            } else if(std::abs(getFastPosition()) > targetPosition - 5 * (std::abs(getFastPosition()) - lastPosition)) {
+            } else if(std::abs(getFastPosition()) > targetPosition - (((double)((uint32_t)pros::millis - lastTime) * (std::abs(getFastPosition()) - lastPosition))) / 100) {
                 set(reducedSpeed);
             }
             lastPosition = std::abs(getFastPosition());
+            lastTime = (uint32_t)pros::millis;
         }
     }
 
