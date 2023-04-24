@@ -72,6 +72,12 @@ public:
         }
         return motorOutput;
     }
+
+    /** Calculates a control swap
+     * @param value1 | the first control value (integer w/ range [-170 <-> 170])
+     * @param value2 | the second control value (integer w/ range [-170 <-> 170])
+     * @return an array of values to pipe into the motors (std::array<int, 2>)
+     */
     std::array<int, 2> controlSwap(int value1, int value2) {
         int temp = value1;
         std::array<int, 2> returnVal;
@@ -79,6 +85,12 @@ public:
         returnVal[1] = (temp * -1);
         return returnVal;
     }
+
+    /** Applies an offset to input values
+     * @param value1 | the first control value (integer w/ range [-170 <-> 170])
+     * @param value2 | the second control value (integer w/ range [-170 <-> 170])
+     * @return an array of values to pipe into the motors (std::array<int, 2>)
+     */
     std::array<int, 2> applyOffset(int value1, int value2, double L_R_Offset) {
         std::array<int, 2> returnArray;
         if(L_R_Offset != 0) {

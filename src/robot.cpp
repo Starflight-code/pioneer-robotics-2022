@@ -202,6 +202,7 @@ public:
     }
     /**
      * Sets up the control scheme based on driver presets
+     * @return N/A
      */
     void control_scheme_setup() {
         switch(driverName) {

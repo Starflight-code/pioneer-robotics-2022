@@ -24,6 +24,7 @@ private:
 public:
     bool currentState;
     bool modifed;
+
     /** Initialzes the toggle tracker.
      * @param state the initial toggle state (boolean)
      */
@@ -32,6 +33,7 @@ public:
         currentState = false;
         previousState = currentState;
     }
+
     /** Initialzes the toggle tracker.
      * @param state the initial toggle state (boolean)
      */
@@ -40,6 +42,7 @@ public:
         currentState = state;
         previousState = currentState;
     }
+
     /** Updates the tracker with the current button value
      *  @param held current value of the button (boolean)
      */
@@ -72,6 +75,9 @@ public:
     ToggleTracker launcherTracker;
 
 private:
+    /** A listener that runs every 50 ms and runs when training mode is on
+     * @return N/A
+     */
     void training() {
         pros::Controller master(pros::E_CONTROLLER_MASTER);
         if(master.get_digital(Motors.preset.controlButtons[0])) {

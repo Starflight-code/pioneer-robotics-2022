@@ -122,6 +122,10 @@ public:
         }
     }
 
+    /** Starts a encoder movement by a specified number of degrees and at a certian speed
+     * @param speed | a motor speed value (integer w/ range [-170 <-> 170])
+     * @param byDegrees | a distance in degrees to move by (integer w/ range [-inf <-> inf])
+     */
     void setPosition(int speed, int byDegrees) {
         tarePosition();
         targetPosition = byDegrees * (((double)gearSet) / 100);
@@ -133,6 +137,9 @@ public:
         }
     }
 
+    /** Checks if the robot hit the position for the encoder movement
+     * If it has, it will stop and set a few backend variables.
+     */
     void checkPosition() {
         if(movingToPosition) {
             if(std::abs(getFastPosition()) > targetPosition) {
@@ -149,7 +156,9 @@ public:
         }
     }
 
-    /// Returns true if moving to position, otherwise false
+    /** Checks if the motor group is currently moving into an encoder specified position
+     * @return true if moving, otherwise false
+     */
     bool positionCheckStatus() {
         return movingToPosition;
     }
@@ -167,12 +176,6 @@ public:
             motors[i].tare_position();
         }
     }
-    /*bool checkPosition(int targetPosition) {
-        if(std::abs(motors[0].get_position()) >= targetPosition) {
-            return true;
-        }
-        return false;
-    }*/
 
     /** Gets the average position for the array, use getFastPosition for only the first motor's position
      * @return average position for motor array (double w/ range [unknown, TODO add once known])

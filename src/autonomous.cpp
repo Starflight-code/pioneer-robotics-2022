@@ -22,6 +22,12 @@ private:
     // bool task_finished;
 
 public:
+    /** Moves forward by a distance at a speed
+     * @param Motors | the motor wrapper (class object)
+     * @param distance | a distance in degrees to move by (integer w/ range [-inf <-> inf])
+     * @param speed | a speed to set the motors to (integer w/ range [-170 <-> 170])
+     * @return N/A
+     */
     void forward(Motor_Class Motors, int distance, int speed) {
         Motors.leftMotors.setPosition(speed, distance);
         Motors.rightMotors.setPosition(speed, distance);
@@ -32,6 +38,14 @@ public:
             pros::c::delay(20);
         }
     }
+
+    /** Moves the spinners by a specified distance at a specified speed
+     * Applies a hard coded forward boost to increase contact with spinners
+     * @param Motors | the motor wrapper (class object)
+     * @param distance | a distance in degrees to move by (integer w/ range [-inf <-> inf])
+     * @param speed | a speed to set the motors to (integer w/ range [-170 <-> 170])
+     * @return N/A
+     */
     void spinner(Motor_Class Motors, int distance, int speed) {
         Motors.spinnerMotors.setPosition(speed, distance);
         Motors.leftMotors.set(20);
@@ -44,6 +58,13 @@ public:
         Motors.leftMotors.set(0);
         Motors.rightMotors.set(0);
     }
+
+    /** Turns the robot by a specified distance and at a specified speed
+     * @param Motors | the motor wrapper (class object)
+     * @param distance | a distance in degrees to move each motor group by (integer w/ range [-inf <-> inf])
+     * @param speed | a speed to set the motors to (integer w/ range [-170 <-> 170])
+     * @return N/A
+     */
     void turn(Motor_Class Motors, int distance, int speed, bool right) {
         if(!right) { // Turn Left
             Motors.leftMotors.setPosition(-speed, 90);

@@ -25,6 +25,9 @@
 #define include_cpp_
 #endif
 
+/** Contains the robot for isolation mode, runs a control loop that never exists
+ * @return N/A
+ */
 void isolation() {
     // Isolation Mode Restricted Execution Debug Enviroment
 
