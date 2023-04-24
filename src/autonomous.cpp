@@ -14,7 +14,7 @@
 #define spinner_cpp_
 #endif
 
-class autonomous_class {
+class AutonomousClass {
 private:
     u_short desiredWaitTime = 10; // per task wait in milliseconds
     // bool task_one_finished;

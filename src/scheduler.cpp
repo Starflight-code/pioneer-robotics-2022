@@ -3,14 +3,14 @@
 #define include_cpp_
 #endif
 
-class scheduler {
+class Scheduler {
     std::vector<uint32_t> millis_cycle; // length is equal to number of tasks
 
 public:
     /** Initializes the scheduler system with the number of tasks to balance.
      * @param numberOfTasks you will be scheduling with the system (integer w/ range [1 <-> inf.])
      */
-    scheduler(int numberOfTasks) {
+    Scheduler(int numberOfTasks) {
         for(int i = 0; i < numberOfTasks; i++) {
             millis_cycle.push_back(0);
         }

@@ -5,7 +5,7 @@
 #endif
 
 /// Includes algoritms used for control and the range definition used throughout the program
-class algorithms {
+class Algorithms {
 public:
     const int _RANGE = 127;
     /** Converts an integer or double into an int

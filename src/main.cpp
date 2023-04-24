@@ -30,20 +30,19 @@ void isolation() {
 
     // -- IMPORTS --
     cl control;
+    AutonomousClass auton;
     // -- END OF IMPORTS --
 
     while(true) {
-        pros::Motor motor(20);
-        motor = 15;
-        while(motor.get_position() < 900) {
+        auton.forward(control.Motors, 360, 30);
+        control.Motors.leftMotors.setPosition(40, 720);
+        control.Motors.rightMotors.setPosition(40, 720);
 
-            // if(motor.get_position() > 270) {
-            motor = 10;
-            //}
+        while(control.Motors.leftMotors.positionCheckStatus() || control.Motors.rightMotors.positionCheckStatus()) {
+            control.Motors.leftMotors.checkPosition();
+            control.Motors.rightMotors.checkPosition();
             pros::c::delay(50);
         }
-        motor = 0;
-        pros::c::delay(50);
     }
 }
 
@@ -88,9 +87,9 @@ void autonomous() {
     double Move_Dist = 1;
     double Init_Pos;
     Motor_Class Motors;
-    autonomous_class auton;
+    AutonomousClass auton;
     spin spinner;
-    if(Motors.Robot.isolation_mode) {
+    if(Motors.preset.isolation_mode) {
         isolation();
     }
     // pros::Rotation leftEncoders(Motors.Robot.rotationSensorPorts[0]);
@@ -100,8 +99,8 @@ void autonomous() {
     // Control_Algorithms pidTwo(0.2, 0.05, 0.01);
     // Motors.leftMotors.set(-1 * pidOne.PD_Velocity(200, abs(leftEncoders.get_velocity())));
     // Motors.rightMotors.set(-1 * pidTwo.PD_Velocity(200, abs(rightEncoders.get_velocity())));
-    switch(Motors.Robot.robotName) {
-    case robot::Artie: // Artie
+    switch(Motors.preset.robotName) {
+    case Robot::Artie: // Artie
         Motors.leftMotors.set(25);
         Motors.rightMotors.set(25);
         pros::c::delay(1000);
@@ -130,7 +129,7 @@ void autonomous() {
         Motors.leftMotors.set(0);
         Motors.rightMotors.set(0);
         break;
-    case robot::Chance: // Chance
+    case Robot::Chance: // Chance
         Motors.leftMotors.set(40);
         Motors.rightMotors.set(40);
         pros::c::delay(500);
@@ -184,11 +183,11 @@ void autonomous() {
 void opcontrol() {
     u_short desiredWaitTime = 50; // per task wait in milliseconds
     cl Control_Listener;
-    scheduler tasks(2);
-    if(Control_Listener.Motors.Robot.isolation_mode) {
+    Scheduler tasks(2);
+    if(Control_Listener.Motors.preset.isolation_mode) {
         isolation();
     }
-    if(Control_Listener.Motors.Robot.task_scheduler) {
+    if(Control_Listener.Motors.preset.task_scheduler) {
         while(true) {
 
             tasks.cycleRun(0, desiredWaitTime); // Should be placed before the task

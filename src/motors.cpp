@@ -4,6 +4,7 @@
 #include "pros/rtos.hpp"
 #include <cmath>
 #include <sys/types.h>
+
 #ifndef main_h_
 #include "main.h"
 #define main_h_
@@ -12,11 +13,6 @@
 #ifndef robot_cpp_
 #include "robot.cpp"
 #define robot_cpp_
-#endif
-
-#ifndef encoder_interface_cpp_
-// #include "encoder_interface.cpp"
-#define encoder_interface_cpp_
 #endif
 
 /**
@@ -36,15 +32,18 @@ public:
         piston[0].set_value(false); // Retracts the piston, syncing it's state
         piston_state = false;       // Sets the piston state, allowing for tracking
     }
+
     /** Initializes the class, using the piston port. Syncing the state to retracted by default.
      * @param ADI_Port port for the piston (integer w/ range [1 <-> 8])
      * @param initial_state initial state to sync piston to (bool, optional)
      */
+
     void init(int ADI_Port, bool initial_state) { // Initializes the piston, this needs to be completed before it can be used
         piston.push_back(pros::ADIDigitalOut(ADI_Port));
         piston[0].set_value(initial_state); // Retracts the piston, syncing it's state
         piston_state = initial_state;       // Sets the piston state, allowing for tracking
     }
+
     /** Sets the piston to false (retracted) or true (extended), updates tracker
      * @param state false (retracted) or true (extended), sets piston state (bool)
      */
@@ -52,6 +51,7 @@ public:
         piston[0].set_value(state); // Sets the piston value to the value supplied
         piston_state = state;       // Updates the tracker
     }
+
     /**
      * Toggles the motor based on the tracker. State swaps to the opposite for the piston.
      */
@@ -59,6 +59,7 @@ public:
         piston[0].set_value(!piston_state); // Sets the piston value to the opposite of the tracker value
         piston_state = !piston_state;       // Updates the tracker
     }
+
     /**
      * Gets the tracker value for the piston.
      * @return false (retracted) or true (extended)
@@ -74,12 +75,12 @@ private:
     // int current_limiter;
     double current_speed;
     std::vector<pros::Motor> motors = {};
-    int targetPosition; // For cross method execution tracking of target position
-    robot::gearBox gear;
+    double targetPosition; // For cross method execution tracking of target position
     bool movingToPosition;
     short reducedSpeed;
     int lastPosition;
     uint32_t lastTime;
+    Robot::gearBox gearSet;
 
 public:
     /** Initializes the motor group, defining all motors, configuring reverse states and hooking them up to an internal array
@@ -89,7 +90,7 @@ public:
      * @return N/A
      */
     void init(std::vector<int> motor_ports, bool alternating,
-              bool initial_reverse_state, robot::gearBox gearBox) {
+              bool initial_reverse_state, Robot::gearBox gearSet) {
         if(alternating) {
             bool t =
                 initial_reverse_state;                            // Reverse state is used, as the contructor
@@ -105,10 +106,11 @@ public:
                                                                                       // the motor reverse state to
                                                                                       // initial_reverse_state
             }
-            gear = gearBox;
-            movingToPosition = false;
         }
+        this->gearSet = gearSet;
+        movingToPosition = false;
     }
+
     /** Sets the motor array to a specified speed
      * @param speed | a motor speed value (integer w/ range [-170 <-> 170])
      * @return N/A
@@ -119,9 +121,10 @@ public:
             motors[i] = speed;
         }
     }
+
     void setPosition(int speed, int byDegrees) {
         tarePosition();
-        targetPosition = byDegrees * ((double)gear / 100);
+        targetPosition = byDegrees * (((double)gearSet) / 100);
         set(speed);
         movingToPosition = true;
         reducedSpeed = std::round(speed * .75);
@@ -129,15 +132,16 @@ public:
             reducedSpeed = 15;
         }
     }
+
     void checkPosition() {
         if(movingToPosition) {
             if(std::abs(getFastPosition()) > targetPosition) {
                 set(0);
-                targetPosition = NULL;
+                targetPosition = 0;
                 reducedSpeed = 0;
                 movingToPosition = false;
                 lastPosition = 0;
-            } else if(std::abs(getFastPosition()) > targetPosition - (((double)((uint32_t)pros::millis - lastTime) * (std::abs(getFastPosition()) - lastPosition))) / 100) {
+            } else if(std::abs(getFastPosition()) > targetPosition - targetPosition * .2 * (((double)(std::abs(getFastPosition() / (double)((uint32_t)pros::millis - lastTime) - lastPosition))))) {
                 set(reducedSpeed);
             }
             lastPosition = std::abs(getFastPosition());
@@ -180,6 +184,7 @@ public:
         }
         return total / motors.size(); // Returns the average of all positions
     }
+
     /** Gets the average velocity for the array, use getFastVelocity for only the first motor's position
      * @return average velocity for motor array (double w/ range [unknown, TODO add once known])
      */
@@ -208,6 +213,7 @@ public:
         return motors[motorIndex];
     }
 };
+
 /// Wrapper for motor arrays, allows easy instanciation and passthrough to other classes
 class Motor_Class {
 public: // Phase out old Motor_Class functions (setSpeed, getSpeed, etc), and merely use as a holder for motor group objects - DONE
@@ -225,23 +231,25 @@ public: // Phase out old Motor_Class functions (setSpeed, getSpeed, etc), and me
     Piston stringLauncher;
 
 public:
-    robot Robot;
+    Robot preset;
 
     /// Initializes the Motor Class wrapper with robot.cpp configuration, no external parameters required
     Motor_Class() {
-        Robot.init();
-        leftMotors.init(Robot.leftPorts, Robot.leftAltRevStates[0], Robot.leftAltRevStates[1], Robot.leftGearbox);
-        rightMotors.init(Robot.rightPorts, Robot.rightAltRevStates[0], Robot.rightAltRevStates[1], Robot.rightGearbox);
-        spinnerMotors.init(Robot.spinnerPorts, Robot.spinnerAltRevStates[0], Robot.spinnerAltRevStates[1], Robot.spinnerGearbox);
-        launcherMotors.init(Robot.launcherPorts, Robot.launcherAltRevStates[0], Robot.launcherAltRevStates[1], Robot.launcherGearbox);
-        stringLauncher.init(Robot.stringLauncherPort);
+        preset.init();
+        leftMotors.init(preset.leftPorts, preset.leftAltRevStates[0], preset.leftAltRevStates[1], preset.leftGearbox);
+        rightMotors.init(preset.rightPorts, preset.rightAltRevStates[0], preset.rightAltRevStates[1], preset.rightGearbox);
+        spinnerMotors.init(preset.spinnerPorts, preset.spinnerAltRevStates[0], preset.spinnerAltRevStates[1], preset.spinnerGearbox);
+        launcherMotors.init(preset.launcherPorts, preset.launcherAltRevStates[0], preset.launcherAltRevStates[1], preset.launcherGearbox);
+        stringLauncher.init(preset.stringLauncherPort);
     }
+
     void runPositionChecks() {
         leftMotors.checkPosition();
         rightMotors.checkPosition();
         spinnerMotors.checkPosition();
         launcherMotors.checkPosition();
     }
+
     bool self_test() {
         leftMotors.set(30);
         rightMotors.set(30);

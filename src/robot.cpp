@@ -9,7 +9,7 @@
 
 /// Robot Preset System allows centralized configuration of all configurable systems.
 /// Configuration is hard coded and requires manual re-configuration to update it.
-class robot {
+class Robot {
 public:
     // Enumerations, used interally and for configuration (S)
 
@@ -37,11 +37,11 @@ public:
     controlSchemes controlScheme;
 
     // Variables - Globally Configurable (C)
-    int spinner_speed = 50;     // Speed the spinners will be set to
-    int spinner_boost = 20;     // Boost applied to both drive motor arrays upon spinner activation
-    bool debug = false;         // Enables debug functionality, DISABLE BEFORE COMPETITION
-    bool training = false;      // Enables training/testing functionality that should be disabled at a competition
-    bool isolation_mode = true; // Isolated debug mode for highly experimental systems, DO NOT TURN THIS ON UNLESS YOU KNOW WHAT YOU'RE DOING
+    int spinner_speed = 50;      // Speed the spinners will be set to
+    int spinner_boost = 20;      // Boost applied to both drive motor arrays upon spinner activation
+    bool debug = false;          // Enables debug functionality, DISABLE BEFORE COMPETITION
+    bool training = false;       // Enables training/testing functionality that should be disabled at a competition
+    bool isolation_mode = false; // Isolated debug mode for highly experimental systems, DO NOT TURN THIS ON UNLESS YOU KNOW WHAT YOU'RE DOING
 
     // Variables - Not Globally Configurable (S)
     double limiter;                      // Applies and tracks current limiter (range 0 <-> 1)
@@ -56,16 +56,19 @@ public:
     std::vector<int> spinnerPorts;        // Spinner Motor Port Array
     std::vector<int> rotationSensorPorts; // Left, Right motor array encoders
     std::vector<int> launcherPorts;       // Left, Right launcher pullback array
+    std::vector<int> devMotorPorts;
 
     gearBox leftGearbox;
     gearBox rightGearbox;
     gearBox spinnerGearbox;
     gearBox launcherGearbox;
+    gearBox devGearbox;
 
-    std::vector<bool> leftAltRevStates;                       // 0: Alternating (bool) 1: Initial Reverse State (bool)
-    std::vector<bool> rightAltRevStates;                      // 0: Alternating (bool) 1: Initial Reverse State (bool)
-    std::vector<bool> spinnerAltRevStates;                    // 0: Alternating (bool) 1: Initial Reverse State (bool)
-    std::vector<bool> launcherAltRevStates;                   // 0: Alternating (bool) 1: Initial Reverse State (bool)
+    std::vector<bool> leftAltRevStates;     // 0: Alternating (bool) 1: Initial Reverse State (bool)
+    std::vector<bool> rightAltRevStates;    // 0: Alternating (bool) 1: Initial Reverse State (bool)
+    std::vector<bool> spinnerAltRevStates;  // 0: Alternating (bool) 1: Initial Reverse State (bool)
+    std::vector<bool> launcherAltRevStates; // 0: Alternating (bool) 1: Initial Reverse State (bool)
+    std::vector<bool> devAltRevStates;
     int stringLauncherPort;                                   // Port for endgame string launcher (ADI, piston)
     std::vector<pros::controller_digital_e_t> controlButtons; // Array containing customizable control buttons
 
@@ -81,10 +84,10 @@ public:
         case Artie: // Loads configuration for Artie (C)
 
             // Motor Ports
-            leftPorts = {9, 8, 5, 3};      // Ports of left motors, from L1 to L4
-            rightPorts = {20, 18, 14, 12}; // Ports of right motors, from R1 to R4
+            leftPorts = {14, 13, 12, 11};  // Ports of left motors, from L1 to L4
+            rightPorts = {17, 18, 19, 20}; // Ports of right motors, from R1 to R4
             spinnerPorts = {6, 16};        // Port for the spinner motor from S1 to S2
-            launcherPorts = {1, 2};        // Ports for the disk launcher L1 to L2
+            launcherPorts = {1, 7};        // Ports for the disk launcher L1 to L2
             rotationSensorPorts = {2, 17}; // Ports for the rotation sensors/encoders
             stringLauncherPort = 1;        // Port for the string launcher piston
 
@@ -92,7 +95,7 @@ public:
             leftAltRevStates = {true, true};     // 0: Alternating (bool) 1: Initial Reverse State (bool)
             rightAltRevStates = {true, false};   // Alternating: True, False, True ...
             spinnerAltRevStates = {true, false}; // Initial Reverse State True: True, True, True
-            launcherAltRevStates = {true, false};
+            launcherAltRevStates = {true, true};
 
             // Motor Gearbox
             leftGearbox = blue;
@@ -121,7 +124,7 @@ public:
             leftAltRevStates = {true, true};     // 0: Alternating (bool) 1: Initial Reverse State (bool)
             rightAltRevStates = {true, false};   // Alternating: True, False, True ...
             spinnerAltRevStates = {true, false}; // Initial Reverse State True: True, True, True
-            launcherAltRevStates = {true, false};
+            launcherAltRevStates = {true, true};
 
             // Motor Gearbox
             leftGearbox = blue;
@@ -144,19 +147,22 @@ public:
             spinnerPorts = {6, 16};        // Port for the spinner motor from S1 to S2
             launcherPorts = {1, 2};        // Ports for the disk launcher L1 to L2
             rotationSensorPorts = {2, 17}; // Ports for the rotation sensors/encoders
-            stringLauncherPort = 1;        // Port for the string launcher piston
+            devMotorPorts = {1};
+            stringLauncherPort = 1; // Port for the string launcher piston
 
             // Motor Tuning
             leftAltRevStates = {true, true};     // 0: Alternating (bool) 1: Initial Reverse State (bool)
             rightAltRevStates = {true, false};   // Alternating: True, False, True ...
             spinnerAltRevStates = {true, false}; // Initial Reverse State True: True, True, True
-            launcherAltRevStates = {true, false};
+            launcherAltRevStates = {true, true};
+            devAltRevStates = {false, false};
 
             // Motor Gearbox
             leftGearbox = blue;
             rightGearbox = blue;
             spinnerGearbox = green;
             launcherGearbox = red;
+            devGearbox = red;
 
             // Control Tuning
             controlScheme = Tank;
@@ -208,7 +214,9 @@ public:
                 /*1*/ pros::E_CONTROLLER_DIGITAL_Y,    // Piston Keybind
                 /*2*/ pros::E_CONTROLLER_DIGITAL_R1,   // Spinner Keybind (Normal)
                 /*3*/ pros::E_CONTROLLER_DIGITAL_R2,   // Spinner Keybind (Reversed)
-                /*4*/ pros::E_CONTROLLER_DIGITAL_A     // Control Reverse Toggle
+                /*4*/ pros::E_CONTROLLER_DIGITAL_A,    // Control Reverse Toggle
+                /*5*/ pros::E_CONTROLLER_DIGITAL_L1,   // Autopullback
+                /*6*/ pros::E_CONTROLLER_DIGITAL_L2    // Firing, run motor back while held (to make slip gear slip)
             };
 
             break;
@@ -219,7 +227,9 @@ public:
                 /*1*/ pros::E_CONTROLLER_DIGITAL_Y,    // Piston Keybind
                 /*2*/ pros::E_CONTROLLER_DIGITAL_R1,   // Spinner Keybind (Normal)
                 /*3*/ pros::E_CONTROLLER_DIGITAL_R2,   // Spinner Keybind (Reversed)
-                /*4*/ pros::E_CONTROLLER_DIGITAL_A     // Control Reverse Toggle
+                /*4*/ pros::E_CONTROLLER_DIGITAL_A,    // Control Reverse Toggle
+                /*5*/ pros::E_CONTROLLER_DIGITAL_L1,   // Autopullback
+                /*6*/ pros::E_CONTROLLER_DIGITAL_L2    // Firing, run motor back while held (to make slip gear slip)
             };
 
             break;
