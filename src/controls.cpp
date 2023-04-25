@@ -99,7 +99,7 @@ public:
             training(); // Training Modules
         }
         if(launcherTracker.modifed) {
-            Motors.launcherMotors.setPosition(60, Motors.preset.launcherRunLength);
+            Motors.launcherMotors.setPosition(Motors.preset.launcherAutoPullbackSpeed, Motors.preset.launcherRunLength);
             // Motors.launcherMotors.tarePosition();
             // Motors.launcherMotors.set(60);
             // while(Motors.launcherMotors.getFastPosition() < 1620) {
@@ -119,7 +119,7 @@ public:
             }
         }*/
         if(master.get_digital(Motors.preset.controlButtons[6])) {
-            Motors.launcherMotors.set(50);
+            Motors.launcherMotors.set(Motors.preset.launcherManualPullbackSpeed);
         } else if(not master.get_digital(Motors.preset.controlButtons[6]) && not Motors.launcherMotors.positionCheckStatus()) {
             Motors.launcherMotors.set(0);
         }

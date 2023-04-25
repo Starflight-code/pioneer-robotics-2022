@@ -37,12 +37,14 @@ public:
     controlSchemes controlScheme;
 
     // Variables - Globally Configurable (C)
-    int spinner_speed = 50;       // Speed the spinners will be set to
-    int spinner_boost = 20;       // Boost applied to both drive motor arrays upon spinner activation
-    bool debug = false;           // Enables debug functionality, DISABLE BEFORE COMPETITION
-    bool training = false;        // Enables training/testing functionality that should be disabled at a competition
-    bool isolation_mode = false;  // Isolated debug mode for highly experimental systems, DO NOT TURN THIS ON UNLESS YOU KNOW WHAT YOU'RE DOING
-    int launcherRunLength = 1200; // The distance in degrees for the automatic launcher pullback to run
+    int spinner_speed = 50;               // Speed the spinners will be set to
+    int spinner_boost = 20;               // Boost applied to both drive motor arrays upon spinner activation
+    bool debug = false;                   // Enables debug functionality, DISABLE BEFORE COMPETITION
+    bool training = false;                // Enables training/testing functionality that should be disabled at a competition
+    bool isolation_mode = false;          // Isolated debug mode for highly experimental systems, DO NOT TURN THIS ON UNLESS YOU KNOW WHAT YOU'RE DOING
+    int launcherRunLength = 1200;         // The distance in degrees for the automatic launcher pullback to run
+    int launcherManualPullbackSpeed = 50; // Speed for the manual pullback for the launcher
+    int launcherAutoPullbackSpeed = 60;   // Speed for the automatic pullback for the launcher
 
     // Variables - Not Globally Configurable (S)
     double limiter;                      // Applies and tracks current limiter (range 0 <-> 1)
