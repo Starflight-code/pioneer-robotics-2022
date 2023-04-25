@@ -1,6 +1,7 @@
 #ifndef absolute_positioning_cpp_
 #define absolute_positioning_cpp_
 #include "absolute_positioning.cpp"
+#include "pros/imu.h"
 #include "pros/motors.hpp"
 #include "pros/rtos.h"
 #endif
@@ -35,17 +36,17 @@ void isolation() {
     cl control;
     AutonomousClass auton;
     // -- END OF IMPORTS --
+    //  while(true) {
+    //  auton.forward(control.Motors, 360, 30);
+    control.Motors.devMotors.setPosition(40, 720);
 
+    while(control.Motors.devMotors.positionCheckStatus()) {
+        control.Motors.devMotors.checkPosition();
+        pros::c::delay(10);
+    }
+    //}
     while(true) {
-        auton.forward(control.Motors, 360, 30);
-        control.Motors.leftMotors.setPosition(40, 720);
-        control.Motors.rightMotors.setPosition(40, 720);
-
-        while(control.Motors.leftMotors.positionCheckStatus() || control.Motors.rightMotors.positionCheckStatus()) {
-            control.Motors.leftMotors.checkPosition();
-            control.Motors.rightMotors.checkPosition();
-            pros::c::delay(50);
-        }
+        pros::c::delay(50);
     }
 }
 
@@ -184,6 +185,7 @@ void autonomous() {
  * task, not resume it from where it left off.
  */
 void opcontrol() {
+
     u_short desiredWaitTime = 50; // per task wait in milliseconds
     cl Control_Listener;
     Scheduler tasks(2);

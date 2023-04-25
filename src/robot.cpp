@@ -37,11 +37,12 @@ public:
     controlSchemes controlScheme;
 
     // Variables - Globally Configurable (C)
-    int spinner_speed = 50;      // Speed the spinners will be set to
-    int spinner_boost = 20;      // Boost applied to both drive motor arrays upon spinner activation
-    bool debug = false;          // Enables debug functionality, DISABLE BEFORE COMPETITION
-    bool training = false;       // Enables training/testing functionality that should be disabled at a competition
-    bool isolation_mode = false; // Isolated debug mode for highly experimental systems, DO NOT TURN THIS ON UNLESS YOU KNOW WHAT YOU'RE DOING
+    int spinner_speed = 50;       // Speed the spinners will be set to
+    int spinner_boost = 20;       // Boost applied to both drive motor arrays upon spinner activation
+    bool debug = false;           // Enables debug functionality, DISABLE BEFORE COMPETITION
+    bool training = false;        // Enables training/testing functionality that should be disabled at a competition
+    bool isolation_mode = false;  // Isolated debug mode for highly experimental systems, DO NOT TURN THIS ON UNLESS YOU KNOW WHAT YOU'RE DOING
+    int launcherRunLength = 1200; // The distance in degrees for the automatic launcher pullback to run
 
     // Variables - Not Globally Configurable (S)
     double limiter;                      // Applies and tracks current limiter (range 0 <-> 1)
@@ -77,7 +78,7 @@ public:
      */
     void init() {
         // -- CONFIGURATIAON -- (C)
-        robotName = Artie;
+        robotName = Debug;
         driverName = Malachi;
         switch(robotName) {
 
@@ -116,7 +117,7 @@ public:
             leftPorts = {9, 8, 5, 3};      // Ports of left motors, from L1 to L4
             rightPorts = {20, 18, 14, 12}; // Ports of right motors, from R1 to R4
             spinnerPorts = {6, 16};        // Port for the spinner motor from S1 to S2
-            launcherPorts = {1, 2};        // Ports for the disk launcher L1 to L2
+            launcherPorts = {10, 2};       // Ports for the disk launcher L1 to L2
             rotationSensorPorts = {2, 17}; // Ports for the rotation sensors/encoders
             stringLauncherPort = 1;        // Port for the string launcher piston
 
@@ -147,7 +148,7 @@ public:
             spinnerPorts = {6, 16};        // Port for the spinner motor from S1 to S2
             launcherPorts = {1, 2};        // Ports for the disk launcher L1 to L2
             rotationSensorPorts = {2, 17}; // Ports for the rotation sensors/encoders
-            devMotorPorts = {1};
+            devMotorPorts = {9, 1};
             stringLauncherPort = 1; // Port for the string launcher piston
 
             // Motor Tuning
@@ -162,7 +163,7 @@ public:
             rightGearbox = blue;
             spinnerGearbox = green;
             launcherGearbox = red;
-            devGearbox = red;
+            devGearbox = blue;
 
             // Control Tuning
             controlScheme = Tank;

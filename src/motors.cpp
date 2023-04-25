@@ -128,10 +128,10 @@ public:
      */
     void setPosition(int speed, int byDegrees) {
         tarePosition();
-        targetPosition = byDegrees * (((double)gearSet) / 100);
+        targetPosition = byDegrees * (((double)gearSet) / 100) - (2500 / (double)gearSet);
         set(speed);
         movingToPosition = true;
-        reducedSpeed = std::round(speed * .75);
+        reducedSpeed = std::round(speed * .60);
         if(reducedSpeed < 15) {
             reducedSpeed = 15;
         }

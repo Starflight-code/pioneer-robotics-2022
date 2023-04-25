@@ -16,6 +16,9 @@
 #include "include.cpp"
 #endif
 
+/**
+ * Tracks the status of a toggle switch
+ */
 class ToggleTracker {
 private:
     bool held;
@@ -96,7 +99,7 @@ public:
             training(); // Training Modules
         }
         if(launcherTracker.modifed) {
-            Motors.launcherMotors.setPosition(60, 1200);
+            Motors.launcherMotors.setPosition(60, Motors.preset.launcherRunLength);
             // Motors.launcherMotors.tarePosition();
             // Motors.launcherMotors.set(60);
             // while(Motors.launcherMotors.getFastPosition() < 1620) {
@@ -145,6 +148,7 @@ public:
         // Control_Algorithms pidTwo(0.2, 0.04, 0.01);
 
         pros::Controller master(pros::E_CONTROLLER_MASTER); // Imports Controller as "master"
+
         // Set sticks arrays to correct values for current configuration
         if(Motors.preset.controlScheme == Robot::Tank) {
             sticks = {ANALOG_LEFT_Y, ANALOG_RIGHT_Y}; // Tank control

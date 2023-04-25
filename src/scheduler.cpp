@@ -1,7 +1,37 @@
+#include "main.h"
+#include "pros/motors.hpp"
+#include <array>
+#include <initializer_list>
+#include <vector>
+
 #ifndef include_cpp_
 #include "include.cpp"
 #define include_cpp_
 #endif
+
+#ifndef motors_cpp_
+#include "motors.cpp"
+#define motors_cpp_
+#endif
+
+class EncoderManager {
+    std::vector<MotorGroup*> motors;
+
+public:
+    void moveEncoder(MotorGroup* motorGRP, int byDegrees, int atSpeed) {
+        motorGRP->setPosition(atSpeed, byDegrees);
+        motors.push_back(motorGRP);
+    }
+    void runChecks() {
+        for(MotorGroup* x : motors) {
+            x->checkPosition();
+            if(!x->positionCheckStatus()) {
+                motors.erase(std::remove(motors.begin(), motors.end(), x), motors.end());
+            }
+        }
+        motors.shrink_to_fit();
+    }
+};
 
 class Scheduler {
     std::vector<uint32_t> millis_cycle; // length is equal to number of tasks
