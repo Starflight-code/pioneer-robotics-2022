@@ -8,16 +8,19 @@
 class Algorithms {
 public:
     const int _RANGE = 127;
+
     /** Converts an integer or double into an int
      * @param x | any number (double or integer)
      * @return x converted to an int datatype
      */
     int castToInt(double x) { return (int)x; }
+
     /** Converts an integer or double into an int
      * @param x | any number (double or integer)
      * @return x converted to an int datatype
      */
     int castToInt(int x) { return x; }
+
     /** Converts an integer or double into an int
      * @param x | a motor value (integer w/ range [-170 <-> 170])
      * @param limiter | global limiter value (double w/ range [0 <-> 1])
@@ -26,6 +29,7 @@ public:
     int applyLimiter(int x, double limiter) {
         return (int)x * limiter;
     }
+
     /** Exponential control system allows high precision at lower speeds and access to higher speeds when desired
      * @param controlInput | a motor value (integer w/ range [-170 <-> 170])
      * @param exponent | a number which the motor value will be raised to (double)
@@ -35,6 +39,7 @@ public:
         int negativeCarry = controlInput < 0 ? -1 : 1; // Carrys the negative, would otherwise be lost during exponent calcualtion
         return castToInt(negativeCarry * abs((_RANGE * pow(((double)abs(controlInput) / _RANGE), exponent))));
     }
+
     /** Impliments a two stick tank style control system, outputs motor array values
      * @param control_input | a controller output value (integer w/ range [-170 <-> 170])
      * @param limiter | a global limiter value (double w/ range [0 <-> 1])
@@ -43,6 +48,7 @@ public:
     int tank_control(int control_input, double limiter) {
         return applyLimiter(control_input, limiter);
     }
+
     /**
      * Impliments a two stick arcade style control system, outputs left and right motor array values
      * @param controlInput_y | Accepts input values for the left stick, y axis (int w/ range [-170 <-> 170])
@@ -74,16 +80,16 @@ public:
     }
 
     /** Calculates a control swap
-     * @param value1 | the first control value (integer w/ range [-170 <-> 170])
-     * @param value2 | the second control value (integer w/ range [-170 <-> 170])
+     * @param values | an array of control values (std::array<int, 2>)
      * @return an array of values to pipe into the motors (std::array<int, 2>)
      */
-    std::array<int, 2> controlSwap(int value1, int value2) {
-        int temp = value1;
+    std::array<int, 2> controlSwap(std::array<int, 2> values) {
+
+        // switches the control values and swaps the sign
         std::array<int, 2> returnVal;
-        returnVal[0] = (value2 * -1);
-        returnVal[1] = (temp * -1);
-        return returnVal;
+        returnVal[0] = (values[1] * -1);
+        returnVal[1] = (values[0] * -1);
+        return returnVal; // returns the updated array
     }
 
     /** Applies an offset to input values

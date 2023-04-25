@@ -2,6 +2,7 @@
 // code which is called on a per-file basis
 #include "main.h"
 #define main_h_
+
 #include "pros/apix.h"
 #include "pros/misc.h"
 #include "pros/motors.hpp"
@@ -9,5 +10,6 @@
 #include <array>
 #include <exception>
 #include <iostream>
+#include <list>
 #include <math.h>
 #include <vector>

@@ -84,6 +84,8 @@ private:
     void training() {
         pros::Controller master(pros::E_CONTROLLER_MASTER);
         if(master.get_digital(Motors.preset.controlButtons[0])) {
+
+            // sets the local limiter, using the full range of the x axis on the left controller stick
             Motors.preset.limiter = (double)(master.get_analog(ANALOG_LEFT_X) + algo._RANGE) / (algo._RANGE * 2);
         }
     }
@@ -95,34 +97,30 @@ public:
      */
     void event_listener() {
         pros::Controller master(pros::E_CONTROLLER_MASTER); // Imports Controller as "master"
+
         if(Motors.preset.training) {
-            training(); // Training Modules
+            training(); // loads training listener
         }
-        if(launcherTracker.modifed) {
+
+        if(launcherTracker.modifed) { // starts a position movement, only when the toggle button is pressed (executes once per button press)
             Motors.launcherMotors.setPosition(Motors.preset.launcherAutoPullbackSpeed, Motors.preset.launcherRunLength);
-            // Motors.launcherMotors.tarePosition();
-            // Motors.launcherMotors.set(60);
-            // while(Motors.launcherMotors.getFastPosition() < 1620) {
-            //     pros::c::delay(50);
-            // }
-            // Motors.launcherMotors.set(0);
         }
+
+        // updates the toggle trackers with the updated digital input values
         swapControls.updateTracker(master.get_digital(Motors.preset.controlButtons[4]));
         pistonLauncher.updateTracker(master.get_digital(Motors.preset.controlButtons[1]));
-        Motors.stringLauncher.set(pistonLauncher.currentState);
         launcherTracker.updateTracker(master.get_digital(Motors.preset.controlButtons[5]));
-        // 1620 degrees
-        /*if(master.get_digital(Motors.Robot.controlButtons[1])) { // Launcher Toggle
-            Motors.launcher.toggle();
-            while(master.get_digital(Motors.Robot.controlButtons[1])) {
-                pros::c::delay(50);
-            }
-        }*/
-        if(master.get_digital(Motors.preset.controlButtons[6])) {
+
+        // sets the piston to the toggle tracker's output
+        Motors.stringLauncher.set(pistonLauncher.currentState);
+
+        if(master.get_digital(Motors.preset.controlButtons[6])) { // pulls the motor back at a pre-defined speed when button is pressed
+                                                                  // only when an auto pullback is not running
             Motors.launcherMotors.set(Motors.preset.launcherManualPullbackSpeed);
         } else if(not master.get_digital(Motors.preset.controlButtons[6]) && not Motors.launcherMotors.positionCheckStatus()) {
             Motors.launcherMotors.set(0);
         }
+
         if(master.get_digital(Motors.preset.controlButtons[2])) { // Spinner Normal Direction
             Motors.spinnerMotors.set(Motors.preset.spinner_speed * -1);
             spinnerActive = true;
@@ -133,6 +131,8 @@ public:
             Motors.spinnerMotors.set(0);
             spinnerActive = false;
         }
+
+        // checks if the target position is reached for an active automatic motion of the launcher mechanism
         Motors.launcherMotors.checkPosition();
     }
 
@@ -155,6 +155,7 @@ public:
         } else {
             sticks = {ANALOG_LEFT_Y, ANALOG_RIGHT_X}; // Arcade Control
         }
+
         if(Motors.preset.exponential_control) { // Apply exponential control altering and populate controller_values array
             for(int i = 0; i < controller_values.size(); i++) {
                 controller_values[i] = algo.exponential_control(master.get_analog(sticks[i]), Motors.preset.control_exponent_value);
@@ -165,13 +166,14 @@ public:
                 controller_values[i] = master.get_analog(sticks[i]);
             }
         }
+
         switch(Motors.preset.controlScheme) {
-        case Robot::Tank:
+        case Robot::Tank: // populates the controller_values array with calculated values specifically for tank drive
             for(int i = 0; i < controller_values.size(); i++) {
                 controller_values[i] = algo.tank_control(controller_values[i], Motors.preset.limiter);
             }
             break;
-        case Robot::Arcade:
+        case Robot::Arcade: // populates the controller_values array with calculated values specifically for arcade control
             controller_values = algo.arcade_control(controller_values[0], controller_values[1], Motors.preset.limiter);
             break;
         default:
@@ -182,9 +184,13 @@ public:
         }
         // Applys motor speeds from controller_values array
         if(not swapControls.currentState) {
-            controller_values = algo.controlSwap(controller_values[0], controller_values[1]);
+            controller_values = algo.controlSwap(controller_values);
         }
+
+        // applies the L_R_Offset override if applicable, updating array
         controller_values = algo.applyOffset(controller_values[0], controller_values[1], Motors.preset.left_right_motor_offset);
+
+        // sends array values to each motor group
         Motors.leftMotors.set(controller_values[0] + (spinnerActive * Motors.preset.spinner_boost));
         Motors.rightMotors.set(controller_values[1] + (spinnerActive * Motors.preset.spinner_boost));
     }

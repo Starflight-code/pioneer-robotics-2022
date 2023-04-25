@@ -32,9 +32,6 @@ public:
         green = (250), // 2.5 * degree offset
         red = (500)    // 5 * degree offset
     };
-    robotNames robotName;
-    driverNames driverName;
-    controlSchemes controlScheme;
 
     // Variables - Globally Configurable (C)
     int spinner_speed = 50;               // Speed the spinners will be set to
@@ -47,6 +44,7 @@ public:
     int launcherAutoPullbackSpeed = 60;   // Speed for the automatic pullback for the launcher
 
     // Variables - Not Globally Configurable (S)
+
     double limiter;                      // Applies and tracks current limiter (range 0 <-> 1)
     bool exponential_control = true;     // Enables exponent based control system
     double control_exponent_value = 1.5; // Greater the value, the steeper the exponential control curve
@@ -54,25 +52,31 @@ public:
     bool task_scheduler = true;
     double left_right_motor_offset; // Negative values are a left offset, positive is a right
     // Value what the motors will be multiplied by (should be range [-1 <-> 1]), non-dynamic drive adjustment
+
+    robotNames robotName;         // Name of the robot, check robotNames enum for accepted values
+    driverNames driverName;       // Name of the driver, check driverNames enum for accepted values
+    controlSchemes controlScheme; // Control scheme in use, check controlSchemes enum for accepted values
+
+    gearBox leftGearbox;     // Accepted values: red, green, or blue
+    gearBox rightGearbox;    // Accepted values: red, green, or blue
+    gearBox spinnerGearbox;  // Accepted values: red, green, or blue
+    gearBox launcherGearbox; // Accepted values: red, green, or blue
+    gearBox devGearbox;      // Accepted values: red, green, or blue
+
     std::vector<int> leftPorts;           // Left Motor Port Array
     std::vector<int> rightPorts;          // Right Motor Port Array
     std::vector<int> spinnerPorts;        // Spinner Motor Port Array
     std::vector<int> rotationSensorPorts; // Left, Right motor array encoders
     std::vector<int> launcherPorts;       // Left, Right launcher pullback array
     std::vector<int> devMotorPorts;
-
-    gearBox leftGearbox;
-    gearBox rightGearbox;
-    gearBox spinnerGearbox;
-    gearBox launcherGearbox;
-    gearBox devGearbox;
+    int stringLauncherPort; // Port for endgame string launcher (ADI, piston)
 
     std::vector<bool> leftAltRevStates;     // 0: Alternating (bool) 1: Initial Reverse State (bool)
     std::vector<bool> rightAltRevStates;    // 0: Alternating (bool) 1: Initial Reverse State (bool)
     std::vector<bool> spinnerAltRevStates;  // 0: Alternating (bool) 1: Initial Reverse State (bool)
     std::vector<bool> launcherAltRevStates; // 0: Alternating (bool) 1: Initial Reverse State (bool)
     std::vector<bool> devAltRevStates;
-    int stringLauncherPort;                                   // Port for endgame string launcher (ADI, piston)
+
     std::vector<pros::controller_digital_e_t> controlButtons; // Array containing customizable control buttons
 
     /** Initializes the Robot Preset System, all configuration is hard coded and this class does not accept any external parameters
@@ -84,6 +88,37 @@ public:
         driverName = Malachi;
         switch(robotName) {
 
+        /*
+        case Example:
+
+            // Motor Ports
+            leftPorts = {L1, L2, L3, L4};  // Ports of left motors, from L1 to L4
+            rightPorts = {R1, R2, R3, R4}; // Ports of right motors, from R1 to R4
+            spinnerPorts = {S1, S2};        // Port for the spinner motor from S1 to S2
+            launcherPorts = {L1, L2};        // Ports for the disk launcher L1 to L2
+            rotationSensorPorts = {Ro1, Ro2}; // Ports for the rotation sensors/encoders
+            stringLauncherPort = S;        // Port for the string launcher piston
+
+            // Motor Tuning
+            leftAltRevStates = {alternating, first motor reversed?};     // 0: Alternating (bool) 1: Initial Reverse State (bool)
+            rightAltRevStates = {alternating, first motor reversed?};   // Alternating: True, False, True ...
+            spinnerAltRevStates = {alternating, first motor reversed?}; // Initial Reverse State True: True, True, True
+            launcherAltRevStates = {alternating, first motor reversed?};
+
+            // Motor Gearbox
+            leftGearbox = gear: red, green, blue;
+            rightGearbox = gear: red, green, blue;
+            spinnerGearbox = gear: red, green, blue;
+            launcherGearbox = gear: red, green, blue;
+
+            // Control Tuning
+            controlScheme = Tank or Arcade;
+            left_right_motor_offset = between -1 and 1;
+            limiter = between 0 and 1;
+
+            break;
+
+        */
         case Artie: // Loads configuration for Artie (C)
 
             // Motor Ports

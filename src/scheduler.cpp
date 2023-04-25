@@ -2,6 +2,7 @@
 #include "pros/motors.hpp"
 #include <array>
 #include <initializer_list>
+#include <list>
 #include <vector>
 
 #ifndef include_cpp_
@@ -14,22 +15,35 @@
 #define motors_cpp_
 #endif
 
+/** Encoder wrapper, centrally manages the start of, updates and removal of jobs for encoder movement.
+ */
 class EncoderManager {
-    std::vector<MotorGroup*> motors;
+    std::list<MotorGroup*> motors;
 
 public:
+    /** Starts a motor movement by some degrees at some speed under a motor group
+     * @param motorGRP | the motor group to send movement commands to
+     * @param byDegrees | the number of degrees to move the motor by (integer w/ range [-inf <-> inf])
+     * @param atSpeed | the speed to move the motor at (integer w/ range [-127 <-> 127])
+     * @return N/A
+     */
     void moveEncoder(MotorGroup* motorGRP, int byDegrees, int atSpeed) {
-        motorGRP->setPosition(atSpeed, byDegrees);
-        motors.push_back(motorGRP);
+
+        motorGRP->setPosition(atSpeed, byDegrees); // Start a movement under the motor
+        motors.push_back(motorGRP);                // add it to the to-check list
     }
+
+    /** Runs the checks for existing movements
+     * @return N/A
+     */
     void runChecks() {
         for(MotorGroup* x : motors) {
             x->checkPosition();
-            if(!x->positionCheckStatus()) {
-                motors.erase(std::remove(motors.begin(), motors.end(), x), motors.end());
+            if(!x->positionCheckStatus()) { // if motor has completed its movement, remove it from the to-check list
+                // motors.erase(std::remove(motors.begin(), motors.end(), x), motors.end());
+                motors.remove(x);
             }
         }
-        motors.shrink_to_fit();
     }
 };
 
