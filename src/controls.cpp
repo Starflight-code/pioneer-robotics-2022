@@ -114,6 +114,12 @@ public:
         // sets the piston to the toggle tracker's output
         Motors.stringLauncher.set(pistonLauncher.currentState);
 
+        if(master.get_digital(Motors.preset.controlButtons[7])) { // Starts the intake if button is pressed and held
+            Motors.intakeMotors.set(Motors.preset.intakeSpeed);
+        } else {
+            Motors.intakeMotors.set(0);
+        }
+
         if(master.get_digital(Motors.preset.controlButtons[6])) { // pulls the motor back at a pre-defined speed when button is pressed
                                                                   // only when an auto pullback is not running
             Motors.launcherMotors.set(Motors.preset.launcherManualPullbackSpeed);
