@@ -42,7 +42,6 @@ public:
     int launcherRunLength = 1200;         // The distance in degrees for the automatic launcher pullback to run
     int launcherManualPullbackSpeed = 50; // Speed for the manual pullback for the launcher
     int launcherAutoPullbackSpeed = 60;   // Speed for the automatic pullback for the launcher
-    int intakeSpeed = 60;                 // Speed for the intake system
 
     // Variables - Not Globally Configurable (S)
 

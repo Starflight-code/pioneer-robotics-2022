@@ -35,7 +35,7 @@ void isolation() {
 
     // -- IMPORTS --
     cl control;
-    AutonomousClass auton;
+    AutonomousClass auton(&control.Motors);
     // -- END OF IMPORTS --
     //  while(true) {
     //  auton.forward(control.Motors, 360, 30);
@@ -92,7 +92,7 @@ void autonomous() {
     double Move_Dist = 1;
     double Init_Pos;
     Motor_Class Motors;
-    AutonomousClass auton;
+    AutonomousClass auton(&Motors);
     spin spinner;
     if(Motors.preset.isolation_mode) {
         isolation();
@@ -112,8 +112,8 @@ void autonomous() {
         Motors.leftMotors.set(0);
         Motors.rightMotors.set(0);
         pros::c::delay(4000);
-        auton.forward(Motors, 870, -30);
-        auton.turn(Motors, 340, 30, true);
+        auton.forward(870, -30);
+        auton.turn(340, 30, true);
         Motors.leftMotors.set(30);
         Motors.rightMotors.set(30);
         pros::c::delay(5000);
@@ -122,11 +122,11 @@ void autonomous() {
         pros::c::delay(500);
         Motors.leftMotors.set(35);
         Motors.rightMotors.set(35);
-        auton.spinner(Motors, 350, 40);
+        auton.spinner(350, 40);
         Motors.leftMotors.set(0);
         Motors.rightMotors.set(0);
-        auton.forward(Motors, 150, -20);
-        auton.turn(Motors, 163, 30, false);
+        auton.forward(150, -20);
+        auton.turn(163, 30, false);
         Motors.leftMotors.set(-40);
         Motors.rightMotors.set(-40);
         Motors.stringLauncher.toggle();
@@ -154,12 +154,12 @@ void autonomous() {
         pros::c::delay(500);
         Motors.leftMotors.set(35);
         Motors.rightMotors.set(35);
-        auton.spinner(Motors, 350, 40);
+        auton.spinner(350, 40);
         Motors.leftMotors.set(0);
         Motors.rightMotors.set(0);
         pros::c::delay(3000);
-        auton.forward(Motors, 150, -20);
-        auton.turn(Motors, 163, 30, true);
+        auton.forward(150, -20);
+        auton.turn(163, 30, true);
         Motors.leftMotors.set(-40);
         Motors.rightMotors.set(-35);
         Motors.stringLauncher.toggle();
