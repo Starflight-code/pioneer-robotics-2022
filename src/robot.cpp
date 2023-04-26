@@ -62,7 +62,6 @@ public:
     gearBox rightGearbox;    // Accepted values: red, green, or blue
     gearBox spinnerGearbox;  // Accepted values: red, green, or blue
     gearBox launcherGearbox; // Accepted values: red, green, or blue
-    gearBox intakeGearbox;   // Accepted values: red, green, or blue
     gearBox devGearbox;      // Accepted values: red, green, or blue
 
     std::vector<int> leftPorts;           // Left Motor Port Array
@@ -70,7 +69,6 @@ public:
     std::vector<int> spinnerPorts;        // Spinner Motor Port Array
     std::vector<int> rotationSensorPorts; // Left, Right motor array encoders
     std::vector<int> launcherPorts;       // Left, Right launcher pullback array
-    std::vector<int> intakePorts;         // Left, Right intake pullback array
     std::vector<int> devMotorPorts;
     int stringLauncherPort; // Port for endgame string launcher (ADI, piston)
 
@@ -78,7 +76,6 @@ public:
     std::vector<bool> rightAltRevStates;    // 0: Alternating (bool) 1: Initial Reverse State (bool)
     std::vector<bool> spinnerAltRevStates;  // 0: Alternating (bool) 1: Initial Reverse State (bool)
     std::vector<bool> launcherAltRevStates; // 0: Alternating (bool) 1: Initial Reverse State (bool)
-    std::vector<bool> intakeAltRevStates;   // 0: Alternating (bool) 1: Initial Reverse State (bool)
     std::vector<bool> devAltRevStates;      // 0: Alternating (bool) 1: Initial Reverse State (bool)
 
     std::vector<pros::controller_digital_e_t> controlButtons; // Array containing customizable control buttons
@@ -130,7 +127,6 @@ public:
             rightPorts = {17, 18, 19, 20}; // Ports of right motors, from R1 to R4
             spinnerPorts = {6, 16};        // Port for the spinner motor from S1 to S2
             launcherPorts = {1, 7};        // Ports for the disk launcher L1 to L2
-            intakePorts = {3, 4};          // Ports for the intake I1 to I2
             rotationSensorPorts = {2, 17}; // Ports for the rotation sensors/encoders
             stringLauncherPort = 1;        // Port for the string launcher piston
 
@@ -139,14 +135,12 @@ public:
             rightAltRevStates = {true, false};   // Alternating: True, False, True ...
             spinnerAltRevStates = {true, false}; // Initial Reverse State True: True, True, True
             launcherAltRevStates = {true, true};
-            intakeAltRevStates = {true, true};
 
             // Motor Gearbox
             leftGearbox = blue;
             rightGearbox = blue;
             spinnerGearbox = green;
             launcherGearbox = red;
-            intakeGearbox = red;
 
             // Control Tuning
             controlScheme = Tank;
@@ -162,7 +156,6 @@ public:
             rightPorts = {20, 18, 14, 12}; // Ports of right motors, from R1 to R4
             spinnerPorts = {6, 16};        // Port for the spinner motor from S1 to S2
             launcherPorts = {10, 2};       // Ports for the disk launcher L1 to L2
-            intakePorts = {3, 4};          // Ports for the intake I1 to I2
             rotationSensorPorts = {2, 17}; // Ports for the rotation sensors/encoders
             stringLauncherPort = 1;        // Port for the string launcher piston
 
@@ -171,14 +164,12 @@ public:
             rightAltRevStates = {true, false};   // Alternating: True, False, True ...
             spinnerAltRevStates = {true, false}; // Initial Reverse State True: True, True, True
             launcherAltRevStates = {true, true};
-            intakeAltRevStates = {true, true};
 
             // Motor Gearbox
             leftGearbox = blue;
             rightGearbox = blue;
             spinnerGearbox = green;
             launcherGearbox = red;
-            intakeGearbox = red;
 
             // Control Tuning
             controlScheme = Tank;
@@ -193,8 +184,7 @@ public:
             leftPorts = {9, 8, 5, 3};      // Ports of left motors, from L1 to L4
             rightPorts = {20, 18, 14, 12}; // Ports of right motors, from R1 to R4
             spinnerPorts = {6, 16};        // Port for the spinner motor from S1 to S2
-            launcherPorts = {1, 2};        // Ports for the disk launcher L1 to L2
-            intakePorts = {3, 4};          // Ports for the intake I1 to I2
+            launcherPorts = {1, 2};        // Ports for the disk launcher La1 to La2
             rotationSensorPorts = {2, 17}; // Ports for the rotation sensors/encoders
             devMotorPorts = {9, 1};
             stringLauncherPort = 1; // Port for the string launcher piston
@@ -204,7 +194,6 @@ public:
             rightAltRevStates = {true, false};   // Alternating: True, False, True ...
             spinnerAltRevStates = {true, false}; // Initial Reverse State True: True, True, True
             launcherAltRevStates = {true, true};
-            intakeAltRevStates = {true, true};
             devAltRevStates = {false, false};
 
             // Motor Gearbox
@@ -212,7 +201,6 @@ public:
             rightGearbox = blue;
             spinnerGearbox = green;
             launcherGearbox = red;
-            intakeGearbox = red;
             devGearbox = blue;
 
             // Control Tuning
@@ -269,7 +257,7 @@ public:
                 /*4*/ pros::E_CONTROLLER_DIGITAL_A,    // Control Reverse Toggle
                 /*5*/ pros::E_CONTROLLER_DIGITAL_L1,   // Autopullback
                 /*6*/ pros::E_CONTROLLER_DIGITAL_L2,   // Firing, run motor back while held (to make slip gear slip)
-                /*7*/ pros::E_CONTROLLER_DIGITAL_B};   // Intake activation
+            };
 
             break;
         case Malachi: // (C)
@@ -282,7 +270,6 @@ public:
                 /*4*/ pros::E_CONTROLLER_DIGITAL_A,    // Control Reverse Toggle
                 /*5*/ pros::E_CONTROLLER_DIGITAL_L1,   // Autopullback
                 /*6*/ pros::E_CONTROLLER_DIGITAL_L2,   // Firing, run motor back while held (to make slip gear slip)
-                /*7*/ pros::E_CONTROLLER_DIGITAL_B     // Intake activation
             };
 
             break;
