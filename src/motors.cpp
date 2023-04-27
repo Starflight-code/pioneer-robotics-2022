@@ -260,16 +260,17 @@ public:
         rightMotors.checkPosition();
         spinnerMotors.checkPosition();
         launcherMotors.checkPosition();
+        endGameMotors.checkPosition();
     }
 
     bool self_test() {
-        leftMotors.set(30);
+        leftMotors.set(30); // sets all motors to speed 30
         rightMotors.set(30);
         spinnerMotors.set(30);
         launcherMotors.set(30);
-        pros::c::delay(300);
+        pros::c::delay(300); // waits 0.3 seconds for acceleration, increase if required
         bool result;
-        for(int i = 0; i < 4; i++) {
+        for(int i = 0; i < 4; i++) { // checks to make sure the motors have a non-zero velocity
             switch(i) {
             case 0:
                 result = leftMotors.getFastVelocity() > 1 && leftMotors.getFastVelocity() < -1;
@@ -288,10 +289,10 @@ public:
                 break;
             }
         }
-        leftMotors.set(0);
+        leftMotors.set(0); // stops motors
         rightMotors.set(0);
         spinnerMotors.set(0);
         launcherMotors.set(0);
-        return result;
+        return result; // returns the result of this test
     }
 };
