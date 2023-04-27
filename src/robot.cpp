@@ -130,7 +130,7 @@ public:
             // Motor Ports
             leftPorts = {14, 13, 12, 11};  // Ports of left motors, from L1 to L4
             rightPorts = {17, 18, 19, 20}; // Ports of right motors, from R1 to R4
-            spinnerPorts = {6, 16};        // Port for the spinner motor from S1 to S2
+            spinnerPorts = {2, 8};        // Port for the spinner motor from S1 to S2
             launcherPorts = {1, 7};        // Ports for the disk launcher L1 to L2
             endGamePorts = {3, 6};
             rotationSensorPorts = {2, 17}; // Ports for the rotation sensors/encoders
