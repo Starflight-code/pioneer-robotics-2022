@@ -231,6 +231,8 @@ public: // Phase out old Motor_Class functions (setSpeed, getSpeed, etc), and me
     /// Launcher Motor Group Object
     MotorGroup launcherMotors;
     /// Launcher Motor Group Object
+    MotorGroup endGameMotors;
+    /// Launcher Motor Group Object
     MotorGroup devMotors;
     /// Piston string launcher Object
     Piston stringLauncher;
@@ -245,6 +247,7 @@ public:
         rightMotors.init(preset.rightPorts, preset.rightAltRevStates[0], preset.rightAltRevStates[1], preset.rightGearbox);
         spinnerMotors.init(preset.spinnerPorts, preset.spinnerAltRevStates[0], preset.spinnerAltRevStates[1], preset.spinnerGearbox);
         launcherMotors.init(preset.launcherPorts, preset.launcherAltRevStates[0], preset.launcherAltRevStates[1], preset.launcherGearbox);
+        endGameMotors.init(preset.endGamePorts, preset.endGameAltRevStates[0], preset.endGameAltRevStates[1], preset.endGameGearbox);
         stringLauncher.init(preset.stringLauncherPort);
 
         if(preset.robotName == Robot::robotNames::Debug) {

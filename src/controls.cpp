@@ -76,6 +76,7 @@ public:
     ToggleTracker swapControls;
     ToggleTracker pistonLauncher;
     ToggleTracker launcherTracker;
+    ToggleTracker endGameTracker;
 
 private:
     /** A listener that runs every 50 ms and runs when training mode is on
@@ -83,6 +84,7 @@ private:
      */
     void training() {
         pros::Controller master(pros::E_CONTROLLER_MASTER);
+        swapControls.updateTracker(master.get_digital(Motors.preset.controlButtons[4]));
         if(master.get_digital(Motors.preset.controlButtons[0])) {
 
             // sets the local limiter, using the full range of the x axis on the left controller stick
@@ -102,14 +104,17 @@ public:
             training(); // loads training listener
         }
 
-        if(launcherTracker.modifed) { // starts a position movement, only when the toggle button is pressed (executes once per button press)
+        if(launcherTracker.modifed && !Motors.launcherMotors.positionCheckStatus()) { // starts a position movement, only when the toggle button is pressed (executes once per button press)
             Motors.launcherMotors.setPosition(Motors.preset.launcherAutoPullbackSpeed, Motors.preset.launcherRunLength);
+        }
+        if(endGameTracker.modifed && !Motors.endGameMotors.positionCheckStatus()) { // starts a position movement, only when the toggle button is pressed (executes once per button press)
+            Motors.endGameMotors.setPosition(Motors.preset.endGameSpeed, Motors.preset.endGameDistance);
         }
 
         // updates the toggle trackers with the updated digital input values
-        swapControls.updateTracker(master.get_digital(Motors.preset.controlButtons[4]));
         pistonLauncher.updateTracker(master.get_digital(Motors.preset.controlButtons[1]));
         launcherTracker.updateTracker(master.get_digital(Motors.preset.controlButtons[5]));
+        endGameTracker.updateTracker(master.get_digital(Motors.preset.controlButtons[7]));
 
         // sets the piston to the toggle tracker's output
         Motors.stringLauncher.set(pistonLauncher.currentState);
@@ -132,8 +137,9 @@ public:
             spinnerActive = false;
         }
 
-        // checks if the target position is reached for an active automatic motion of the launcher mechanism
+        // checks if the target position is reached for an active automatic motion of the launcher or endgame mechanism
         Motors.launcherMotors.checkPosition();
+        Motors.endGameMotors.checkPosition();
     }
 
     /** Control Listening Service
