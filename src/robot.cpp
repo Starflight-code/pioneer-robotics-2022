@@ -44,8 +44,8 @@ public:
     int launcherRunDistance = 1200;       // The distance in degrees for the automatic launcher pullback to run
     int launcherManualPullbackSpeed = 50; // Speed for the manual pullback for the launcher
     int launcherAutoPullbackSpeed = 60;   // Speed for the automatic pullback for the launcher
-    int endGameSpeed = 60;                // End game motor speed for setting position automatically
-    int endGameDistance = 360;            // End game distance for movement
+    int endGameSpeed = 10;                // End game motor speed for setting position automatically
+    int endGameDistance = 30;            // End game distance for movement
 
     // Variables - Not Globally Configurable (S)
 
@@ -90,7 +90,7 @@ public:
      */
     void init() {
         // -- CONFIGURATIAON -- (C)
-        robotName = Debug;
+        robotName = Artie;
         driverName = Malachi;
         switch(robotName) {
 
@@ -141,7 +141,7 @@ public:
             rightAltRevStates = {true, false};   // Alternating: True, False, True ...
             spinnerAltRevStates = {true, false}; // Initial Reverse State True: True, True, True
             launcherAltRevStates = {true, true};
-            endGameAltRevStates = {true, false};
+            endGameAltRevStates = {true, true};
 
             // Motor Gearbox
             leftGearbox = blue;
