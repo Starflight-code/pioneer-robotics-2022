@@ -55,9 +55,9 @@ public:
     double left_right_motor_offset; // Negative values are a left offset, positive is a right
     // Value what the motors will be multiplied by (should be range [-1 <-> 1]), non-dynamic drive adjustment
 
-    robotNames robotName;         // Name of the robot, check robotNames enum for accepted values
-    driverNames driverName;       // Name of the driver, check driverNames enum for accepted values
-    controlSchemes controlScheme; // Control scheme in use, check controlSchemes enum for accepted values
+    robotNames robotName;         // Name of the robot | Accepted values: Artie, Chance, Debug
+    driverNames driverName;       // Name of the driver | Accepted values: Teagen, Malachi, None
+    controlSchemes controlScheme; // Control scheme in use | Accepted values: Tank, Arcade
 
     gearBox leftGearbox;     // Accepted values: red, green, or blue
     gearBox rightGearbox;    // Accepted values: red, green, or blue
@@ -191,7 +191,7 @@ public:
         case Debug: // Loads debug configuration (C)
 
             // Motor Ports
-            leftPorts = {9 , 8, 5, 3};      // Ports of left motors, from L1 to L4
+            leftPorts = {9, 8, 5, 3};      // Ports of left motors, from L1 to L4
             rightPorts = {20, 18, 14, 12}; // Ports of right motors, from R1 to R4
             spinnerPorts = {6, 16};        // Port for the spinner motor from S1 to S2
             launcherPorts = {1, 2};        // Ports for the disk launcher La1 to La2
