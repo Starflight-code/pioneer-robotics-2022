@@ -33,13 +33,15 @@ public:
         red = (500)    // 5 * degree offset
     };
 
+    // Modes - Globally Configurable (C)
+    bool debug = false;          // Enables debug functionality, DISABLE BEFORE COMPETITION
+    bool training = false;       // Enables training/testing functionality that should be disabled at a competition
+    bool isolation_mode = false; // Isolated debug mode for highly experimental systems, DO NOT TURN THIS ON UNLESS YOU KNOW WHAT YOU'RE DOING
+
     // Variables - Globally Configurable (C)
-    int spinner_speed = 50;               // Speed the spinners will be set to
-    int spinner_boost = 20;               // Boost applied to both drive motor arrays upon spinner activation
-    bool debug = false;                   // Enables debug functionality, DISABLE BEFORE COMPETITION
-    bool training = false;                // Enables training/testing functionality that should be disabled at a competition
-    bool isolation_mode = false;          // Isolated debug mode for highly experimental systems, DO NOT TURN THIS ON UNLESS YOU KNOW WHAT YOU'RE DOING
-    int launcherRunLength = 1200;         // The distance in degrees for the automatic launcher pullback to run
+    int spinnerSpeed = 50;                // Speed the spinners will be set to
+    int spinnerBoost = 20;                // Boost applied to both drive motor arrays upon spinner activation
+    int launcherRunDistance = 1200;       // The distance in degrees for the automatic launcher pullback to run
     int launcherManualPullbackSpeed = 50; // Speed for the manual pullback for the launcher
     int launcherAutoPullbackSpeed = 60;   // Speed for the automatic pullback for the launcher
     int endGameSpeed = 60;                // End game motor speed for setting position automatically
@@ -50,9 +52,8 @@ public:
     double limiter;                      // Applies and tracks current limiter (range 0 <-> 1)
     bool exponential_control = true;     // Enables exponent based control system
     double control_exponent_value = 1.5; // Greater the value, the steeper the exponential control curve
-    int control_switch_value;
-    bool task_scheduler = true;
-    double left_right_motor_offset; // Negative values are a left offset, positive is a right
+    bool task_scheduler = true;          // turns the task scheduler system on/off
+    double left_right_motor_offset;      // Negative values are a left offset, positive is a right
     // Value what the motors will be multiplied by (should be range [-1 <-> 1]), non-dynamic drive adjustment
 
     robotNames robotName;         // Name of the robot | Accepted values: Artie, Chance, Debug

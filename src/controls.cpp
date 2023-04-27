@@ -105,7 +105,7 @@ public:
         }
 
         if(launcherTracker.modifed && !Motors.launcherMotors.positionCheckStatus()) { // starts a position movement, only when the toggle button is pressed (executes once per button press)
-            Motors.launcherMotors.setPosition(Motors.preset.launcherAutoPullbackSpeed, Motors.preset.launcherRunLength);
+            Motors.launcherMotors.setPosition(Motors.preset.launcherAutoPullbackSpeed, Motors.preset.launcherRunDistance);
         }
         if(endGameTracker.modifed && !Motors.endGameMotors.positionCheckStatus()) { // starts a position movement, only when the toggle button is pressed (executes once per button press)
             Motors.endGameMotors.setPosition(Motors.preset.endGameSpeed, Motors.preset.endGameDistance);
@@ -127,10 +127,10 @@ public:
         }
 
         if(master.get_digital(Motors.preset.controlButtons[2])) { // Spinner Normal Direction
-            Motors.spinnerMotors.set(Motors.preset.spinner_speed * -1);
+            Motors.spinnerMotors.set(Motors.preset.spinnerSpeed * -1);
             spinnerActive = true;
         } else if(master.get_digital(Motors.preset.controlButtons[3])) { // Spinner Reversed Direction
-            Motors.spinnerMotors.set(Motors.preset.spinner_speed);
+            Motors.spinnerMotors.set(Motors.preset.spinnerSpeed);
             spinnerActive = true;
         } else {
             Motors.spinnerMotors.set(0);
@@ -197,7 +197,7 @@ public:
         controller_values = algo.applyOffset(controller_values[0], controller_values[1], Motors.preset.left_right_motor_offset);
 
         // sends array values to each motor group
-        Motors.leftMotors.set(controller_values[0] + (spinnerActive * Motors.preset.spinner_boost));
-        Motors.rightMotors.set(controller_values[1] + (spinnerActive * Motors.preset.spinner_boost));
+        Motors.leftMotors.set(controller_values[0] + (spinnerActive * Motors.preset.spinnerBoost));
+        Motors.rightMotors.set(controller_values[1] + (spinnerActive * Motors.preset.spinnerBoost));
     }
 };
