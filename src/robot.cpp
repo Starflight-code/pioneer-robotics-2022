@@ -191,7 +191,6 @@ public:
         case Debug: // Loads debug configuration (C)
 
             // Motor Ports
-            //adfskjladfskjladfskjladfskjladfskjladfskjladfskjladfskjladfskjladfsadfskjladfsadfskjladkjladfskjl
             leftPorts = {9 , 8, 5, 3};      // Ports of left motors, from L1 to L4
             rightPorts = {20, 18, 14, 12}; // Ports of right motors, from R1 to R4
             spinnerPorts = {6, 16};        // Port for the spinner motor from S1 to S2
