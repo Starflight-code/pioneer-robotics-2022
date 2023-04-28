@@ -39,8 +39,8 @@ public:
     bool isolation_mode = false; // Isolated debug mode for highly experimental systems, DO NOT TURN THIS ON UNLESS YOU KNOW WHAT YOU'RE DOING
 
     // Variables - Globally Configurable (C)
-    int spinnerSpeed = 50;                // Speed the spinners will be set to
-    int spinnerBoost = 20;                // Boost applied to both drive motor arrays upon spinner activation
+    int spinnerSpeed = 80;                // Speed the spinners will be set to
+    int spinnerBoost = 0;                // Boost applied to both drive motor arrays upon spinner activation
     int launcherRunDistance = 1200;       // The distance in degrees for the automatic launcher pullback to run
     int launcherManualPullbackSpeed = 50; // Speed for the manual pullback for the launcher
     int launcherAutoPullbackSpeed = 60;   // Speed for the automatic pullback for the launcher

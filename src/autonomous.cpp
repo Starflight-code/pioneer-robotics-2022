@@ -83,8 +83,8 @@ public:
      */
     void spinner(int distance, int speed) {
         motors->spinnerMotors.setPosition(speed, distance);
-        motors->leftMotors.set(20);
-        motors->rightMotors.set(20);
+        motors->leftMotors.set(0);
+        motors->rightMotors.set(0);
 
         while(motors->spinnerMotors.positionCheckStatus()) {
             motors->spinnerMotors.checkPosition();

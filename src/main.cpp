@@ -104,69 +104,20 @@ void autonomous() {
     // Control_Algorithms pidTwo(0.2, 0.05, 0.01);
     // Motors.leftMotors.set(-1 * pidOne.PD_Velocity(200, abs(leftEncoders.get_velocity())));
     // Motors.rightMotors.set(-1 * pidTwo.PD_Velocity(200, abs(rightEncoders.get_velocity())));
+    //    auton.forward(speed,distance)
+    
     switch(Motors.preset.robotName) {
     case Robot::Artie: // Artie
-        Motors.leftMotors.set(25);
-        Motors.rightMotors.set(25);
-        pros::c::delay(1000);
-        Motors.leftMotors.set(0);
-        Motors.rightMotors.set(0);
-        pros::c::delay(4000);
-        auton.forward(870, -30);
-        auton.turn(340, 30, true);
-        Motors.leftMotors.set(30);
-        Motors.rightMotors.set(30);
-        pros::c::delay(5000);
-        Motors.leftMotors.set(40);
-        Motors.rightMotors.set(40);
-        pros::c::delay(500);
-        Motors.leftMotors.set(35);
-        Motors.rightMotors.set(35);
-        auton.spinner(350, 40);
-        Motors.leftMotors.set(0);
-        Motors.rightMotors.set(0);
-        auton.forward(150, -20);
-        auton.turn(163, 30, false);
-        Motors.leftMotors.set(-40);
-        Motors.rightMotors.set(-40);
-        Motors.stringLauncher.toggle();
-        pros::c::delay(6000);
-        Motors.leftMotors.set(0);
-        Motors.rightMotors.set(0);
-        break;
-    case Robot::Chance: // Chance
-        Motors.leftMotors.set(40);
-        Motors.rightMotors.set(40);
-        pros::c::delay(500);
-        Motors.leftMotors.set(0);
-        Motors.rightMotors.set(0);
-        Motors.leftMotors.set(-40);
-        Motors.rightMotors.set(-35);
-        pros::c::delay(2000);
-        Motors.leftMotors.set(40);
-        Motors.rightMotors.set(36);
-        pros::c::delay(3000);
         Motors.leftMotors.set(20);
         Motors.rightMotors.set(20);
-        pros::c::delay(1000);
-        Motors.leftMotors.set(40);
-        Motors.rightMotors.set(40);
-        pros::c::delay(500);
-        Motors.leftMotors.set(35);
-        Motors.rightMotors.set(35);
-        auton.spinner(350, 40);
-        Motors.leftMotors.set(0);
-        Motors.rightMotors.set(0);
-        pros::c::delay(3000);
-        auton.forward(150, -20);
-        auton.turn(163, 30, true);
-        Motors.leftMotors.set(-40);
-        Motors.rightMotors.set(-35);
-        Motors.stringLauncher.toggle();
-        pros::c::delay(6000);
-        Motors.leftMotors.set(0);
-        Motors.rightMotors.set(0);
-        //  auton.turn(Motors, 162, 20, true); // Turns 180 degrees (650 Units), do not change distance value (for now)
+        auton.forward(20,160);
+        auton.spinner(80, 350);
+        break;
+    case Robot::Chance: // Chance
+        Motors.leftMotors.set(20);
+        Motors.rightMotors.set(20);
+        auton.forward(20, 160);
+        auton.spinner(80, 350);
         break;
     default:
         break;
