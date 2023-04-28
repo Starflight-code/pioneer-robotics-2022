@@ -19,3 +19,4 @@ temp.errors
 .d/
 .vscode/*
 .vscode/
+compile_commands.json
