@@ -113,11 +113,11 @@
             "-funwind-tables",
             "--std=gnu++17",
             "-o",
-            "bin/scheduler.cpp.o",
-            "src\\scheduler.cpp"
+            "bin/absolute_positioning.cpp.o",
+            "src\\absolute_positioning.cpp"
         ],
         "directory": "C:\\Users\\aidan\\OneDrive\\Documents\\GitHub\\pioneer-robotics-2022",
-        "file": "src\\scheduler.cpp"
+        "file": "src\\absolute_positioning.cpp"
     },
     {
         "arguments": [
@@ -153,11 +153,11 @@
             "-funwind-tables",
             "--std=gnu++17",
             "-o",
-            "bin/motors.cpp.o",
-            "src\\motors.cpp"
+            "bin/PID.cpp.o",
+            "src\\PID.cpp"
         ],
         "directory": "C:\\Users\\aidan\\OneDrive\\Documents\\GitHub\\pioneer-robotics-2022",
-        "file": "src\\motors.cpp"
+        "file": "src\\PID.cpp"
     },
     {
         "arguments": [
@@ -198,46 +198,6 @@
         ],
         "directory": "C:\\Users\\aidan\\OneDrive\\Documents\\GitHub\\pioneer-robotics-2022",
         "file": "src\\robot.cpp"
-    },
-    {
-        "arguments": [
-            "clang++",
-            "-c",
-            "-target",
-            "armv7ar-none-none-eabi",
-            "-fno-ms-extensions",
-            "-fno-ms-compatibility",
-            "-fno-delayed-template-parsing",
-            "-isystemc:\\users\\aidan\\appdata\\roaming\\code\\user\\globalstorage\\sigbots.pros\\install\\pros-toolchain-windows\\usr\\bin\\../lib/gcc/arm-none-eabi/10.3.1/../../../../arm-none-eabi/include/c++/10.3.1",
-            "-isystemc:\\users\\aidan\\appdata\\roaming\\code\\user\\globalstorage\\sigbots.pros\\install\\pros-toolchain-windows\\usr\\bin\\../lib/gcc/arm-none-eabi/10.3.1/../../../../arm-none-eabi/include/c++/10.3.1/arm-none-eabi/thumb/v7-a+simd/softfp",
-            "-isystemc:\\users\\aidan\\appdata\\roaming\\code\\user\\globalstorage\\sigbots.pros\\install\\pros-toolchain-windows\\usr\\bin\\../lib/gcc/arm-none-eabi/10.3.1/../../../../arm-none-eabi/include/c++/10.3.1/backward",
-            "-isystemc:\\users\\aidan\\appdata\\roaming\\code\\user\\globalstorage\\sigbots.pros\\install\\pros-toolchain-windows\\usr\\bin\\../lib/gcc/arm-none-eabi/10.3.1/include",
-            "-isystemc:\\users\\aidan\\appdata\\roaming\\code\\user\\globalstorage\\sigbots.pros\\install\\pros-toolchain-windows\\usr\\bin\\../lib/gcc/arm-none-eabi/10.3.1/include-fixed",
-            "-isystemc:\\users\\aidan\\appdata\\roaming\\code\\user\\globalstorage\\sigbots.pros\\install\\pros-toolchain-windows\\usr\\bin\\../lib/gcc/arm-none-eabi/10.3.1/../../../../arm-none-eabi/include",
-            "-iquote./include",
-            "-iquote./include/okapi/squiggles",
-            "-iquote./include/./",
-            "-mcpu=cortex-a9",
-            "-mfpu=neon-fp16",
-            "-mfloat-abi=softfp",
-            "-Os",
-            "-g",
-            "-D_POSIX_THREADS",
-            "-D_UNIX98_THREAD_MUTEX_ATTRIBUTES",
-            "-D_POSIX_TIMERS",
-            "-D_POSIX_MONOTONIC_CLOCK",
-            "-Wno-psabi",
-            "-ffunction-sections",
-            "-fdata-sections",
-            "-fdiagnostics-color",
-            "-funwind-tables",
-            "--std=gnu++17",
-            "-o",
-            "bin/main.cpp.o",
-            "src\\main.cpp"
-        ],
-        "directory": "C:\\Users\\aidan\\OneDrive\\Documents\\GitHub\\pioneer-robotics-2022",
-        "file": "src\\main.cpp"
     },
     {
         "arguments": [
@@ -393,11 +353,11 @@
             "-funwind-tables",
             "--std=gnu++17",
             "-o",
-            "bin/PID.cpp.o",
-            "src\\PID.cpp"
+            "bin/scheduler.cpp.o",
+            "src\\scheduler.cpp"
         ],
         "directory": "C:\\Users\\aidan\\OneDrive\\Documents\\GitHub\\pioneer-robotics-2022",
-        "file": "src\\PID.cpp"
+        "file": "src\\scheduler.cpp"
     },
     {
         "arguments": [
@@ -433,10 +393,50 @@
             "-funwind-tables",
             "--std=gnu++17",
             "-o",
-            "bin/absolute_positioning.cpp.o",
-            "src\\absolute_positioning.cpp"
+            "bin/motors.cpp.o",
+            "src\\motors.cpp"
         ],
         "directory": "C:\\Users\\aidan\\OneDrive\\Documents\\GitHub\\pioneer-robotics-2022",
-        "file": "src\\absolute_positioning.cpp"
+        "file": "src\\motors.cpp"
+    },
+    {
+        "arguments": [
+            "clang++",
+            "-c",
+            "-target",
+            "armv7ar-none-none-eabi",
+            "-fno-ms-extensions",
+            "-fno-ms-compatibility",
+            "-fno-delayed-template-parsing",
+            "-isystemc:\\users\\aidan\\appdata\\roaming\\code\\user\\globalstorage\\sigbots.pros\\install\\pros-toolchain-windows\\usr\\bin\\../lib/gcc/arm-none-eabi/10.3.1/../../../../arm-none-eabi/include/c++/10.3.1",
+            "-isystemc:\\users\\aidan\\appdata\\roaming\\code\\user\\globalstorage\\sigbots.pros\\install\\pros-toolchain-windows\\usr\\bin\\../lib/gcc/arm-none-eabi/10.3.1/../../../../arm-none-eabi/include/c++/10.3.1/arm-none-eabi/thumb/v7-a+simd/softfp",
+            "-isystemc:\\users\\aidan\\appdata\\roaming\\code\\user\\globalstorage\\sigbots.pros\\install\\pros-toolchain-windows\\usr\\bin\\../lib/gcc/arm-none-eabi/10.3.1/../../../../arm-none-eabi/include/c++/10.3.1/backward",
+            "-isystemc:\\users\\aidan\\appdata\\roaming\\code\\user\\globalstorage\\sigbots.pros\\install\\pros-toolchain-windows\\usr\\bin\\../lib/gcc/arm-none-eabi/10.3.1/include",
+            "-isystemc:\\users\\aidan\\appdata\\roaming\\code\\user\\globalstorage\\sigbots.pros\\install\\pros-toolchain-windows\\usr\\bin\\../lib/gcc/arm-none-eabi/10.3.1/include-fixed",
+            "-isystemc:\\users\\aidan\\appdata\\roaming\\code\\user\\globalstorage\\sigbots.pros\\install\\pros-toolchain-windows\\usr\\bin\\../lib/gcc/arm-none-eabi/10.3.1/../../../../arm-none-eabi/include",
+            "-iquote./include",
+            "-iquote./include/okapi/squiggles",
+            "-iquote./include/./",
+            "-mcpu=cortex-a9",
+            "-mfpu=neon-fp16",
+            "-mfloat-abi=softfp",
+            "-Os",
+            "-g",
+            "-D_POSIX_THREADS",
+            "-D_UNIX98_THREAD_MUTEX_ATTRIBUTES",
+            "-D_POSIX_TIMERS",
+            "-D_POSIX_MONOTONIC_CLOCK",
+            "-Wno-psabi",
+            "-ffunction-sections",
+            "-fdata-sections",
+            "-fdiagnostics-color",
+            "-funwind-tables",
+            "--std=gnu++17",
+            "-o",
+            "bin/main.cpp.o",
+            "src\\main.cpp"
+        ],
+        "directory": "C:\\Users\\aidan\\OneDrive\\Documents\\GitHub\\pioneer-robotics-2022",
+        "file": "src\\main.cpp"
     }
 ]
