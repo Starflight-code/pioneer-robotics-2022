@@ -35,7 +35,7 @@ void isolation() {
 
     // -- IMPORTS --
     cl control;
-    AutonomousClass auton(&control.Motors);
+    AutonomousClass auton;
     // -- END OF IMPORTS --
     //  while(true) {
     //  auton.forward(control.Motors, 360, 30);
@@ -92,7 +92,7 @@ void autonomous() {
     double Move_Dist = 1;
     double Init_Pos;
     Motor_Class Motors;
-    AutonomousClass auton(&Motors);
+    AutonomousClass auton;
     spin spinner;
     if(Motors.preset.isolation_mode) {
         isolation();
@@ -105,19 +105,19 @@ void autonomous() {
     // Motors.leftMotors.set(-1 * pidOne.PD_Velocity(200, abs(leftEncoders.get_velocity())));
     // Motors.rightMotors.set(-1 * pidTwo.PD_Velocity(200, abs(rightEncoders.get_velocity())));
     //    auton.forward(speed,distance)
-    
+
     switch(Motors.preset.robotName) {
     case Robot::Artie: // Artie
         Motors.leftMotors.set(20);
         Motors.rightMotors.set(20);
-        auton.forward(20,160);
-        auton.spinner(80, 350);
+        auton.forward(20, 160, Motors);
+        auton.spinner(80, 350, Motors);
         break;
     case Robot::Chance: // Chance
         Motors.leftMotors.set(20);
         Motors.rightMotors.set(20);
-        auton.forward(20, 160);
-        auton.spinner(80, 350);
+        auton.forward(20, 160, Motors);
+        auton.spinner(80, 350, Motors);
         break;
     default:
         break;

@@ -106,7 +106,7 @@ public:
         }
 
         if(!runOnce) {
-            Motors.endGameMotors.holdPosition(Motors.preset.holdMarginEndGame);
+            Motors.endGameMotors.holdPosition(Motors.preset.holdMarginEndGame, Motors.preset.holdSpeed);
         }
 
         if(launcherTracker.modifed && !Motors.launcherMotors.positionCheckStatus()) { // starts a position movement, only when the toggle button is pressed (executes once per button press)

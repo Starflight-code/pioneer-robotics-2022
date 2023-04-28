@@ -3,6 +3,7 @@
 #include "pros/rtos.h"
 #include "pros/rtos.hpp"
 #include <cmath>
+#include <memory>
 #include <sys/types.h>
 #include <vector>
 
@@ -83,9 +84,9 @@ private:
         moving,
         none
     };
-    Robot* robotPtr;
     encoderStates encoderState;
     short reducedSpeed;
+    short holdSpeed;
     int lastPosition;
     uint32_t lastTime;
     Robot::gearBox gearSet;
@@ -98,7 +99,7 @@ public:
      * @return N/A
      */
     void init(std::vector<int> motor_ports, bool alternating,
-              bool initial_reverse_state, Robot::gearBox gearSet, Robot* robot) {
+              bool initial_reverse_state, Robot::gearBox gearSet) {
         if(alternating) {
             bool t =
                 initial_reverse_state;                            // Reverse state is used, as the contructor
@@ -117,14 +118,13 @@ public:
         }
         this->gearSet = gearSet;
         encoderState = none;
-        this->robotPtr = robot;
     }
     /** Initializes a motor group with a vector of all reverse states
      * @param motor_ports | the motor ports for this motor group (std::vector<int>)
      * @param reverseStates | the motor reverse states (std::vector<int>)
      * @param gearSet | the gear set for this motor group (Robot::gearBox enum value w/ accepted [red, green, blue])
      */
-    void init(std::vector<int> motor_ports, std::vector<bool> reverseStates, Robot::gearBox gearSet, Robot* robot) {
+    void init(std::vector<int> motor_ports, std::vector<bool> reverseStates, Robot::gearBox gearSet) {
 
         for(int i = 0; i < motor_ports.size(); i++) { // Goes through all the ports and sets them accordingly
             if(reverseStates.size() <= i) {
@@ -134,7 +134,6 @@ public:
         }
         this->gearSet = gearSet;
         encoderState = none;
-        this->robotPtr = robot;
     }
 
     /** Sets the motor array to a specified speed
@@ -167,10 +166,11 @@ public:
      * @param speed | a motor speed value (integer w/ range [-170 <-> 170])
      * @param byDegrees | a distance in degrees to move by (integer w/ range [-inf <-> inf])
      */
-    void holdPosition(int marginDegrees) {
+    void holdPosition(int marginDegrees, int holdSpeed) {
         tarePosition();
         targetPosition = marginDegrees * (((double)gearSet) / 100);
         encoderState = hold;
+        this->holdSpeed = holdSpeed;
         safePosition = ((double)marginDegrees / 5) * (((double)gearSet) / 100);
     }
 
@@ -192,7 +192,7 @@ public:
             lastTime = (uint32_t)pros::millis;
         } else if(encoderState == hold) {
             if(std::abs(getFastPosition()) > targetPosition) {
-                set(robotPtr->holdSpeed);
+                set(reducedSpeed);
             } else if(std::abs(getFastPosition()) > safePosition) {
                 set(0);
             }
@@ -286,15 +286,15 @@ public:
     /// Initializes the Motor Class wrapper with robot.cpp configuration, no external parameters required
     Motor_Class() {
         preset.init();
-        leftMotors.init(preset.leftPorts, preset.leftAltRevStates[0], preset.leftAltRevStates[1], preset.leftGearbox, &preset);
-        rightMotors.init(preset.rightPorts, preset.rightAltRevStates[0], preset.rightAltRevStates[1], preset.rightGearbox, &preset);
-        spinnerMotors.init(preset.spinnerPorts, preset.spinnerAltRevStates[0], preset.spinnerAltRevStates[1], preset.spinnerGearbox, &preset);
-        launcherMotors.init(preset.launcherPorts, preset.launcherAltRevStates[0], preset.launcherAltRevStates[1], preset.launcherGearbox, &preset);
-        endGameMotors.init(preset.endGamePorts, preset.endGameAltRevStates[0], preset.endGameAltRevStates[1], preset.endGameGearbox, &preset);
+        leftMotors.init(preset.leftPorts, preset.leftAltRevStates[0], preset.leftAltRevStates[1], preset.leftGearbox);
+        rightMotors.init(preset.rightPorts, preset.rightAltRevStates[0], preset.rightAltRevStates[1], preset.rightGearbox);
+        spinnerMotors.init(preset.spinnerPorts, preset.spinnerAltRevStates[0], preset.spinnerAltRevStates[1], preset.spinnerGearbox);
+        launcherMotors.init(preset.launcherPorts, preset.launcherAltRevStates[0], preset.launcherAltRevStates[1], preset.launcherGearbox);
+        endGameMotors.init(preset.endGamePorts, preset.endGameAltRevStates[0], preset.endGameAltRevStates[1], preset.endGameGearbox);
         stringLauncher.init(preset.stringLauncherPort);
 
         if(preset.robotName == Robot::robotNames::Debug) {
-            devMotors.init(preset.devMotorPorts, preset.devAltRevStates[0], preset.devAltRevStates[1], preset.devGearbox, &preset);
+            devMotors.init(preset.devMotorPorts, preset.devAltRevStates[0], preset.devAltRevStates[1], preset.devGearbox);
         }
     }
 
