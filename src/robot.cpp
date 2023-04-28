@@ -40,12 +40,14 @@ public:
 
     // Variables - Globally Configurable (C)
     int spinnerSpeed = 80;                // Speed the spinners will be set to
-    int spinnerBoost = 0;                // Boost applied to both drive motor arrays upon spinner activation
+    int spinnerBoost = 0;                 // Boost applied to both drive motor arrays upon spinner activation
     int launcherRunDistance = 1200;       // The distance in degrees for the automatic launcher pullback to run
     int launcherManualPullbackSpeed = 50; // Speed for the manual pullback for the launcher
     int launcherAutoPullbackSpeed = 60;   // Speed for the automatic pullback for the launcher
     int endGameSpeed = 80;                // End game motor speed for setting position automatically
-    int endGameDistance = 90;            // End game distance for movement
+    int endGameDistance = 90;             // End game distance for movement
+    int holdSpeed = 50;                   // Speed to set motor that are holding their position
+    int holdMarginEndGame = 5;            // Margin of in degrees for end game position hold
 
     // Variables - Not Globally Configurable (S)
 
@@ -130,7 +132,7 @@ public:
             // Motor Ports
             leftPorts = {14, 13, 12, 11};  // Ports of left motors, from L1 to L4
             rightPorts = {17, 18, 19, 20}; // Ports of right motors, from R1 to R
-            spinnerPorts = {2, 8};        // Port for the spinner motor from S1 to S2
+            spinnerPorts = {2, 8};         // Port for the spinner motor from S1 to S2
             launcherPorts = {1, 7};        // Ports for the disk launcher L1 to L2
             endGamePorts = {3, 6};
             rotationSensorPorts = {2, 17}; // Ports for the rotation sensors/encoders
@@ -162,18 +164,18 @@ public:
             // Motor Ports
             leftPorts = {14, 13, 12, 11};  // Ports of left motors, from L1 to L4
             rightPorts = {17, 18, 19, 20}; // Ports of right motors, from R1 to R4
-            spinnerPorts = {2, 8};        // Port for the spinner motor from S1 to S2
+            spinnerPorts = {2, 8};         // Port for the spinner motor from S1 to S2
             launcherPorts = {1, 7};        // Ports for the disk launcher L1 to L2
             endGamePorts = {3, 6, 4};
             rotationSensorPorts = {2, 17}; // Ports for the rotation sensors/encoders
             stringLauncherPort = 1;        // Port for the string launcher piston
 
             // Motor Tuning
-            //This alternates the motors directions back and forth from true to false
+            // This alternates the motors directions back and forth from true to false
             leftAltRevStates = {true, true};     // 0: Alternating (bool) 1: Initial Reverse State (bool)
             rightAltRevStates = {true, false};   // Alternating: True, False, True ...
             spinnerAltRevStates = {true, false}; // Initial Reverse State True: True, True, True
-            launcherAltRevStates = {true, true};                                                                                                                                                                           
+            launcherAltRevStates = {true, true};
             endGameAltRevStates = {true, true};
 
             // Motor Gearbox

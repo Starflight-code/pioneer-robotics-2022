@@ -67,6 +67,7 @@ private:
     bool spinnerActive; // Tracks if the spinner is on or off
     std::array<int, 2> controller_values;
     std::array<pros::controller_analog_e_t, 2> sticks;
+    bool runOnce = false;
 
 public:
     Motor_Class Motors;
@@ -102,6 +103,10 @@ public:
 
         if(Motors.preset.training) {
             training(); // loads training listener
+        }
+
+        if(!runOnce) {
+            Motors.endGameMotors.holdPosition(Motors.preset.holdMarginEndGame);
         }
 
         if(launcherTracker.modifed && !Motors.launcherMotors.positionCheckStatus()) { // starts a position movement, only when the toggle button is pressed (executes once per button press)
@@ -140,6 +145,8 @@ public:
         // checks if the target position is reached for an active automatic motion of the launcher or endgame mechanism
         Motors.launcherMotors.checkPosition();
         Motors.endGameMotors.checkPosition();
+
+        runOnce = true; // this was run one time or more
     }
 
     /** Control Listening Service
