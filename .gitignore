@@ -12,6 +12,10 @@ bin/
 .cache/*
 .vscode/
 .cache/
+.cache\*
+.cache
+cache
+compile_commands
 */compile_commands.json
 temp.log
 temp.errors
@@ -19,5 +23,4 @@ temp.errors
 .d/
 .vscode/*
 .vscode/
-compile_commands.json
-*.json
+*compile_commands.json
