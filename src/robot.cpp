@@ -169,11 +169,12 @@ public:
             stringLauncherPort = 1;        // Port for the string launcher piston
 
             // Motor Tuning
+            //This alternates the motors directions back and forth from true to false
             leftAltRevStates = {true, true};     // 0: Alternating (bool) 1: Initial Reverse State (bool)
             rightAltRevStates = {true, false};   // Alternating: True, False, True ...
             spinnerAltRevStates = {true, false}; // Initial Reverse State True: True, True, True
-            launcherAltRevStates = {true, true};
-            endGameAltRevStates = {true, true, true};
+            launcherAltRevStates = {true, true};                                                                                                                                                                           
+            endGameAltRevStates = {true, true};
 
             // Motor Gearbox
             leftGearbox = blue;
