@@ -23,8 +23,12 @@ private:
     //  bool task_one_finished;
     //  bool task_two_finished;
     //  bool task_finished;
+    Motor_Class* motors;
 
 public:
+    AutonomousClass(Motor_Class motorIn) {
+        this->motors = &motorIn;
+    }
     /** Moves forward by a distance at a speed
      * @param Motors | the motor wrapper (class object)
      * @param distance | a distance in degrees to move by (integer w/ range [-inf <-> inf])
@@ -56,12 +60,12 @@ public:
      * @param milliseconds | time to leave motors at specified speed (integer w/ range [0 <-> inf])
      * @return N/A
      */
-    void forwardFor(int speed, int milliseconds, Motor_Class motors) {
-        motors.leftMotors.set(speed);
-        motors.rightMotors.set(speed);
+    void forwardFor(int speed, int milliseconds /*, Motor_Class motors*/) {
+        motors->leftMotors.set(speed);
+        motors->rightMotors.set(speed);
         pros::c::delay(milliseconds);
-        motors.leftMotors.set(0);
-        motors.rightMotors.set(0);
+        motors->leftMotors.set(0);
+        motors->rightMotors.set(0);
     }
 
     /** Stops the motors for the drive motor groups

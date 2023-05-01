@@ -35,7 +35,7 @@ void isolation() {
 
     // -- IMPORTS --
     cl control;
-    AutonomousClass auton;
+    AutonomousClass auton(MotorGroup);
     // -- END OF IMPORTS --
     //  while(true) {
     //  auton.forward(control.Motors, 360, 30);
@@ -92,7 +92,7 @@ void autonomous() {
     double Move_Dist = 1;
     double Init_Pos;
     Motor_Class Motors;
-    AutonomousClass auton;
+    AutonomousClass auton(MotorGroup);
     spin spinner;
     if(Motors.preset.isolation_mode) {
         isolation();
