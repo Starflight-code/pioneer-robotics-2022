@@ -4,6 +4,7 @@
 #include "pros/imu.h"
 #include "pros/motors.hpp"
 #include "pros/rtos.h"
+#include "pros/rtos.hpp"
 #endif
 
 #ifndef spinner_cpp_
@@ -35,16 +36,18 @@ void isolation() {
 
     // -- IMPORTS --
     cl control;
-    AutonomousClass auton(MotorGroup);
+    AutonomousClass auton(control.Motors);
     // -- END OF IMPORTS --
     //  while(true) {
     //  auton.forward(control.Motors, 360, 30);
-    control.Motors.devMotors.setPosition(40, 720);
+    // control.Motors.devMotors.setPosition(40, 720);
+    // auton.forwardFor(30, 2000);
+    auton.forward(30, 360);
 
-    while(control.Motors.devMotors.positionCheckStatus()) {
+    /*while(control.Motors.devMotors.positionCheckStatus()) {
         control.Motors.devMotors.checkPosition();
         pros::c::delay(10);
-    }
+    }*/
     //}
     while(true) {
         pros::c::delay(50);
@@ -92,7 +95,7 @@ void autonomous() {
     double Move_Dist = 1;
     double Init_Pos;
     Motor_Class Motors;
-    AutonomousClass auton(MotorGroup);
+    AutonomousClass auton(Motors);
     spin spinner;
     if(Motors.preset.isolation_mode) {
         isolation();
@@ -110,14 +113,14 @@ void autonomous() {
     case Robot::Artie: // Artie
         Motors.leftMotors.set(20);
         Motors.rightMotors.set(20);
-        auton.forward(20, 160, Motors);
-        auton.spinner(80, 350, Motors);
+        auton.forward(20, 160);
+        auton.spinner(80, 350);
         break;
     case Robot::Chance: // Chance
         Motors.leftMotors.set(20);
         Motors.rightMotors.set(20);
-        auton.forward(20, 160, Motors);
-        auton.spinner(80, 350, Motors);
+        auton.forward(20, 160);
+        auton.spinner(80, 350);
         break;
     default:
         break;

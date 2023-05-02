@@ -34,9 +34,9 @@ public:
     };
 
     // Modes - Globally Configurable (C)
-    bool debug = false;          // Enables debug functionality, DISABLE BEFORE COMPETITION
-    bool training = false;       // Enables training/testing functionality that should be disabled at a competition
-    bool isolation_mode = false; // Isolated debug mode for highly experimental systems, DO NOT TURN THIS ON UNLESS YOU KNOW WHAT YOU'RE DOING
+    bool debug = false;         // Enables debug functionality, DISABLE BEFORE COMPETITION
+    bool training = false;      // Enables training/testing functionality that should be disabled at a competition
+    bool isolation_mode = true; // Isolated debug mode for highly experimental systems, DO NOT TURN THIS ON UNLESS YOU KNOW WHAT YOU'RE DOING
 
     // Variables - Globally Configurable (C)
     int spinnerSpeed = 80;                // Speed the spinners will be set to

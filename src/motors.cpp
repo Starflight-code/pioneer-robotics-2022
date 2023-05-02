@@ -3,6 +3,7 @@
 #include "pros/rtos.h"
 #include "pros/rtos.hpp"
 #include <cmath>
+#include <list>
 #include <memory>
 #include <sys/types.h>
 #include <vector>
@@ -23,6 +24,7 @@
 class Piston { // Piston class, supports ADI Pistons and includes tracking/setting
 private:
     std::vector<pros::ADIDigitalOut> piston = {};
+    int pistonPort;
     bool piston_state; // Allows for toggle/state fetching
 public:
     /** Initializes the class, using the piston port. Syncing the state to retracted by default.
@@ -30,9 +32,10 @@ public:
      * @param initial_state initial state to sync piston to (bool, optional)
      */
     void init(int ADI_Port) { // Initializes the piston, this needs to be completed before it can be used
+        pistonPort = ADI_Port;
         piston.push_back(pros::ADIDigitalOut(ADI_Port));
         piston[0].set_value(false); // Retracts the piston, syncing it's state
-        piston_state = false;       // Sets the piston state, allowing for tracking
+        piston_state = false;
     }
 
     /** Initializes the class, using the piston port. Syncing the state to retracted by default.
@@ -41,9 +44,21 @@ public:
      */
 
     void init(int ADI_Port, bool initial_state) { // Initializes the piston, this needs to be completed before it can be used
+        pistonPort = ADI_Port;
         piston.push_back(pros::ADIDigitalOut(ADI_Port));
-        piston[0].set_value(initial_state); // Retracts the piston, syncing it's state
-        piston_state = initial_state;       // Sets the piston state, allowing for tracking
+        piston[0].set_value(initial_state); // Sets the piston, syncing it's state
+        piston_state = initial_state;
+    }
+
+    /** Initializes the class, using the piston port. Syncing the state to retracted by default.
+     * @param piston | a piston object to clone
+     */
+
+    void init(Piston& pistonObject) { // Initializes the piston, this needs to be completed before it can be used
+        pistonPort = pistonObject.pistonPort;
+        piston.push_back(pros::ADIDigitalOut(pistonPort));
+        piston[0].set_value(false); // Retracts the piston, syncing it's state
+        piston_state = false;
     }
 
     /** Sets the piston to false (retracted) or true (extended), updates tracker
@@ -84,6 +99,9 @@ private:
         moving,
         none
     };
+    std::vector<int> ports;
+    std::vector<bool> altRev;
+    bool altRevFormatStandard;
     encoderStates encoderState;
     short reducedSpeed;
     short holdSpeed;
@@ -100,6 +118,9 @@ public:
      */
     void init(std::vector<int> motor_ports, bool alternating,
               bool initial_reverse_state, Robot::gearBox gearSet) {
+        ports = motor_ports;
+        altRev = {alternating, initial_reverse_state};
+        altRevFormatStandard = true;
         if(alternating) {
             bool t =
                 initial_reverse_state;                            // Reverse state is used, as the contructor
@@ -117,14 +138,20 @@ public:
             }
         }
         this->gearSet = gearSet;
-        encoderState = none;
+        this->encoderState = none;
     }
+
     /** Initializes a motor group with a vector of all reverse states
      * @param motor_ports | the motor ports for this motor group (std::vector<int>)
      * @param reverseStates | the motor reverse states (std::vector<int>)
      * @param gearSet | the gear set for this motor group (Robot::gearBox enum value w/ accepted [red, green, blue])
      */
     void init(std::vector<int> motor_ports, std::vector<bool> reverseStates, Robot::gearBox gearSet) {
+        ports = motor_ports;
+        for(int i = 0; i < reverseStates.size(); i++) {
+            altRev.push_back(reverseStates[i]);
+        }
+        altRevFormatStandard = false;
 
         for(int i = 0; i < motor_ports.size(); i++) { // Goes through all the ports and sets them accordingly
             if(reverseStates.size() <= i) {
@@ -133,7 +160,44 @@ public:
             motors.push_back(pros::Motor(motor_ports[i], reverseStates[i])); // Initializes an array of motors,                                      // Changes its state each time the loop occurs
         }
         this->gearSet = gearSet;
-        encoderState = none;
+        this->encoderState = none;
+    }
+
+    /** Initializes a motor group with a vector of all reverse states
+     * @param motor | motor group object to copy
+     */
+    void init(MotorGroup& motor) {
+        for(int i = 0; i < motor.ports.size(); i++) { // deep copy of motor ports
+            this->ports.push_back(motor.ports[i]);
+        }
+        for(int i = 0; i < motor.altRev.size(); i++) { // deep copy of alt-rev states
+            this->altRev.push_back(motor.altRev[i]);
+        }
+        this->altRevFormatStandard = motor.altRevFormatStandard;
+        this->gearSet = motor.gearSet;
+        this->encoderState = none;
+
+        if(this->altRevFormatStandard) {
+            if(altRev[0]) { // alternating
+                bool t = altRev[1];
+                for(int i = 0; i < ports.size(); i++) {
+                    motors.push_back(pros::Motor(ports[i], t)); // adds and inits motor objects to "motors" (vector)
+                    t = !t;                                     // toggles t (false <-> true)
+                }
+            } else { // not alternating
+                for(int i = 0; i < ports.size(); i++) {
+                    motors.push_back(pros::Motor(ports[i], altRev[1])); // sets all motors to altRev[1] reverse state
+                }
+            }
+
+        } else {
+            for(int i = 0; i < this->ports.size(); i++) { // Goes through all the ports and sets them accordingly
+                if(altRev.size() <= i) {
+                    altRev.push_back(false);
+                }
+                motors.push_back(pros::Motor(ports[i], altRev[i])); // Initializes an array of motors                                     // Changes its state each time the loop occurs
+            }
+        }
     }
 
     /** Sets the motor array to a specified speed
@@ -157,7 +221,7 @@ public:
         set(speed);
         encoderState = moving;
         reducedSpeed = std::round(speed * .60);
-        if(reducedSpeed < 15) {
+        if(reducedSpeed < 15 && speed > reducedSpeed) {
             reducedSpeed = 15;
         }
     }
@@ -211,6 +275,15 @@ public:
      */
     int getSpeed() { return current_speed; } // Fetches speed from tracker
 
+    /** Gets the motor ports used to initialize this motor
+     * @return Vector of motor port ints (std::vector<int>)
+     */
+    std::vector<int> getMotorPorts() { return ports; }
+
+    /** Gets alt rev data required to create a new instance
+     * @return Vector of alt rev bools (std::vector<bool>)
+     */
+    std::vector<bool> getAltRev() { return altRev; }
     /** Tare the encoder position to the current position
      * @return N/A
      */
@@ -267,8 +340,6 @@ public: // Phase out old Motor_Class functions (setSpeed, getSpeed, etc), and me
     MotorGroup leftMotors;
     /// Right Motor Group Object
     MotorGroup rightMotors;
-    /// Flywheel Motor Group Object
-    // MotorGroup flywheelMotors;
     /// Spinner Motor Group Object
     MotorGroup spinnerMotors;
     /// Launcher Motor Group Object
@@ -297,6 +368,19 @@ public:
             devMotors.init(preset.devMotorPorts, preset.devAltRevStates[0], preset.devAltRevStates[1], preset.devGearbox);
         }
     }
+    Motor_Class(Motor_Class& otherGroup) {
+        preset.init();
+        leftMotors.init(otherGroup.leftMotors);
+        rightMotors.init(otherGroup.rightMotors);
+        spinnerMotors.init(otherGroup.spinnerMotors);
+        launcherMotors.init(otherGroup.launcherMotors);
+        endGameMotors.init(otherGroup.endGameMotors);
+        stringLauncher.init(otherGroup.stringLauncher);
+
+        if(preset.robotName == Robot::robotNames::Debug) {
+            devMotors.init(otherGroup.devMotors);
+        }
+    }
 
     void runPositionChecks() {
         leftMotors.checkPosition();
@@ -306,6 +390,7 @@ public:
         endGameMotors.checkPosition();
     }
 
+    /* - Deprecated as of 5/1/2023, no use found. Code should work according to initial design if re-activated. NO LONGER MAINTAINED!
     bool self_test() {
         leftMotors.set(30); // sets all motors to speed 30
         rightMotors.set(30);
@@ -337,5 +422,5 @@ public:
         spinnerMotors.set(0);
         launcherMotors.set(0);
         return result; // returns the result of this test
-    }
+    }*/
 };
