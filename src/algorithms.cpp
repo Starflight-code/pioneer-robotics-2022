@@ -1,3 +1,4 @@
+#include <functional>
 #ifndef include_cpp_
 #include "include.cpp"
 #define include_cpp_
@@ -7,6 +8,11 @@
 class Algorithms {
 public:
     const int _RANGE = 127;
+    enum lambdas {
+        APPLYLIMITER,
+        EXPONENTIALCONTROL,
+        TANKCONTROL
+    };
 
     /** Converts an integer or double into an int
      * @param x | any number (double or integer)
@@ -19,6 +25,31 @@ public:
      * @return x converted to an int datatype
      */
     int castToInt(int x) { return x; }
+
+    /** Returns a wrapped lambda expression, defined by lambdas emum in algorithms.cpp
+     * @param type | lambda to return (accepted: APPLYLIMITER, EXPONENTIALCONTROL, TANKCONTROL)
+     * @return a wrapped lambda (std::function<int(int x, double limiter)>)
+     */
+    std::function<int(int, double)> returnLambda(lambdas type) {
+        switch(type) {
+        case APPLYLIMITER:
+            return [](int x, double limiter) { return (int)x * limiter; };
+            break;
+
+        case EXPONENTIALCONTROL:
+            return [](int controlInput, double exponent) {
+                const int _RANGE = 127;
+                int negativeCarry = controlInput < 0 ? -1 : 1; // Carrys the negative, would otherwise be lost during exponent calcualtion
+                return (int)negativeCarry * abs((_RANGE * pow(((double)abs(controlInput) / _RANGE), exponent)));
+            };
+            break;
+        case TANKCONTROL:
+            return [](int controlInput, double limiter) {
+                return (int)controlInput * limiter;
+            };
+            break;
+        }
+    }
 
     /** Converts an integer or double into an int
      * @param x | a motor value (integer w/ range [-170 <-> 170])

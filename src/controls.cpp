@@ -94,12 +94,6 @@ private:
         }
     }
 
-    /** Holds all the code that handles controller -> drive system interaction
-     * @return N/A
-     */
-    void driveInteraction() {
-    }
-
 public:
     /** Listens for certian events and acts on them
     Training: Left -> Sets limiter by checking full range left stick x axis value.
@@ -163,8 +157,6 @@ public:
      */
     void
     controls() {
-
-        master = new pros::Controller(pros::E_CONTROLLER_MASTER); // Imports Controller as "master"
 
         // Set sticks arrays to correct values for current configuration
         if(Motors.preset.controlScheme == Robot::Tank) {
