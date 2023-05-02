@@ -1,10 +1,3 @@
-#include "main.h"
-#include "pros/motors.hpp"
-#include <array>
-#include <initializer_list>
-#include <list>
-#include <vector>
-
 #ifndef include_cpp_
 #include "include.cpp"
 #define include_cpp_

@@ -1,8 +1,6 @@
 #ifndef include_cpp_
 #define include_cpp_
 #include "include.cpp"
-#include "pros/misc.h"
-#include <vector>
 #endif
 
 // (C) indicates a configurable option, (S) indicates a static, non configurable option.
@@ -33,31 +31,34 @@ public:
         red = (500)    // 5 * degree offset
     };
 
+    // Modes - Globally Configurable (C)
+    bool debug = false;         // Enables debug functionality, DISABLE BEFORE COMPETITION
+    bool training = false;      // Enables training/testing functionality that should be disabled at a competition
+    bool isolation_mode = true; // Isolated debug mode for highly experimental systems, DO NOT TURN THIS ON UNLESS YOU KNOW WHAT YOU'RE DOING
+
     // Variables - Globally Configurable (C)
-    int spinner_speed = 50;               // Speed the spinners will be set to
-    int spinner_boost = 20;               // Boost applied to both drive motor arrays upon spinner activation
-    bool debug = false;                   // Enables debug functionality, DISABLE BEFORE COMPETITION
-    bool training = false;                // Enables training/testing functionality that should be disabled at a competition
-    bool isolation_mode = false;          // Isolated debug mode for highly experimental systems, DO NOT TURN THIS ON UNLESS YOU KNOW WHAT YOU'RE DOING
-    int launcherRunLength = 1200;         // The distance in degrees for the automatic launcher pullback to run
+    int spinnerSpeed = 80;                // Speed the spinners will be set to
+    int spinnerBoost = 0;                 // Boost applied to both drive motor arrays upon spinner activation
+    int launcherRunDistance = 1200;       // The distance in degrees for the automatic launcher pullback to run
     int launcherManualPullbackSpeed = 50; // Speed for the manual pullback for the launcher
     int launcherAutoPullbackSpeed = 60;   // Speed for the automatic pullback for the launcher
-    int endGameSpeed = 60;                // End game motor speed for setting position automatically
-    int endGameDistance = 360;            // End game distance for movement
+    int endGameSpeed = 80;                // End game motor speed for setting position automatically
+    int endGameDistance = 90;             // End game distance for movement
+    int holdSpeed = 50;                   // Speed to set motor that are holding their position
+    int holdMarginEndGame = 5;            // Margin of in degrees for end game position hold
 
     // Variables - Not Globally Configurable (S)
 
     double limiter;                      // Applies and tracks current limiter (range 0 <-> 1)
     bool exponential_control = true;     // Enables exponent based control system
     double control_exponent_value = 1.5; // Greater the value, the steeper the exponential control curve
-    int control_switch_value;
-    bool task_scheduler = true;
-    double left_right_motor_offset; // Negative values are a left offset, positive is a right
+    bool task_scheduler = true;          // turns the task scheduler system on/off
+    double left_right_motor_offset;      // Negative values are a left offset, positive is a right
     // Value what the motors will be multiplied by (should be range [-1 <-> 1]), non-dynamic drive adjustment
 
-    robotNames robotName;         // Name of the robot, check robotNames enum for accepted values
-    driverNames driverName;       // Name of the driver, check driverNames enum for accepted values
-    controlSchemes controlScheme; // Control scheme in use, check controlSchemes enum for accepted values
+    robotNames robotName;         // Name of the robot | Accepted values: Artie, Chance, Debug
+    driverNames driverName;       // Name of the driver | Accepted values: Teagen, Malachi, None
+    controlSchemes controlScheme; // Control scheme in use | Accepted values: Tank, Arcade
 
     gearBox leftGearbox;     // Accepted values: red, green, or blue
     gearBox rightGearbox;    // Accepted values: red, green, or blue
@@ -89,7 +90,7 @@ public:
      */
     void init() {
         // -- CONFIGURATIAON -- (C)
-        robotName = Debug;
+        robotName = Chance;
         driverName = Malachi;
         switch(robotName) {
 
@@ -128,8 +129,8 @@ public:
 
             // Motor Ports
             leftPorts = {14, 13, 12, 11};  // Ports of left motors, from L1 to L4
-            rightPorts = {17, 18, 19, 20}; // Ports of right motors, from R1 to R4
-            spinnerPorts = {6, 16};        // Port for the spinner motor from S1 to S2
+            rightPorts = {17, 18, 19, 20}; // Ports of right motors, from R1 to R
+            spinnerPorts = {2, 8};         // Port for the spinner motor from S1 to S2
             launcherPorts = {1, 7};        // Ports for the disk launcher L1 to L2
             endGamePorts = {3, 6};
             rotationSensorPorts = {2, 17}; // Ports for the rotation sensors/encoders
@@ -140,7 +141,7 @@ public:
             rightAltRevStates = {true, false};   // Alternating: True, False, True ...
             spinnerAltRevStates = {true, false}; // Initial Reverse State True: True, True, True
             launcherAltRevStates = {true, true};
-            endGameAltRevStates = {true, false};
+            endGameAltRevStates = {true, true};
 
             // Motor Gearbox
             leftGearbox = blue;
@@ -159,20 +160,21 @@ public:
         case Chance: // Loads configuration for Chance (C)
 
             // Motor Ports
-            leftPorts = {9, 8, 5, 3};      // Ports of left motors, from L1 to L4
-            rightPorts = {20, 18, 14, 12}; // Ports of right motors, from R1 to R4
-            spinnerPorts = {6, 16};        // Port for the spinner motor from S1 to S2
-            launcherPorts = {10, 2};       // Ports for the disk launcher L1 to L2
-            endGamePorts = {3, 6};
+            leftPorts = {14, 13, 12, 11};  // Ports of left motors, from L1 to L4
+            rightPorts = {17, 18, 19, 20}; // Ports of right motors, from R1 to R4
+            spinnerPorts = {2, 8};         // Port for the spinner motor from S1 to S2
+            launcherPorts = {1, 7};        // Ports for the disk launcher L1 to L2
+            endGamePorts = {3, 6, 4};
             rotationSensorPorts = {2, 17}; // Ports for the rotation sensors/encoders
             stringLauncherPort = 1;        // Port for the string launcher piston
 
             // Motor Tuning
+            // This alternates the motors directions back and forth from true to false
             leftAltRevStates = {true, true};     // 0: Alternating (bool) 1: Initial Reverse State (bool)
             rightAltRevStates = {true, false};   // Alternating: True, False, True ...
             spinnerAltRevStates = {true, false}; // Initial Reverse State True: True, True, True
             launcherAltRevStates = {true, true};
-            endGameAltRevStates = {true, false};
+            endGameAltRevStates = {true, true};
 
             // Motor Gearbox
             leftGearbox = blue;

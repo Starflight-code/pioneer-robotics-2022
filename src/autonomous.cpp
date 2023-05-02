@@ -1,4 +1,3 @@
-#include "pros/rtos.h"
 #ifndef controls_cpp_
 #include "controls.cpp"
 #define controls_cpp_
@@ -17,14 +16,22 @@
 class AutonomousClass {
 private:
     u_short desiredWaitTime = 10; // per task wait in milliseconds
-    Motor_Class* motors;
-    // bool task_one_finished;
-    // bool task_two_finished;
-    // bool task_finished;
+    Motor_Class* motors;          // Motor_Class wrapper pointer
 
 public:
-    AutonomousClass(Motor_Class* motorClass) {
-        motors = motorClass;
+    /** initializes a new motor class instance, creates a new instance of Motor_Class
+     * @param motorIn | motor class wrapper to point to
+     * @return N/A
+     */
+    AutonomousClass(Motor_Class motorIn) {
+        this->motors = &motorIn;
+    }
+
+    /** initializes a new motor class instance, creates a new instance of Motor_Class
+     * @return N/A
+     */
+    AutonomousClass() {
+        this->motors = new Motor_Class();
     }
 
     /** Moves forward by a distance at a speed
@@ -33,7 +40,7 @@ public:
      * @param speed | a speed to set the motors to (integer w/ range [-170 <-> 170])
      * @return N/A
      */
-    void forward(int speed, int distance) {
+    void forward(int speed, int distance /*, Motor_Class motors*/) {
         motors->leftMotors.setPosition(speed, distance);
         motors->rightMotors.setPosition(speed, distance);
 
@@ -58,12 +65,13 @@ public:
      * @param milliseconds | time to leave motors at specified speed (integer w/ range [0 <-> inf])
      * @return N/A
      */
-    void forwardFor(int speed, int milliseconds) {
+    void forwardFor(int speed, int milliseconds /*, Motor_Class motors*/) {
         motors->leftMotors.set(speed);
         motors->rightMotors.set(speed);
         pros::c::delay(milliseconds);
         motors->leftMotors.set(0);
         motors->rightMotors.set(0);
+        return;
     }
 
     /** Stops the motors for the drive motor groups
@@ -81,7 +89,7 @@ public:
      * @param speed | a speed to set the motors to (integer w/ range [-170 <-> 170])
      * @return N/A
      */
-    void spinner(int distance, int speed) {
+    void spinner(int distance, int speed /*, Motor_Class motors*/) {
         motors->spinnerMotors.setPosition(speed, distance);
         motors->leftMotors.set(20);
         motors->rightMotors.set(20);
@@ -100,7 +108,7 @@ public:
      * @param speed | a speed to set the motors to (integer w/ range [-170 <-> 170])
      * @return N/A
      */
-    void turn(int distance, int speed, bool right) {
+    void turn(int distance, int speed, bool right /*, Motor_Class motors*/) {
         if(!right) { // Turn Left
             motors->leftMotors.setPosition(-speed, 90);
             motors->rightMotors.setPosition(speed, 90);
@@ -116,7 +124,7 @@ public:
     /** Toggles the string launcher, dropping it if it's extended
      * @return N/A
      */
-    void dropPiston() {
+    void dropPiston(/*Motor_Class motors*/) {
         motors->stringLauncher.toggle();
     }
 
@@ -124,7 +132,7 @@ public:
      * @param speed | speed to set the intake motors to (integer w/ range [-127 <-> 127])
      * @return N/A
      */
-    void runIntake(int speed) {
+    void runIntake(int speed /*, Motor_Class motors*/) {
         motors->spinnerMotors.set(speed);
     }
 
@@ -133,7 +141,7 @@ public:
      * @param milliseconds | time to leave the motors active (integer w/ range [0 <-> inf])
      * @return N/A
      */
-    void runIntake(int speed, int milliseconds) {
+    void runIntake(int speed, int milliseconds /*, Motor_Class motors*/) {
         motors->spinnerMotors.set(speed);
         pros::c::delay(milliseconds);
         motors->spinnerMotors.set(0);
@@ -144,7 +152,7 @@ public:
      * @param degrees | distance to pull the launcher back
      * @return N/A
      */
-    void pullbackLauncher(int speed, int degrees) {
+    void pullbackLauncher(int speed, int degrees /*, Motor_Class motors*/) {
         motors->launcherMotors.setPosition(speed, degrees);
         while(motors->launcherMotors.positionCheckStatus()) {
             motors->launcherMotors.checkPosition();
@@ -156,7 +164,7 @@ public:
      * @param speed | speed to set the launcher to
      * @return N/A
      */
-    void pullbackLauncher(int speed) {
+    void pullbackLauncher(int speed /*, Motor_Class motors*/) {
         motors->launcherMotors.set(speed);
     }
 
@@ -165,7 +173,7 @@ public:
      * @param milliseconds | time to leave launcher motors active
      * @return N/A
      */
-    void pullbackLauncherFor(int speed, int milliseconds) {
+    void pullbackLauncherFor(int speed, int milliseconds /*, Motor_Class motors*/) {
         motors->launcherMotors.set(speed);
         pros::c::delay(milliseconds);
         motors->launcherMotors.set(0);

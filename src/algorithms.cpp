@@ -1,4 +1,3 @@
-#include <vector>
 #ifndef include_cpp_
 #include "include.cpp"
 #define include_cpp_
