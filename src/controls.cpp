@@ -101,36 +101,21 @@ public:
      */
     void event_listener() {
 
+        // -- TRAINING MODE LOOP EXECUTION
         if(Motors.preset.training) {
             training(); // loads training listener
         }
 
+        // -- ENDGAME CONTROL LISTENING --
         if(!runOnce) {
             Motors.endGameMotors.holdPosition(Motors.preset.holdMarginEndGame, Motors.preset.holdSpeed);
         }
 
-        if(launcherTracker.modifed && !Motors.launcherMotors.positionCheckStatus()) { // starts a position movement, only when the toggle button is pressed (executes once per button press)
-            Motors.launcherMotors.setPosition(Motors.preset.launcherAutoPullbackSpeed, Motors.preset.launcherRunDistance);
-        }
         if(endGameTracker.modifed && !Motors.endGameMotors.positionCheckStatus()) { // starts a position movement, only when the toggle button is pressed (executes once per button press)
             Motors.endGameMotors.setPosition(Motors.preset.endGameSpeed, Motors.preset.endGameDistance);
         }
 
-        // updates the toggle trackers with the updated digital input values
-        pistonLauncher.updateTracker(master->get_digital(Motors.preset.controlButtons[1]));
-        launcherTracker.updateTracker(master->get_digital(Motors.preset.controlButtons[5]));
-        endGameTracker.updateTracker(master->get_digital(Motors.preset.controlButtons[7]));
-
-        // sets the piston to the toggle tracker's output
-        Motors.stringLauncher.set(pistonLauncher.currentState);
-
-        if(master->get_digital(Motors.preset.controlButtons[6])) { // pulls the motor back at a pre-defined speed when button is pressed
-                                                                   // only when an auto pullback is not running
-            Motors.launcherMotors.set(Motors.preset.launcherManualPullbackSpeed);
-        } else if(not master->get_digital(Motors.preset.controlButtons[6]) && not Motors.launcherMotors.positionCheckStatus()) {
-            Motors.launcherMotors.set(0);
-        }
-
+        // -- SPINNER CONTROL LISTENING --
         if(master->get_digital(Motors.preset.controlButtons[2])) { // Spinner Normal Direction
             Motors.spinnerMotors.set(Motors.preset.spinnerSpeed * -1);
             spinnerActive = true;
@@ -142,7 +127,26 @@ public:
             spinnerActive = false;
         }
 
-        // checks if the target position is reached for an active automatic motion of the launcher or endgame mechanism
+        // -- LAUNCHER CONTROL LISTENING --
+        if(launcherTracker.modifed && !Motors.launcherMotors.positionCheckStatus()) { // starts a position movement, only when the toggle button is pressed (executes once per button press)
+            Motors.launcherMotors.setPosition(Motors.preset.launcherAutoPullbackSpeed, Motors.preset.launcherRunDistance);
+        }
+
+        if(master->get_digital(Motors.preset.controlButtons[6])) { // pulls the motor back at a pre-defined speed when button is pressed & autopullback not active
+            Motors.launcherMotors.set(Motors.preset.launcherManualPullbackSpeed);
+        } else if(not master->get_digital(Motors.preset.controlButtons[6]) && not Motors.launcherMotors.positionCheckStatus()) {
+            Motors.launcherMotors.set(0);
+        }
+
+        // -- TOGGLE TRACKER UPDATES --
+        pistonLauncher.updateTracker(master->get_digital(Motors.preset.controlButtons[1]));
+        launcherTracker.updateTracker(master->get_digital(Motors.preset.controlButtons[5]));
+        endGameTracker.updateTracker(master->get_digital(Motors.preset.controlButtons[7]));
+
+        // sets the piston to the toggle tracker's output
+        Motors.stringLauncher.set(pistonLauncher.currentState);
+
+        // -- POSITION CHECKS FOR ENCODER MOVEMENTS --
         Motors.launcherMotors.checkPosition();
         Motors.endGameMotors.checkPosition();
 
@@ -158,13 +162,13 @@ public:
     void
     controls() {
 
-        // Set sticks arrays to correct values for current configuration
-        if(Motors.preset.controlScheme == Robot::Tank) {
-            sticks = {ANALOG_LEFT_Y, ANALOG_RIGHT_Y}; // Tank control
+        if(Motors.preset.controlScheme == Robot::Tank) { // loads stick values into "sticks" array
+            sticks = {ANALOG_LEFT_Y, ANALOG_RIGHT_Y};    // Tank control
         } else {
             sticks = {ANALOG_LEFT_Y, ANALOG_RIGHT_X}; // Arcade Control
         }
 
+        // -- EXPONENTIAL CONTROL SYSTEM
         if(Motors.preset.exponential_control) { // Apply exponential control altering and populate controller_values array
             for(int i = 0; i < controller_values.size(); i++) {
                 controller_values[i] = algo.exponential_control(master->get_analog(sticks[i]), Motors.preset.control_exponent_value);
@@ -176,6 +180,7 @@ public:
             }
         }
 
+        // -- CONTROL SCHEME CALCULATIONS --
         switch(Motors.preset.controlScheme) {
         case Robot::Tank: // populates the controller_values array with calculated values specifically for tank drive
             for(int i = 0; i < controller_values.size(); i++) {
@@ -186,14 +191,17 @@ public:
             controller_values = algo.arcade_control(controller_values[0], controller_values[1], Motors.preset.limiter);
             break;
         }
-        // Applys motor speeds from controller_values array
+
+        // -- CONTROL SWAP SYSTEM --
         if(not swapControls.currentState) {
             controller_values = algo.controlSwap(controller_values);
         }
 
+        // -- LR OFFSET SYSTEM --
         // applies the L_R_Offset override if applicable, updating array
         controller_values = algo.applyOffset(controller_values[0], controller_values[1], Motors.preset.left_right_motor_offset);
 
+        // -- APPLIES VALUES TO MOTORS --
         // sends array values to each motor group
         Motors.leftMotors.set(controller_values[0] + (spinnerActive * Motors.preset.spinnerBoost));
         Motors.rightMotors.set(controller_values[1] + (spinnerActive * Motors.preset.spinnerBoost));
