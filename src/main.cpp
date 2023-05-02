@@ -38,7 +38,7 @@ void isolation() {
     //  auton.forward(control.Motors, 360, 30);
     // control.Motors.devMotors.setPosition(40, 720);
     // auton.forwardFor(30, 2000);
-    auton.forward(30, 360);
+    auton.forwardFor(40, 1000);
 
     /*while(control.Motors.devMotors.positionCheckStatus()) {
         control.Motors.devMotors.checkPosition();
