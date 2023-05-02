@@ -94,37 +94,6 @@ public:
         driverName = Malachi;
         switch(robotName) {
 
-        /*
-        case Example:
-
-            // Motor Ports
-            leftPorts = {L1, L2, L3, L4};  // Ports of left motors, from L1 to L4
-            rightPorts = {R1, R2, R3, R4}; // Ports of right motors, from R1 to R4
-            spinnerPorts = {S1, S2};        // Port for the spinner motor from S1 to S2
-            launcherPorts = {L1, L2};        // Ports for the disk launcher L1 to L2
-            rotationSensorPorts = {Ro1, Ro2}; // Ports for the rotation sensors/encoders
-            stringLauncherPort = S;        // Port for the string launcher piston
-
-            // Motor Tuning
-            leftAltRevStates = {alternating, first motor reversed?};     // 0: Alternating (bool) 1: Initial Reverse State (bool)
-            rightAltRevStates = {alternating, first motor reversed?};   // Alternating: True, False, True ...
-            spinnerAltRevStates = {alternating, first motor reversed?}; // Initial Reverse State True: True, True, True
-            launcherAltRevStates = {alternating, first motor reversed?};
-
-            // Motor Gearbox
-            leftGearbox = gear: red, green, blue;
-            rightGearbox = gear: red, green, blue;
-            spinnerGearbox = gear: red, green, blue;
-            launcherGearbox = gear: red, green, blue;
-
-            // Control Tuning
-            controlScheme = Tank or Arcade;
-            left_right_motor_offset = between -1 and 1;
-            limiter = between 0 and 1;
-
-            break;
-
-        */
         case Artie: // Loads configuration for Artie (C)
 
             // Motor Ports
