@@ -3,14 +3,51 @@
 #define include_cpp_
 #endif
 
-class scheduler {
+#ifndef motors_cpp_
+#include "motors.cpp"
+#define motors_cpp_
+#endif
+
+/** Encoder wrapper, centrally manages the start of, updates and removal of jobs for encoder movement.
+ */
+class EncoderManager {
+    std::list<MotorGroup*> motors;
+
+public:
+    /** Starts a motor movement by some degrees at some speed under a motor group
+     * @param motorGRP | the motor group to send movement commands to
+     * @param byDegrees | the number of degrees to move the motor by (integer w/ range [-inf <-> inf])
+     * @param atSpeed | the speed to move the motor at (integer w/ range [-127 <-> 127])
+     * @return N/A
+     */
+    void moveEncoder(MotorGroup* motorGRP, int byDegrees, int atSpeed) {
+
+        motorGRP->setPosition(atSpeed, byDegrees); // Start a movement under the motor
+        motors.push_back(motorGRP);                // add it to the to-check list
+    }
+
+    /** Runs the checks for existing movements
+     * @return N/A
+     */
+    void runChecks() {
+        for(MotorGroup* x : motors) {
+            x->checkPosition();
+            if(!x->positionCheckStatus()) { // if motor has completed its movement, remove it from the to-check list
+                // motors.erase(std::remove(motors.begin(), motors.end(), x), motors.end());
+                motors.remove(x);
+            }
+        }
+    }
+};
+
+class Scheduler {
     std::vector<uint32_t> millis_cycle; // length is equal to number of tasks
 
 public:
     /** Initializes the scheduler system with the number of tasks to balance.
      * @param numberOfTasks you will be scheduling with the system (integer w/ range [1 <-> inf.])
      */
-    scheduler(int numberOfTasks) {
+    Scheduler(int numberOfTasks) {
         for(int i = 0; i < numberOfTasks; i++) {
             millis_cycle.push_back(0);
         }

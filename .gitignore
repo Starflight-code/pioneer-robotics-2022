@@ -8,12 +8,19 @@
 
 # PROS
 bin/
+.vscode/*
+.cache/*
 .vscode/
 .cache/
-compile_commands.json
+.cache\*
+.cache
+cache
+compile_commands
+*/compile_commands.json
 temp.log
 temp.errors
 *.ini
 .d/
 .vscode/*
 .vscode/
+*compile_commands.json

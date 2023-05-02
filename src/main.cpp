@@ -1,8 +1,6 @@
 #ifndef absolute_positioning_cpp_
 #define absolute_positioning_cpp_
 #include "absolute_positioning.cpp"
-#include "pros/rotation.hpp"
-#include "pros/rtos.h"
 #endif
 
 #ifndef spinner_cpp_
@@ -24,6 +22,33 @@
 #include "include.cpp"
 #define include_cpp_
 #endif
+
+/** Contains the robot for isolation mode, runs a control loop that never exists.
+ *  Consult a programming team member for further information before utilizing this.
+ * @return N/A
+ */
+void isolation() {
+    // Isolation Mode Restricted Execution Debug Enviroment
+
+    // -- IMPORTS --
+    cl control;
+    AutonomousClass auton(control.Motors);
+    // -- END OF IMPORTS --
+    //  while(true) {
+    //  auton.forward(control.Motors, 360, 30);
+    // control.Motors.devMotors.setPosition(40, 720);
+    // auton.forwardFor(30, 2000);
+    auton.forwardFor(40, 1000);
+
+    /*while(control.Motors.devMotors.positionCheckStatus()) {
+        control.Motors.devMotors.checkPosition();
+        pros::c::delay(10);
+    }*/
+    //}
+    while(true) {
+        pros::c::delay(50);
+    }
+}
 
 /**
  * Runs initialization code. This occurs as soon as the program is started.
@@ -66,8 +91,11 @@ void autonomous() {
     double Move_Dist = 1;
     double Init_Pos;
     Motor_Class Motors;
-    autonomous_class auton;
+    AutonomousClass auton(Motors);
     spin spinner;
+    if(Motors.preset.isolation_mode) {
+        isolation();
+    }
     // pros::Rotation leftEncoders(Motors.Robot.rotationSensorPorts[0]);
     // pros::Rotation rightEncoders(Motors.Robot.rotationSensorPorts[1]);
 
@@ -75,75 +103,22 @@ void autonomous() {
     // Control_Algorithms pidTwo(0.2, 0.05, 0.01);
     // Motors.leftMotors.set(-1 * pidOne.PD_Velocity(200, abs(leftEncoders.get_velocity())));
     // Motors.rightMotors.set(-1 * pidTwo.PD_Velocity(200, abs(rightEncoders.get_velocity())));
-    switch(Motors.Robot.RID) {
-    case 1: // Artie
-        Motors.leftMotors.set(25);
-        Motors.rightMotors.set(25);
-        pros::c::delay(1000);
-        Motors.leftMotors.set(0);
-        Motors.rightMotors.set(0);
-        pros::c::delay(4000);
-        auton.forward(Motors, 870, -30);
-        auton.turn(Motors, 340, 30, true);
-        Motors.leftMotors.set(30);
-        Motors.rightMotors.set(30);
-        pros::c::delay(5000);
-        Motors.leftMotors.set(40);
-        Motors.rightMotors.set(40);
-        pros::c::delay(500);
-        Motors.leftMotors.set(35);
-        Motors.rightMotors.set(35);
-        auton.spinner(Motors, 350, 40);
-        Motors.leftMotors.set(0);
-        Motors.rightMotors.set(0);
-        auton.forward(Motors, 150, -20);
-        auton.turn(Motors, 163, 30, false);
-        // Motors.leftMotors.set(pidOne.PD_Velocity(200, abs(leftEncoders.get_velocity())));
-        // Motors.rightMotors.set(pidTwo.PD_Velocity(200, abs(rightEncoders.get_velocity())));
-        Motors.leftMotors.set(-40);
-        Motors.rightMotors.set(-40);
-        Motors.launcher.toggle();
-        pros::c::delay(6000);
-        Motors.leftMotors.set(0);
-        Motors.rightMotors.set(0);
-        break;
-    case 2: // Chance
-        Motors.leftMotors.set(40);
-        Motors.rightMotors.set(40);
-        pros::c::delay(500);
-        Motors.leftMotors.set(0);
-        Motors.rightMotors.set(0);
-        Motors.leftMotors.set(-40);
-        Motors.rightMotors.set(-35);
-        pros::c::delay(2000);
-        Motors.leftMotors.set(40);
-        Motors.rightMotors.set(36);
-        pros::c::delay(3000);
+    //    auton.forward(speed,distance)
+
+    switch(Motors.preset.robotName) {
+    case Robot::Artie: // Artie
         Motors.leftMotors.set(20);
         Motors.rightMotors.set(20);
-        pros::c::delay(1000);
-        Motors.leftMotors.set(40);
-        Motors.rightMotors.set(40);
-        pros::c::delay(500);
-        Motors.leftMotors.set(35);
-        Motors.rightMotors.set(35);
-        auton.spinner(Motors, 350, 40);
-        Motors.leftMotors.set(0);
-        Motors.rightMotors.set(0);
-        pros::c::delay(3000);
-        auton.forward(Motors, 150, -20);
-        auton.turn(Motors, 163, 30, true);
-        // Motors.leftMotors.set(pidOne.PD_Velocity(200, abs(leftEncoders.get_velocity())));
-        // Motors.rightMotors.set(pidTwo.PD_Velocity(200, abs(rightEncoders.get_velocity())));
-        Motors.leftMotors.set(-40);
-        Motors.rightMotors.set(-35);
-        Motors.launcher.toggle();
-        pros::c::delay(6000);
-        Motors.leftMotors.set(0);
-        Motors.rightMotors.set(0);
-        // auton.forward(Motors, 400, -20);
-        //  auton.forward(Motors, 3600, -50);
-        //  auton.turn(Motors, 162, 20, true); // Turns 180 degrees (650 Units), do not change distance value (for now)
+        auton.forward(20, 160);
+        auton.spinner(80, 350);
+        break;
+    case Robot::Chance: // Chance
+        Motors.leftMotors.set(20);
+        Motors.rightMotors.set(20);
+        auton.forward(20, 160);
+        auton.spinner(80, 350);
+        break;
+    default:
         break;
     }
 }
@@ -160,29 +135,15 @@ void autonomous() {
  * operator control task will be stopped. Re-enabling the robot will restart the
  * task, not resume it from where it left off.
  */
-/*std::vector<uint32_t> cycleRun(short int taskIndex, std::vector<uint32_t> millis_array, short desiredWait) {
-    // Integrated a historical task time skipping system, where if the wait time is greater than the historical
-    // time taken for all other tasks on the cycle, processing is freed for other tasks. Leaving no impact on the task's timing.
-
-    short lastTaskIndex = taskIndex - 1 < 0 ? millis_array.size() - 1 : taskIndex - 1;
-    short waitTime = desiredWait - ((uint32_t)pros::millis() - millis_array[taskIndex]); // Calculates current wait time by checking desiredWaitTime(default:50) - time passed since task finished
-    short historicWait = millis_array[lastTaskIndex] - millis_array[taskIndex];
-    bool carryWaitTime = millis_array[taskIndex] % 100 == 0;
-    if(not carryWaitTime) {                                   // Checks for a artifact added by the historical wait time system
-        millis_array[lastTaskIndex] = (uint32_t)pros::millis; // Prevents the index from reaching -1, instead setting it to the max index value if it is
-    }                                                         // Sets current time as the finishing time of the last task
-    if(waitTime > historicWait && not carryWaitTime) {
-        millis_array[taskIndex] = millis_array[taskIndex] * 100;
-    }
-    pros::c::delay(waitTime < 0 || carryWaitTime ? waitTime / 100 > historicWait : waitTime > historicWait ? 0
-                                                                                                           : waitTime); // Waits for the wait time, if it is still positive (has not passed)
-    return millis_array;                                                                                                // Sends the updated array back, allows persistance between method executions
-}*/
 void opcontrol() {
+
     u_short desiredWaitTime = 50; // per task wait in milliseconds
     cl Control_Listener;
-    scheduler tasks(2);
-    if(Control_Listener.Motors.Robot.task_scheduler) {
+    Scheduler tasks(2);
+    if(Control_Listener.Motors.preset.isolation_mode) {
+        isolation();
+    }
+    if(Control_Listener.Motors.preset.task_scheduler) {
         while(true) {
 
             tasks.cycleRun(0, desiredWaitTime); // Should be placed before the task

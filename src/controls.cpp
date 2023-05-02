@@ -1,9 +1,6 @@
 #ifndef pid_cpp_
 #define pid_cpp_
 #include "PID.cpp"
-#include "pros/misc.h"
-#include "pros/rtos.h"
-#include <cmath>
 #endif
 
 #ifndef algorithms_cpp_
@@ -16,35 +13,45 @@
 #include "include.cpp"
 #endif
 
-class toggleTracker {
+/**
+ * Tracks the status of a toggle switch
+ */
+class ToggleTracker {
 private:
     bool held;
     bool previousState;
 
 public:
     bool currentState;
+    bool modifed;
+
     /** Initialzes the toggle tracker.
      * @param state the initial toggle state (boolean)
      */
-    toggleTracker() {
+    ToggleTracker() {
         held = false;
         currentState = false;
         previousState = currentState;
     }
+
     /** Initialzes the toggle tracker.
      * @param state the initial toggle state (boolean)
      */
-    toggleTracker(bool state) {
+    ToggleTracker(bool state) {
         held = false;
         currentState = state;
         previousState = currentState;
     }
+
     /** Updates the tracker with the current button value
      *  @param held current value of the button (boolean)
      */
     void updateTracker(bool held) {
         if(held && held != previousState) {
             currentState = !currentState;
+            modifed = true;
+        } else {
+            modifed = false;
         }
         previousState = held;
     }
@@ -57,20 +64,29 @@ private:
     bool spinnerActive; // Tracks if the spinner is on or off
     std::array<int, 2> controller_values;
     std::array<pros::controller_analog_e_t, 2> sticks;
+    bool runOnce = false;
 
 public:
     Motor_Class Motors;
-    algorithms algo;
-    Control_Algorithms pidOne();
-    Control_Algorithms pidTwo();
-    toggleTracker swapControls;
-    toggleTracker pistonLauncher;
+    Algorithms algo;
+    // Control_Algorithms pidOne();
+    // Control_Algorithms pidTwo();
+    ToggleTracker swapControls;
+    ToggleTracker pistonLauncher;
+    ToggleTracker launcherTracker;
+    ToggleTracker endGameTracker;
 
 private:
+    /** A listener that runs every 50 ms and runs when training mode is on
+     * @return N/A
+     */
     void training() {
         pros::Controller master(pros::E_CONTROLLER_MASTER);
-        if(master.get_digital(Motors.Robot.controlButtons[0])) {
-            Motors.Robot.limiter = (double)(master.get_analog(ANALOG_LEFT_X) + algo._RANGE) / (algo._RANGE * 2);
+        swapControls.updateTracker(master.get_digital(Motors.preset.controlButtons[4]));
+        if(master.get_digital(Motors.preset.controlButtons[0])) {
+
+            // sets the local limiter, using the full range of the x axis on the left controller stick
+            Motors.preset.limiter = (double)(master.get_analog(ANALOG_LEFT_X) + algo._RANGE) / (algo._RANGE * 2);
         }
     }
 
@@ -81,28 +97,53 @@ public:
      */
     void event_listener() {
         pros::Controller master(pros::E_CONTROLLER_MASTER); // Imports Controller as "master"
-        if(Motors.Robot.training) {
-            training(); // Training Modules
+
+        if(Motors.preset.training) {
+            training(); // loads training listener
         }
-        swapControls.updateTracker(master.get_digital(Motors.Robot.controlButtons[4]));
-        pistonLauncher.updateTracker(master.get_digital(Motors.Robot.controlButtons[1]));
-        Motors.launcher.set(pistonLauncher.currentState);
-        /*if(master.get_digital(Motors.Robot.controlButtons[1])) { // Launcher Toggle
-            Motors.launcher.toggle();
-            while(master.get_digital(Motors.Robot.controlButtons[1])) {
-                pros::c::delay(50);
-            }
-        }*/
-        if(master.get_digital(Motors.Robot.controlButtons[2])) { // Spinner Normal Direction
-            Motors.spinnerMotors.set(Motors.Robot.spinner_speed * -1);
+
+        if(!runOnce) {
+            Motors.endGameMotors.holdPosition(Motors.preset.holdMarginEndGame, Motors.preset.holdSpeed);
+        }
+
+        if(launcherTracker.modifed && !Motors.launcherMotors.positionCheckStatus()) { // starts a position movement, only when the toggle button is pressed (executes once per button press)
+            Motors.launcherMotors.setPosition(Motors.preset.launcherAutoPullbackSpeed, Motors.preset.launcherRunDistance);
+        }
+        if(endGameTracker.modifed && !Motors.endGameMotors.positionCheckStatus()) { // starts a position movement, only when the toggle button is pressed (executes once per button press)
+            Motors.endGameMotors.setPosition(Motors.preset.endGameSpeed, Motors.preset.endGameDistance);
+        }
+
+        // updates the toggle trackers with the updated digital input values
+        pistonLauncher.updateTracker(master.get_digital(Motors.preset.controlButtons[1]));
+        launcherTracker.updateTracker(master.get_digital(Motors.preset.controlButtons[5]));
+        endGameTracker.updateTracker(master.get_digital(Motors.preset.controlButtons[7]));
+
+        // sets the piston to the toggle tracker's output
+        Motors.stringLauncher.set(pistonLauncher.currentState);
+
+        if(master.get_digital(Motors.preset.controlButtons[6])) { // pulls the motor back at a pre-defined speed when button is pressed
+                                                                  // only when an auto pullback is not running
+            Motors.launcherMotors.set(Motors.preset.launcherManualPullbackSpeed);
+        } else if(not master.get_digital(Motors.preset.controlButtons[6]) && not Motors.launcherMotors.positionCheckStatus()) {
+            Motors.launcherMotors.set(0);
+        }
+
+        if(master.get_digital(Motors.preset.controlButtons[2])) { // Spinner Normal Direction
+            Motors.spinnerMotors.set(Motors.preset.spinnerSpeed * -1);
             spinnerActive = true;
-        } else if(master.get_digital(Motors.Robot.controlButtons[3])) { // Spinner Reversed Direction
-            Motors.spinnerMotors.set(Motors.Robot.spinner_speed);
+        } else if(master.get_digital(Motors.preset.controlButtons[3])) { // Spinner Reversed Direction
+            Motors.spinnerMotors.set(Motors.preset.spinnerSpeed);
             spinnerActive = true;
         } else {
             Motors.spinnerMotors.set(0);
             spinnerActive = false;
         }
+
+        // checks if the target position is reached for an active automatic motion of the launcher or endgame mechanism
+        Motors.launcherMotors.checkPosition();
+        Motors.endGameMotors.checkPosition();
+
+        runOnce = true; // this was run one time or more
     }
 
     /** Control Listening Service
@@ -113,19 +154,21 @@ public:
      */
     void
     controls() {
-        Control_Algorithms pidOne(0.2, 0.04, 0.01);
-        Control_Algorithms pidTwo(0.2, 0.04, 0.01);
+        // Control_Algorithms pidOne(0.2, 0.04, 0.01);
+        // Control_Algorithms pidTwo(0.2, 0.04, 0.01);
 
         pros::Controller master(pros::E_CONTROLLER_MASTER); // Imports Controller as "master"
+
         // Set sticks arrays to correct values for current configuration
-        if(Motors.Robot.controlScheme == 0) {
+        if(Motors.preset.controlScheme == Robot::Tank) {
             sticks = {ANALOG_LEFT_Y, ANALOG_RIGHT_Y}; // Tank control
         } else {
             sticks = {ANALOG_LEFT_Y, ANALOG_RIGHT_X}; // Arcade Control
         }
-        if(Motors.Robot.exponential_control) { // Apply exponential control altering and populate controller_values array
+
+        if(Motors.preset.exponential_control) { // Apply exponential control altering and populate controller_values array
             for(int i = 0; i < controller_values.size(); i++) {
-                controller_values[i] = algo.exponential_control(master.get_analog(sticks[i]), Motors.Robot.control_exponent_value);
+                controller_values[i] = algo.exponential_control(master.get_analog(sticks[i]), Motors.preset.control_exponent_value);
             }
         } else {
             for(int i = 0; i < controller_values.size(); i++) { // Populate controller_values
@@ -133,14 +176,15 @@ public:
                 controller_values[i] = master.get_analog(sticks[i]);
             }
         }
-        switch(Motors.Robot.controlScheme) {
-        case 0: // Tank Control
+
+        switch(Motors.preset.controlScheme) {
+        case Robot::Tank: // populates the controller_values array with calculated values specifically for tank drive
             for(int i = 0; i < controller_values.size(); i++) {
-                controller_values[i] = algo.tank_control(controller_values[i], Motors.Robot.limiter);
+                controller_values[i] = algo.tank_control(controller_values[i], Motors.preset.limiter);
             }
             break;
-        case 1: // Split Arcade
-            controller_values = algo.arcade_control(controller_values[0], controller_values[1], Motors.Robot.limiter);
+        case Robot::Arcade: // populates the controller_values array with calculated values specifically for arcade control
+            controller_values = algo.arcade_control(controller_values[0], controller_values[1], Motors.preset.limiter);
             break;
         default:
             // SHOULD NEVER OCCUR, but if it does...
@@ -149,26 +193,15 @@ public:
             break;
         }
         // Applys motor speeds from controller_values array
-        // Motors.leftMotors.set(pidOne.PD_Velocity(200, Motors.leftMotors.getFastVelocity()));
-        // Motors.rightMotors.set(pidTwo.PD_Velocity(200, Motors.rightMotors.getFastVelocity()));
         if(not swapControls.currentState) {
-            controller_values = algo.controlSwap(controller_values[0], controller_values[1]);
+            controller_values = algo.controlSwap(controller_values);
         }
-        controller_values = algo.applyOffset(controller_values[0], controller_values[1], Motors.Robot.left_right_motor_offset);
-        Motors.leftMotors.set(controller_values[0] + (spinnerActive * Motors.Robot.spinner_boost));
-        Motors.rightMotors.set(controller_values[1] + (spinnerActive * Motors.Robot.spinner_boost));
-        /*
-        if(Motors.Robot.left_right_motor_offset != 0) {
-            if(Motors.Robot.left_right_motor_offset < 0) { // Apply to left motor
-                Motors.leftMotors.set(controller_values[0] * abs(Motors.Robot.left_right_motor_offset) + (spinnerActive * Motors.Robot.spinner_boost));
-                Motors.rightMotors.set(controller_values[1] + (spinnerActive * Motors.Robot.spinner_boost));
-            } else {
-                Motors.leftMotors.set(controller_values[0] + (spinnerActive * Motors.Robot.spinner_boost));
-                Motors.rightMotors.set(controller_values[1] * abs(Motors.Robot.left_right_motor_offset) + (spinnerActive * Motors.Robot.spinner_boost));
-            }
-        } else {
-            Motors.leftMotors.set(controller_values[0] + (spinnerActive * Motors.Robot.spinner_boost));
-            Motors.rightMotors.set(controller_values[1] + (spinnerActive * Motors.Robot.spinner_boost));
-        }*/
+
+        // applies the L_R_Offset override if applicable, updating array
+        controller_values = algo.applyOffset(controller_values[0], controller_values[1], Motors.preset.left_right_motor_offset);
+
+        // sends array values to each motor group
+        Motors.leftMotors.set(controller_values[0] + (spinnerActive * Motors.preset.spinnerBoost));
+        Motors.rightMotors.set(controller_values[1] + (spinnerActive * Motors.preset.spinnerBoost));
     }
 };
