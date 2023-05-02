@@ -9,7 +9,7 @@
 #endif
 
 /// Class for PID and other control algorithms
-class Control_Algorithms {
+class ControlAlgorithms {
 private:            // TODO: Tune constants as PID will have a decreased/reverse effect with incorrect constants
     float kP = .2;  // Potential Constant
     float kI = .04; // Integral Constant
@@ -21,7 +21,7 @@ private:            // TODO: Tune constants as PID will have a decreased/reverse
     float integral;
 
 public:
-    Control_Algorithms(float Potential_Constant, float Integral_Constant, float Derivative_Constant) {
+    ControlAlgorithms(float Potential_Constant, float Integral_Constant, float Derivative_Constant) {
         kP = Potential_Constant;
         kI = Integral_Constant;
         kD = Derivative_Constant;
@@ -43,7 +43,7 @@ public:
         derivative = error - prevError;
         prevError = error;
 
-        return ((kP * error) + (kD * derivative) + (kI * integral)) * 127;
+        return ((kP * error) + (kD * derivative) + (kI * integral)) /* * 127*/;
     }
     /// WIP code for PID
     int PID_Velocity(int desiredVelocity, double currentVelocity, bool zeroPower) {

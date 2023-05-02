@@ -289,7 +289,7 @@ public:
     double getPosition() {
         double total = 0;
         for(int i = 0; i < motors.size(); i++) { // Loops for each motor, pulls velocities from each
-            total += motors[i].get_position();
+            total += abs(motors[i].get_position());
         }
         return total / motors.size(); // Returns the average of all positions
     }
@@ -300,7 +300,7 @@ public:
     double getVelocity() {
         double total = 0;
         for(int i = 0; i < motors.size(); i++) { // Loops for each motor, pulls velocities from each
-            total += motors[i].get_actual_velocity();
+            total += abs(motors[i].get_actual_velocity());
         }
         return total / motors.size();
     }

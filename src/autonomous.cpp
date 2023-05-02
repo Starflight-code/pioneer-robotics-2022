@@ -19,7 +19,7 @@ private:
     Motor_Class* motors;          // Motor_Class wrapper pointer
 
 public:
-    /** initializes a new motor class instance, creates a new instance of Motor_Class
+    /** creates a Motor_Class pointer, points it to given Motor_Class
      * @param motorIn | motor class wrapper to point to
      * @return N/A
      */
@@ -27,7 +27,7 @@ public:
         this->motors = &motorIn;
     }
 
-    /** initializes a new motor class instance, creates a new instance of Motor_Class
+    /** creates a Motor_Class pointer, points it to a new Motor_Class instance
      * @return N/A
      */
     AutonomousClass() {

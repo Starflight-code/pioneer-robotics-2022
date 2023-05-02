@@ -55,13 +55,13 @@ public:
 
     /** Runs a task delay, making the task run desiredWait milliseconds after it finished
      * or bypassing it if the wait time is greater than the historical time taken for all
-     * other tasks on the cycle, processing is freed for other tasks.
+     * other tasks on the cycle.
      * @param taskIndex task number starting at 0, counting up (integer w/ range [0 <-> inf.])
      * @param desiredWait milliseconds for this task to run after last execution (unsigned short integer w/ range (0 <-> 65,535))
      */
     void cycleRun(short int taskIndex, u_short desiredWait) {
         // Integrated a historical task time skipping system, where if the wait time is greater than the historical
-        // time taken for all other tasks on the cycle, processing is freed for other tasks. Leaving no impact on the task's timing.
+        // time taken for all other tasks on the cycle. Leaving no impact on the task's timing.
 
         short lastTaskIndex = taskIndex - 1 < 0 ? millis_cycle.size() - 1 : taskIndex - 1;
         short waitTime = desiredWait - ((uint32_t)pros::millis() - millis_cycle[taskIndex]); // Calculates current wait time by checking desiredWaitTime(default:50) - time passed since task finished
