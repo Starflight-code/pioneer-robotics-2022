@@ -1,6 +1,3 @@
-#include "pros/motors.h"
-#include "pros/motors.hpp"
-#include "pros/rtos.h"
 #ifndef controls_cpp_
 #include "controls.cpp"
 #define controls_cpp_
@@ -19,7 +16,7 @@
 class AutonomousClass {
 private:
     u_short desiredWaitTime = 10; // per task wait in milliseconds
-    Motor_Class* motors;
+    Motor_Class* motors;          // Motor_Class wrapper pointer
 
 public:
     /** initializes a new motor class instance, creates a new instance of Motor_Class

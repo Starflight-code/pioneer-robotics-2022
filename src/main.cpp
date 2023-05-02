@@ -1,10 +1,6 @@
 #ifndef absolute_positioning_cpp_
 #define absolute_positioning_cpp_
 #include "absolute_positioning.cpp"
-#include "pros/imu.h"
-#include "pros/motors.hpp"
-#include "pros/rtos.h"
-#include "pros/rtos.hpp"
 #endif
 
 #ifndef spinner_cpp_

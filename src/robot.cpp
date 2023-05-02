@@ -1,8 +1,6 @@
 #ifndef include_cpp_
 #define include_cpp_
 #include "include.cpp"
-#include "pros/misc.h"
-#include <vector>
 #endif
 
 // (C) indicates a configurable option, (S) indicates a static, non configurable option.

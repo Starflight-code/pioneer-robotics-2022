@@ -1,13 +1,3 @@
-#include "pros/adi.hpp"
-#include "pros/misc.h"
-#include "pros/rtos.h"
-#include "pros/rtos.hpp"
-#include <cmath>
-#include <list>
-#include <memory>
-#include <sys/types.h>
-#include <vector>
-
 #ifndef main_h_
 #include "main.h"
 #define main_h_

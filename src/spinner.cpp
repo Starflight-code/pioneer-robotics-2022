@@ -1,4 +1,3 @@
-/// Allows interaction with color sensor and running automated spinner systems
 #ifndef include_cpp_
 #include "include.cpp"
 #define include_cpp_

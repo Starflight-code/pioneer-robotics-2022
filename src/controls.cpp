@@ -1,9 +1,6 @@
 #ifndef pid_cpp_
 #define pid_cpp_
 #include "PID.cpp"
-#include "pros/misc.h"
-#include "pros/rtos.h"
-#include <cmath>
 #endif
 
 #ifndef algorithms_cpp_
