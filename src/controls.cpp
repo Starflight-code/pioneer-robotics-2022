@@ -1,6 +1,7 @@
 #ifndef pid_cpp_
 #define pid_cpp_
 #include "PID.cpp"
+#include "pros/misc.hpp"
 #endif
 
 #ifndef algorithms_cpp_
@@ -69,12 +70,15 @@ private:
 public:
     Motor_Class Motors;
     Algorithms algo;
-    // Control_Algorithms pidOne();
-    // Control_Algorithms pidTwo();
     ToggleTracker swapControls;
     ToggleTracker pistonLauncher;
     ToggleTracker launcherTracker;
     ToggleTracker endGameTracker;
+    pros::Controller* master;
+
+    cl() {
+        master = new pros::Controller(pros::E_CONTROLLER_MASTER);
+    }
 
 private:
     /** A listener that runs every 50 ms and runs when training mode is on
@@ -90,13 +94,18 @@ private:
         }
     }
 
+    /** Holds all the code that handles controller -> drive system interaction
+     * @return N/A
+     */
+    void driveInteraction() {
+    }
+
 public:
     /** Listens for certian events and acts on them
     Training: Left -> Sets limiter by checking full range left stick x axis value.
      * @return N/A
      */
     void event_listener() {
-        pros::Controller master(pros::E_CONTROLLER_MASTER); // Imports Controller as "master"
 
         if(Motors.preset.training) {
             training(); // loads training listener
@@ -114,24 +123,24 @@ public:
         }
 
         // updates the toggle trackers with the updated digital input values
-        pistonLauncher.updateTracker(master.get_digital(Motors.preset.controlButtons[1]));
-        launcherTracker.updateTracker(master.get_digital(Motors.preset.controlButtons[5]));
-        endGameTracker.updateTracker(master.get_digital(Motors.preset.controlButtons[7]));
+        pistonLauncher.updateTracker(master->get_digital(Motors.preset.controlButtons[1]));
+        launcherTracker.updateTracker(master->get_digital(Motors.preset.controlButtons[5]));
+        endGameTracker.updateTracker(master->get_digital(Motors.preset.controlButtons[7]));
 
         // sets the piston to the toggle tracker's output
         Motors.stringLauncher.set(pistonLauncher.currentState);
 
-        if(master.get_digital(Motors.preset.controlButtons[6])) { // pulls the motor back at a pre-defined speed when button is pressed
-                                                                  // only when an auto pullback is not running
+        if(master->get_digital(Motors.preset.controlButtons[6])) { // pulls the motor back at a pre-defined speed when button is pressed
+                                                                   // only when an auto pullback is not running
             Motors.launcherMotors.set(Motors.preset.launcherManualPullbackSpeed);
-        } else if(not master.get_digital(Motors.preset.controlButtons[6]) && not Motors.launcherMotors.positionCheckStatus()) {
+        } else if(not master->get_digital(Motors.preset.controlButtons[6]) && not Motors.launcherMotors.positionCheckStatus()) {
             Motors.launcherMotors.set(0);
         }
 
-        if(master.get_digital(Motors.preset.controlButtons[2])) { // Spinner Normal Direction
+        if(master->get_digital(Motors.preset.controlButtons[2])) { // Spinner Normal Direction
             Motors.spinnerMotors.set(Motors.preset.spinnerSpeed * -1);
             spinnerActive = true;
-        } else if(master.get_digital(Motors.preset.controlButtons[3])) { // Spinner Reversed Direction
+        } else if(master->get_digital(Motors.preset.controlButtons[3])) { // Spinner Reversed Direction
             Motors.spinnerMotors.set(Motors.preset.spinnerSpeed);
             spinnerActive = true;
         } else {
@@ -154,10 +163,8 @@ public:
      */
     void
     controls() {
-        // Control_Algorithms pidOne(0.2, 0.04, 0.01);
-        // Control_Algorithms pidTwo(0.2, 0.04, 0.01);
 
-        pros::Controller master(pros::E_CONTROLLER_MASTER); // Imports Controller as "master"
+        master = new pros::Controller(pros::E_CONTROLLER_MASTER); // Imports Controller as "master"
 
         // Set sticks arrays to correct values for current configuration
         if(Motors.preset.controlScheme == Robot::Tank) {
@@ -168,12 +175,12 @@ public:
 
         if(Motors.preset.exponential_control) { // Apply exponential control altering and populate controller_values array
             for(int i = 0; i < controller_values.size(); i++) {
-                controller_values[i] = algo.exponential_control(master.get_analog(sticks[i]), Motors.preset.control_exponent_value);
+                controller_values[i] = algo.exponential_control(master->get_analog(sticks[i]), Motors.preset.control_exponent_value);
             }
         } else {
             for(int i = 0; i < controller_values.size(); i++) { // Populate controller_values
                                                                 // array with raw stick values
-                controller_values[i] = master.get_analog(sticks[i]);
+                controller_values[i] = master->get_analog(sticks[i]);
             }
         }
 
@@ -185,11 +192,6 @@ public:
             break;
         case Robot::Arcade: // populates the controller_values array with calculated values specifically for arcade control
             controller_values = algo.arcade_control(controller_values[0], controller_values[1], Motors.preset.limiter);
-            break;
-        default:
-            // SHOULD NEVER OCCUR, but if it does...
-            // There is an error in variables.cpp in
-            // the Robot.controlScheme variable preset
             break;
         }
         // Applys motor speeds from controller_values array
