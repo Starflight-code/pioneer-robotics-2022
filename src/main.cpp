@@ -8,6 +8,11 @@
 #include "spinner.cpp"
 #endif
 
+#ifndef autonomous_methods_cpp_
+#include "autonomous_methods.cpp"
+#define autonomous_methods_cpp_
+#endif
+
 #ifndef autonomous_cpp_
 #include "autonomous.cpp"
 #define autonomous_cpp_
@@ -23,6 +28,11 @@
 #define include_cpp_
 #endif
 
+#ifndef isolation_cpp_
+#include "isolation.cpp"
+#define isolation_cpp_
+#endif
+
 /** Contains the robot for isolation mode, runs a control loop that never exists.
  *  Consult a programming team member for further information before utilizing this.
  * @return N/A
@@ -30,24 +40,9 @@
 void isolation() {
     // Isolation Mode Restricted Execution Debug Enviroment
 
-    // -- IMPORTS --
-    cl control;
-    AutonomousClass auton(control.Motors);
-    // -- END OF IMPORTS --
-    //  while(true) {
-    //  auton.forward(control.Motors, 360, 30);
-    // control.Motors.devMotors.setPosition(40, 720);
-    // auton.forwardFor(30, 2000);
-    auton.forwardFor(40, 1000);
-
-    /*while(control.Motors.devMotors.positionCheckStatus()) {
-        control.Motors.devMotors.checkPosition();
-        pros::c::delay(10);
-    }*/
-    //}
-    while(true) {
-        pros::c::delay(50);
-    }
+    // Isolation Mode Class
+    isolation_mode isolation;
+    isolation.run();
 }
 
 /**
@@ -88,9 +83,16 @@ void competition_initialize() {}
  * from where it left off.
  */
 void autonomous() {
-    double Move_Dist = 1;
-    double Init_Pos;
     Motor_Class Motors;
+    if(Motors.preset.isolation_mode) {
+        isolation();
+    }
+
+    Autonomous auton;
+    auton.run();
+
+    /*double Move_Dist = 1;
+    double Init_Pos;
     AutonomousClass auton(Motors);
     spin spinner;
     if(Motors.preset.isolation_mode) {
@@ -120,7 +122,7 @@ void autonomous() {
         break;
     default:
         break;
-    }
+    }*/
 }
 /**
  * Runs the operator control code. This function will be started in its own task

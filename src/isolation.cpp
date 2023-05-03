@@ -23,44 +23,19 @@
 #define include_cpp_
 #endif
 
-class Autonomous {
+class isolation_mode {
     cl* Control;
     AutonomousClass* Auton;
     Motor_Class* Motors;
     Robot* Preset;
 
 public:
-    Autonomous() {
+    isolation_mode() {
         this->Control = new cl;
         this->Auton = new AutonomousClass;
         this->Motors = &Control->Motors;
         this->Preset = &Control->Motors.preset;
     }
     void run() {
-
-        switch(Preset->robotName) {
-        case Robot::Artie: // Artie
-            artie();
-            break;
-        case Robot::Chance: // Chance
-            chance();
-            break;
-        default:
-            break;
-        }
-    }
-
-    void artie() {
-        Motors->leftMotors.set(20);
-        Motors->rightMotors.set(20);
-        Auton->forward(20, 160);
-        Auton->spinner(80, 350);
-    }
-
-    void chance() {
-        Motors->leftMotors.set(20);
-        Motors->rightMotors.set(20);
-        Auton->forward(20, 160);
-        Auton->spinner(80, 350);
     }
 };
