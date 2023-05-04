@@ -17,10 +17,12 @@
 #define include_cpp_
 #include "include.cpp"
 #endif
+
 /**
  * Tracks the status of a toggle switch
  */
 class ToggleTracker {
+
 private:
     bool held;
     bool previousState;
@@ -61,17 +63,24 @@ public:
     }
 };
 
+class MegaWrapper {
+public:
+    Motor_Class Motors;
+    Robot Preset;
+};
+
 class EventHandler {
-    Motor_Class* Motors;
+    Motor_Class* motors;
     Robot* preset;
+    MegaWrapper wrapper;
 
     enum eventType {
         hold,
         toggle,
         press
     };
-    std::vector<std::function<void(void)>> functions;
-    std::vector<std::function<void(void)>> functionsIfDisabled;
+    std::vector<std::function<void(MegaWrapper)>> functions;
+    std::vector<std::function<void(MegaWrapper)>> functionsIfDisabled;
     std::vector<pros::controller_digital_e_t> buttons;
     std::vector<eventType> eventHandlingType;
     std::vector<ToggleTracker> trackers;
@@ -79,12 +88,12 @@ class EventHandler {
 
 public:
     EventHandler() {
-        Motors = new Motor_Class;
-        preset = &Motors->preset;
+        motors = new Motor_Class;
+        preset = &motors->preset;
         master = new pros::Controller(pros::E_CONTROLLER_MASTER);
     }
 
-    void addEvent(std::function<void(void)> eventService, pros::controller_digital_e_t button, eventType type) {
+    void addEvent(std::function<void(MegaWrapper)> eventService, pros::controller_digital_e_t button, eventType type) {
         functions.push_back(eventService);
         functionsIfDisabled.push_back(NULL);
         buttons.push_back(button);
@@ -97,7 +106,7 @@ public:
         }
     }
 
-    void addEvent(std::function<void(void)> eventService, std::function<void(void)> eventServiceIfOff, pros::controller_digital_e_t button, eventType type) {
+    void addEvent(std::function<void(MegaWrapper)> eventService, std::function<void(MegaWrapper)> eventServiceIfOff, pros::controller_digital_e_t button, eventType type) {
         functions.push_back(eventService);
         functionsIfDisabled.push_back(eventServiceIfOff);
         buttons.push_back(button);
@@ -116,10 +125,10 @@ public:
 
             case toggle:
                 if(trackers[i].currentState) {
-                    functions[i]();
+                    functions[i](wrapper);
                 } else {
                     if(functionsIfDisabled[i] != NULL) {
-                        functionsIfDisabled[i]();
+                        functionsIfDisabled[i](wrapper);
                     }
                 }
                 trackers[i].updateTracker(master->get_digital(buttons[i]));
@@ -127,20 +136,20 @@ public:
 
             case hold:
                 if(master->get_digital(buttons[i])) {
-                    functions[i]();
+                    functions[i](wrapper);
                 } else {
                     if(functionsIfDisabled[i] != NULL) {
-                        functionsIfDisabled[i]();
+                        functionsIfDisabled[i](wrapper);
                     }
                 }
                 break;
 
             case press:
                 if(trackers[i].modifed && master->get_digital(buttons[i])) {
-                    functions[i]();
+                    functions[i](wrapper);
                 } else {
                     if(functionsIfDisabled[i] != NULL) {
-                        functionsIfDisabled[i]();
+                        functionsIfDisabled[i](wrapper);
                     }
                 }
                 trackers[i].updateTracker(master->get_digital(buttons[i]));

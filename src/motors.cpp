@@ -358,6 +358,8 @@ public:
             devMotors.init(preset.devMotorPorts, preset.devAltRevStates[0], preset.devAltRevStates[1], preset.devGearbox);
         }
     }
+
+    /// Initialzes the Motor Class wrapper with configuration data from another motor class instance
     Motor_Class(Motor_Class& otherGroup) {
         preset.init();
         leftMotors.init(otherGroup.leftMotors);
