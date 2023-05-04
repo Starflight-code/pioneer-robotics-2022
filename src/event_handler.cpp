@@ -79,8 +79,8 @@ class EventHandler {
         toggle,
         press
     };
-    std::vector<std::function<void(MegaWrapper)>> functions;
-    std::vector<std::function<void(MegaWrapper)>> functionsIfDisabled;
+    std::vector<std::function<void(MegaWrapper&)>> functions;
+    std::vector<std::function<void(MegaWrapper&)>> functionsIfDisabled;
     std::vector<pros::controller_digital_e_t> buttons;
     std::vector<eventType> eventHandlingType;
     std::vector<ToggleTracker> trackers;
@@ -93,7 +93,7 @@ public:
         master = new pros::Controller(pros::E_CONTROLLER_MASTER);
     }
 
-    void addEvent(std::function<void(MegaWrapper)> eventService, pros::controller_digital_e_t button, eventType type) {
+    void addEvent(std::function<void(MegaWrapper&)> eventService, pros::controller_digital_e_t button, eventType type) {
         functions.push_back(eventService);
         functionsIfDisabled.push_back(NULL);
         buttons.push_back(button);
@@ -106,7 +106,7 @@ public:
         }
     }
 
-    void addEvent(std::function<void(MegaWrapper)> eventService, std::function<void(MegaWrapper)> eventServiceIfOff, pros::controller_digital_e_t button, eventType type) {
+    void addEvent(std::function<void(MegaWrapper&)> eventService, std::function<void(MegaWrapper&)> eventServiceIfOff, pros::controller_digital_e_t button, eventType type) {
         functions.push_back(eventService);
         functionsIfDisabled.push_back(eventServiceIfOff);
         buttons.push_back(button);
