@@ -53,6 +53,7 @@ void isolation() {
  */
 void initialize() {
 }
+
 /**
  * Runs while the robot is in the disabled state of Field Management System or
  * the VEX Competition Switch, following either autonomous or opcontrol. When
@@ -60,6 +61,7 @@ void initialize() {
  */
 void disabled() {
 }
+
 /**
  * Runs after initialize(), and before autonomous when connected to the Field
  * Management System or the VEX Competition Switch. This is intended for
@@ -124,6 +126,7 @@ void autonomous() {
         break;
     }*/
 }
+
 /**
  * Runs the operator control code. This function will be started in its own task
  * with the default priority and stack size whenever the robot is enabled via

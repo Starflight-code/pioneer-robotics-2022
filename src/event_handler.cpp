@@ -77,6 +77,7 @@ class EventHandler {
     std::vector<ToggleTracker> trackers;
     pros::Controller* master;
 
+public:
     EventHandler() {
         Motors = new Motor_Class;
         preset = &Motors->preset;
@@ -88,6 +89,7 @@ class EventHandler {
         functionsIfDisabled.push_back(NULL);
         buttons.push_back(button);
         eventHandlingType.push_back(type);
+
         if(type == toggle || type == press) {
             trackers.push_back(ToggleTracker());
         } else {
@@ -100,6 +102,7 @@ class EventHandler {
         functionsIfDisabled.push_back(eventServiceIfOff);
         buttons.push_back(button);
         eventHandlingType.push_back(type);
+
         if(type == toggle || type == press) {
             trackers.push_back(ToggleTracker());
         } else {
@@ -110,6 +113,7 @@ class EventHandler {
     void checkEvents() {
         for(int i = 0; i < functions.size(); i++) {
             switch(eventHandlingType[i]) {
+
             case toggle:
                 if(trackers[i].currentState) {
                     functions[i]();
@@ -120,6 +124,7 @@ class EventHandler {
                 }
                 trackers[i].updateTracker(master->get_digital(buttons[i]));
                 break;
+
             case hold:
                 if(master->get_digital(buttons[i])) {
                     functions[i]();
@@ -129,6 +134,7 @@ class EventHandler {
                     }
                 }
                 break;
+
             case press:
                 if(trackers[i].modifed && master->get_digital(buttons[i])) {
                     functions[i]();

@@ -14,49 +14,10 @@
 #include "include.cpp"
 #endif
 
-/**
- * Tracks the status of a toggle switch
- */
-class ToggleTracker {
-private:
-    bool held;
-    bool previousState;
-
-public:
-    bool currentState;
-    bool modifed;
-
-    /** Initialzes the toggle tracker.
-     * @param state the initial toggle state (boolean)
-     */
-    ToggleTracker() {
-        held = false;
-        currentState = false;
-        previousState = currentState;
-    }
-
-    /** Initialzes the toggle tracker.
-     * @param state the initial toggle state (boolean)
-     */
-    ToggleTracker(bool state) {
-        held = false;
-        currentState = state;
-        previousState = currentState;
-    }
-
-    /** Updates the tracker with the current button value
-     *  @param held current value of the button (boolean)
-     */
-    void updateTracker(bool held) {
-        if(held && held != previousState) {
-            currentState = !currentState;
-            modifed = true;
-        } else {
-            modifed = false;
-        }
-        previousState = held;
-    }
-};
+#ifndef event_handler_cpp_
+#define event_handler_cpp_
+#include "event_handler.cpp"
+#endif
 
 class cl {
 
@@ -100,9 +61,9 @@ public:
      * @return N/A
      */
     void event_listener() {
-
-        // -- TRAINING MODE LOOP EXECUTION
-        if(Motors.preset.training) {
+        EventHandler
+            // -- TRAINING MODE LOOP EXECUTION
+            if(Motors.preset.training) {
             training(); // loads training listener
         }
 
